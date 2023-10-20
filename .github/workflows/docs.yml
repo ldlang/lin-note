@@ -49,3 +49,11 @@ jobs:
         env:
           # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Configure Git  
+      run: |  
+        mkdir -p ~/.ssh/  
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  
+        chmod 600 ~/.ssh/id_rsa  
+        git config --global user.name "ldlang"  
+        git config --global user.email "1156614427@qq.com"
