@@ -7,6 +7,7 @@ export default defineUserConfig({
   title: "笔记",
   description: "ldlang-note",
   theme: defaultTheme({
+    contributors:false,
     navbar: [
       {
         text: "首页",
@@ -15,10 +16,9 @@ export default defineUserConfig({
       {
         text: "git笔记",
         link: "/git-note/",
+        activeMatch: '^/git-note/',
       },
     ],
-    sidebar: {
-      '/git-note/': ['README.md']
-    },
+    sidebar: 'auto'
   }),
 });

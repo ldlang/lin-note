@@ -1,9 +1,22 @@
 ---
 home: true
-heroText: 学海无涯，苦乐自知
-tagline: 副标题
-actions:
-  - text: git
-    link: git-note/ # 修改处
-    type: primary
 ---
+
+<home />
+
+<style>
+  .home{
+    padding: var(--navbar-height) 0 0 !important;
+    margin: 0;
+    max-width: 100%;
+  }
+  .hero{
+    display: none;
+  }
+  .theme-default-content{
+    height: calc(100vh - 3.6rem);
+  }
+  .theme-default-content > div{
+    height: calc(100vh - 3.6rem);
+  }
+</style>
