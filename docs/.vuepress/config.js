@@ -1,5 +1,7 @@
 import { defineUserConfig } from "vuepress";
 import { defaultTheme } from "vuepress";
+import { jsConfig } from "./config/sidebar-config.js";
+import { navbarConfig } from "./config/navbar-config.js";
 
 export default defineUserConfig({
   base: "/lin-note/",
@@ -7,18 +9,10 @@ export default defineUserConfig({
   title: "笔记",
   description: "ldlang-note",
   theme: defaultTheme({
-    contributors:false,
-    navbar: [
-      {
-        text: "首页",
-        link: "/",
-      },
-      {
-        text: "git笔记",
-        link: "/git-note/",
-        activeMatch: '^/git-note/',
-      },
-    ],
-    sidebar: 'auto'
+    contributors: false,
+    navbar: [...navbarConfig],
+    sidebar: {
+      ...jsConfig,
+    },
   }),
 });
