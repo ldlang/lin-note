@@ -11,14 +11,15 @@
 import { onMounted, reactive, nextTick, onBeforeUnmount } from "vue";
 // 画布尺寸设置
 const windowSize = reactive({
-  height: window.innerHeight,
-  width: window.innerWidth,
+  height: 0,
+  width: 0,
 });
 
-// 监听可视窗口尺寸变化
-window.addEventListener("resize", changeSize);
-
 onMounted(() => {
+  // 监听可视窗口尺寸变化
+  window.addEventListener("resize", changeSize);
+  windowSize.height = window.innerHeight;
+  windowSize.width = window.innerWidth;
   getCtx();
 });
 
