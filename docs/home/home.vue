@@ -1,7 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container center">
     <img src="/avatar.jpg" class="avatar" />
-    <div style="display: flex; justify-content: center; align-items: center">
+    <h3 class="name">林达浪</h3>
+    <div class="center" style="height: 50px">
       <h1 id="title" class="title"></h1>
     </div>
   </div>
@@ -11,13 +12,17 @@
 <script setup>
 import canvasStar from "./components/canvas-star.vue";
 import Typed from "typed.js";
-import { onMounted } from "vue";
+import { onMounted, onBeforeUnmount } from "vue";
 
+let typed;
 onMounted(() => {
-  new Typed("#title", {
+  typed = new Typed("#title", {
     strings: ["学海无涯，苦乐自知。"],
     typeSpeed: 50,
   });
+});
+onBeforeUnmount(() => {
+  typed.destroy();
 });
 </script>
 
@@ -28,18 +33,21 @@ onMounted(() => {
   background: transparent;
   position: relative;
   z-index: 1;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   & .title {
     color: #ffffff;
     font-size: 40px;
   }
+  & .name {
+    color: #ffffff;
+    font-size: 26px;
+  }
 }
 .avatar {
+  position: relative;
   width: 80px;
   height: 80px;
+  cursor: pointer;
   border-radius: 100%;
   box-shadow: 0px 0px 30px 8px rgba(255, 255, 255, 0.82);
   transition: all 0.2s;
@@ -49,6 +57,11 @@ onMounted(() => {
 }
 ::v-deep(.typed-cursor) {
   color: #ffffff;
-  transform: scaleY(2);
+  transform: scaleY(2.2);
+}
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
