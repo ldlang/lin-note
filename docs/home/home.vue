@@ -41,6 +41,7 @@ onBeforeUnmount(() => {
   & .name {
     color: #ffffff;
     font-size: 26px;
+    margin-bottom: 30px;
   }
 }
 .avatar {

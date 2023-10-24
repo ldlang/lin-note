@@ -10,13 +10,15 @@ sidebar: auto
 
    ```js
    6个基础类型 Undefined、Null、Boolean、Number、String 和 Symbol
-   通过字面量形式创建的会直接将值存储在内存中(也就是存储在栈内存中)，访问变量就直接访问内存中的值
+   通过字面量形式创建的会直接将值存储在内存中(也就是存储在栈内存中)，访问变量就直接访问
+   内存中的值
    ```
 
 2. 引用值
 
    ```js
-   object、Array、function、和通过 new 创建的基础类型(存储在堆内存中)，变量保存的只不过是这个值存储在内存中的引用地址
+   object、Array、function、和通过 new 创建的基础类型(存储在堆内存中)，变量保存的只不
+   过是这个值存储在内存中的引用地址
 
    注意：通过 new 创建出来的基础类型，通过typeof检测为object
    ```
@@ -25,14 +27,17 @@ sidebar: auto
 
    ```js
    原始数据类型：
-   	将一个变量保存的值赋值给另一个变量式，会在内存中开辟两个空间来存储这两个值，因此两个值是互不干扰的，即使一个值变了，另一个值也不会变
+   	将一个变量保存的值赋值给另一个变量式，会在内存中开辟两个空间来存储这两个值，因此两个
+    值是互不干扰的，即使一个值变了，另一个值也不会变
        let str = "str";
        let str1 = str;
        str = 2;
        console.log(str, str1); // 2  '字符串'
 
    引用数据类型：
-   	引用数据类型将一个变量的引用值赋值个另一个变量，只是原来这个变量存储的引用地址赋值给了这个新的变量，只要任意个变量改变了存储的这个值，那么所有保存这个引用值的变量都会改变,引用数据直接赋值也就是所谓的浅拷贝。
+   	引用数据类型将一个变量的引用值赋值个另一个变量，只是原来这个变量存储的引用地址赋值给
+    了这个新的变量，只要任意个变量改变了存储的这个值，那么所有保存这个引用值的变量都会改
+    变,引用数据直接赋值也就是所谓的浅拷贝。
        对象：
            let obj = {
                a: "1",
@@ -70,7 +75,8 @@ sidebar: auto
 4. 确定类型
 
    ```js
-   通过typeof去检测除了 null 的基础数据类型是有意义的，因为能够准确的知道类型，检测引用数据类型的意义其实并不大，此时就可以 instanceof 去确定引用的数据类型
+   通过typeof去检测除了 null 的基础数据类型是有意义的，因为能够准确的知道类型，检测引
+   用数据类型的意义其实并不大，此时就可以 instanceof 去确定引用的数据类型
 
        let mao = new Map();
        console.log(mao instanceof Object); // true
@@ -80,7 +86,9 @@ sidebar: auto
        console.log(fun instanceof Object);// true
        console.log(fun instanceof Function);// true
 
-   通过 instanceof 检测基础数据类型会直接返回false，检测引用数据类型，所有的数据类型通过 instanceof 与 Object 检测都是返回true，即使是函数也是true， 所以可以直接检测对应的类型，如Array，Function，Map等
+   通过 instanceof 检测基础数据类型会直接返回false，检测引用数据类型，所有的数据类型通
+   过 instanceof 与 Object 检测都是返回true，即使是函数也是true， 所以可以直接检测对应
+   的类型，如Array，Function，Map等
    ```
 
 5. const 定义的引用数据类型如何不让更改
