@@ -1,3 +1,7 @@
+---
+sidebar: auto
+---
+
 # git
 
 ### git 初始化
@@ -558,8 +562,64 @@
      	git clone --recurse-submodules https://github.com/chaconinc/MainProject
      ```
 
-   -
+### 合并不同项目的 commit
 
-   -
+> 假如现在有两个项目分别为 A 和 B 项目，现在要将 A 项目的某个 commit 合并到 B 项目上
 
-6.
+1. 先在 A 项目上 git remote -v 查看远程地址，并赋值下来，然后再去 B 项目上添加 A 项目
+   的远程地址
+
+   ```git
+   假如A项目的远端地址为:
+      https://gitee.com/linda-lang/vue3.git
+
+   那么在 B 项目上执行以下命令，将A项目的远端地址添加到B项目上
+      git remote add source https://gitee.com/linda-lang/vue3-case.git
+   ```
+
+2. 在 B 项目中拉取 A 项目的代码，但不合并到本地，使用`fetch`拉取，因为上面将 A 项目的远端
+   地址添加到了 B 项目上，并命名为 `source`,所以可以直接拉取 A 项目的代码。此时 B 项目的本地
+   就拥有了 A 项目的完整代码。
+
+   ```git
+   git pull = git fetch + git merge
+
+   git fetch source
+   ```
+
+3. 在 A 项目中使用`git log`查看你想要合并 commit 的哈希值，然后在 B 项目中使用`cherry-pick`进行合并
+
+   > 假如你要合并的 commit 的哈希值为 72057cfaeb87dafa041829a593ea270c9d096165
+
+   ```git
+   git cherry-pick 72057cfaeb87dafa041829a593ea270c9d096165
+   如果没有冲突则可以直接 pull 再 push 到远端
+
+   如果有冲突，解决完冲突后，执行
+   git add .
+   git cherry-pick --continue
+   git pull --rebase
+   git push
+   ```
+
+4. `cherry-pick`说明
+   （**注意：** cherry-pick 也可对同一个项目的不同分支的 commit 进行操作）
+
+   > 如果 A 项目提交了新的 commit，并且你要合并的 commit 在新提交的记录上，那么在
+   > B 项目中要先执行`git fetch`拉取 A 项目的远端代码，然后再去 B 项目中执行
+   > `cherry-pick`
+
+   ```git
+   git cherry-pick --continue
+      使用`.git/sequencer`中的信息继续进行中的操作。可以用来在解决拣选或还原
+      失败的冲突后继续执行
+
+   git cherry-pick --skip
+      跳过当前的提交，继续进行队列中其余的命令。
+
+   git cherry-pick --quit
+      忽略当前正在进行的操作。 可以用来在拣选或还原失败之后清除序列器的状态。
+
+   git cherry-pick --abort
+      取消操作并返回到预排序状态。
+   ```
