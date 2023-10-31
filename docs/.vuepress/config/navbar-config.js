@@ -22,4 +22,9 @@ export const navbarConfig = [
       },
     ],
   },
+  {
+    text: "mysql",
+    link: "/mysql/",
+    activeMatch: "^/mysql/",
+  },
 ];
