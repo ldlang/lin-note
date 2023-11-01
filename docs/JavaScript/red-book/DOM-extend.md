@@ -4,7 +4,7 @@ sidebar: auto
 
 # Dom 扩展
 
-### Selectors API
+## Selectors API
 
 1. **querySelector**
 
@@ -38,5 +38,22 @@ sidebar: auto
      // 获取页面上第一个 div标签有 bd 这个class的标签
      const dom = document.querySelector("div.bd");
      ```
+
+2. **querySelectorAll**
+
+等同于 querySelector，只不过得到是所有符合条件的节点数组快照，没有实时获取是因为如果同时获取并更改大量的 dom，会有性能上的问题。
+
+## html5
+
+### css 类扩展
+
+1. **getElementsByClassName**
+
+   通过 class 获取 dom，返回所有匹配的节点数组
+
+   ```js
+   // 得到所有class上有 aa 属性的节点
+   document.getElementsByClassName("aa");
+   ```
 
 2.
