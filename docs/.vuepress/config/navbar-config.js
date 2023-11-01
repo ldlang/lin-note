@@ -24,7 +24,16 @@ export const navbarConfig = [
   },
   {
     text: "mysql",
-    link: "/mysql/",
     activeMatch: "^/mysql/",
+        children: [
+      {
+        text: "基础部分",
+        link: "/mysql/basis.md",
+      },
+      {
+        text: "SELECT部分",
+        link: "/mysql/SELECT.md",
+      },
+    ],
   },
 ];

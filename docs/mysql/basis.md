@@ -8,19 +8,19 @@ sidebar: auto
 
 1. DDL：数据库定义语言，用来定义数据库对象（数据库，表，字段）。
 
-   ```mysq
+   ```sq
    CREATE ALTER DROP RENAME TRUNCATE
    ```
 
 2. DML：数据操作语言，数据的操作，用来对数据库表中的数据进行增删改查。
 
-   ```mysql
+   ```sql
    INSERT DELETE UPDATE SELECT
    ```
 
 3. DCL：数据控制语言，用来创建数据库用户，控制数据库的访问权限。
 
-   ```mysql
+   ```sql
    COMMIT ROLLBACK SAVEPOINT GRANT REVOKE
    ```
 
@@ -49,4 +49,3 @@ sidebar: auto
 
 * source + 文件路径			在命令行中执行
 * 借助图形化的工具
-
