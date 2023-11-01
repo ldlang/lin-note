@@ -32,8 +32,12 @@ export const jsConfig = {
           link: "/javaScript/red-book/DOM.md",
         },
         {
-          text: "14、DOM扩展",
+          text: "15、DOM扩展",
           link: "/javaScript/red-book/DOM-extend.md",
+        },
+        {
+          text: "16、DOM2和DOM3",
+          link: "/javaScript/red-book/DOM2-and-DOM3.md",
         },
       ],
     },

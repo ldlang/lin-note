@@ -455,7 +455,3 @@ newNode.innerText = 7;
      mb.takeRecords(); // [MutationRecord, MutationRecord]
      mb.disconnect();
      ```
-
-   -
-
-2.
