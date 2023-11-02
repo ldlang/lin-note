@@ -39,6 +39,10 @@ export const jsConfig = {
           text: "16、DOM2和DOM3",
           link: "/javaScript/red-book/DOM2-and-DOM3.md",
         },
+        {
+          text: "16、事件",
+          link: "/javaScript/red-book/event.md",
+        },
       ],
     },
   ],
