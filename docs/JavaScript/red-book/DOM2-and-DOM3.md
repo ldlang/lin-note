@@ -76,6 +76,53 @@ sidebar: auto
 
    ![Image](/red-book/offset.png)
 
-2. 客户端尺寸
+2. 客户端尺寸（只读）
 
-3. 
+   `clientHeight`和`clientWidth`是元素内部的空间，不包含滚动条的空间，所有这两个属性常用于确定浏览器视口尺寸。
+
+   ```js
+   一般用于表示视口（<html>或<body>元素）的尺寸。
+   const { clientHeight, clientWidth } = document.documentElement
+   ```
+
+3. 滚动尺寸
+
+   除了html标签，其他的必须要有`overflow`才能滚动。
+
+   如果发生了滚动，那么改变的是父盒子的scrollTop的值，子盒子的还是0，滚动后可以将scrollTop或者scrollLeft设为0就可以将对齐方向滚动到起始位置。
+
+   ```html
+   <div style="width: 200px; height: 200px; overflow: scroll;" id="mydiv">
+   	<div style="width: 300px; height: 300px;background: sandybrown;" id="childDiv">盒子</div>
+   </div>
+   ```
+
+   ```js
+   const myDiv = document.getElementById("mydiv");
+   const childDiv = document.getElementById("childDiv");
+   
+   myDiv.addEventListener("scroll", (e) => {
+       myDiv.scrollTop // 在垂直方向的滚动的距离
+       myDiv.scrollHeight // 被父盒子撑开了高度也是，300
+       childDiv.scrollTop // 永远是0
+       childDiv.scrollHeight // 盒子自身的高度，300
+   })
+   ```
+
+   | 参数         | 说明                                                         |
+   | ------------ | ------------------------------------------------------------ |
+   | scrollHeight | 没有滚动条出现时，元素内容的总高度。                         |
+   | scrollLeft   | 内容区左侧隐藏的像素数，设置这个属性可以改变元素的滚动位置。 |
+   | scrollTop    | 内容区顶部隐藏的像素数，设置这个属性可以改变元素的滚动位置。 |
+   | scrollWidth  | 没有滚动条出现时，元素内容的总宽度。                         |
+
+   ![image](/red-book/scroll.png)
+
+4. 确定元素尺寸及位置
+
+   每个元素身上的`getBoundingClientRect()`方法，返回一个元素尺寸级位置的对象。
+
+   ![image](/red-book/getBoundingClientRect.png)
+
+### 遍历
+
