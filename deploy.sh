@@ -15,3 +15,8 @@ git commit -m 'message'
 
 git push -f git@github.com:ldlang/lin-note.git master:gh-pages
 
+# 返回上一级目录
+cd ..
+
+# 删除dist文件夹
+rm -rf dist
