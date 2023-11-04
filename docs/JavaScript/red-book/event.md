@@ -95,6 +95,152 @@ myDiv.removeEventListener("click", handler, false);
 `event.currentTarget` === `event.target` === `this` === `dom节点`，
 event.type 就可以判断触发事件的类型，比如触发的是 click 事件，那么 event.type 的值就是 click
 
-[event实例属性说明](https://developer.mozilla.org/zh-CN/docs/Web/API/Event)
+[event 实例属性说明](https://developer.mozilla.org/zh-CN/docs/Web/API/Event)
 
-* preventDefault
+**注意** event 对象只在事件处理程序执行期间存在，一旦执行完毕，就会被销毁。
+
+- **preventDefault**
+
+  阻止默认行为，比如，链接的默认行为就是在被单击时导 航到 href 属性指定的 URL。
+
+  ```js
+  // 此时再次点击a标签，就不会发生跳转了
+  const adom = document.querySelector("a");
+  adom.addEventListener("click", (e) => {
+    e.preventDefault();
+  });
+  ```
+
+- **stopPropagation**
+
+  阻止事件冒泡方式事件向外传播。
+
+  ```js
+  adom.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+  ```
+
+## 事件类型
+
+用户界面事件（UIEvent）：涉及与 BOM 交互的通用浏览器事件。
+
+焦点事件（FocusEvent）：在元素获得和失去焦点时触发。
+
+鼠标事件（MouseEvent）：使用鼠标在页面上执行某些操作时触发。
+
+滚轮事件（WheelEvent）：使用鼠标滚轮（或类似设备）时触发。
+
+输入事件（InputEvent）：向文档中输入文本时触发。
+
+键盘事件（KeyboardEvent）：使用键盘在页面上执行某些操作时触发。
+
+合成事件（CompositionEvent）：在使用某种 IME（Input Method Editor，输入法编辑器）输入
+
+字符时触发。
+
+### 用户界面事件
+
+1. **load**事件
+
+   - 在 window 上添加对`load`事件的监听，这个监听事件则会在整个页面加载完毕后触发
+
+     ```js
+     window.addEventListener("load", () => {
+       console.log("页面加载完毕");
+     });
+     ```
+
+   - 在 img 上添加`load`事件，则会在整张图片都渲染完毕后触发事件。
+
+     ```js
+     const img = document.querySelector("img");
+     img.addEventListener("load", () => {
+       console.log("图片加载完成了");
+     });
+     ```
+
+   - 根据 DOM2 Events，load 事件应该在 document 而非 window 上触发。可是为了
+
+     向后兼容，所有浏览器都在 window 上实现了 load 事件，
+
+     但是通过获取 dom 添加事件测试并未生效，只能在节点上加事件。
+
+     ```js
+     // 有效
+     <body onload="console.log('加载完毕了')">
+
+     // 并未生效
+     document.body.addEventListener('load', () => {
+         console.log('页面加载完毕');
+     })
+     ```
+
+2. **unLoad**事件
+
+   监听页面卸载
+
+   ```js
+   window.addEventListener("unload", () => {
+     localStorage.setItem("close", "关闭");
+   });
+   ```
+
+3. **resize**事件
+
+   监听浏览器窗口尺寸变化
+
+   ```js
+   window.addEventListener("resize", () => {
+     console.log("尺寸变化了");
+   });
+   ```
+
+4. **scroll**事件
+
+   监听页面滚动，或者一个盒子上有`overflow`，也可以对这个盒子添加`scroll`事件的监听
+
+   ```js
+   window.addEventListener("scroll", () => {
+     console.log("页面滚动了");
+   });
+   ```
+
+### 焦点事件
+
+- blur 失去焦点，不会冒泡
+- focusout 失去焦点，会向外冒泡
+- focus 获取焦点，不会冒泡
+- focusin 获取焦点，会向外冒泡
+
+### 鼠标和滚轮事件
+
+- click 在用户单击鼠标主键（通常是左键）或按键盘回车键时触发
+- dblclick 在用户双击鼠标主键（通常是左键）时触发
+- [mdn 事件说明](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/click_event)
+
+1. 客户端坐标
+
+   鼠标事件发生时，鼠标的位置会被保存在 clientX 和 clientY 上，这两个属性表示的是该点距离当前浏览器可视窗口的顶部，和左边的距离。如果页面滑动这两个值距离可视窗口的大小也会改变。
+
+   ```js
+   const btn = document.getElementById("btn");
+   btn.addEventListener("click", (event) => {
+     const { clientX, clientY } = event;
+     console.log(clientX, clientY);
+   });
+   ```
+
+2. 页面坐标
+
+   页面坐标是，该点距离页面顶部（pageY）和页面左边（pageX）的距离，页面无论怎么动，这两个值都不会改变的。如果页面不产生滚动，那么 页面坐标 = 客户端坐标
+
+   ```js
+   const btn = document.getElementById("btn");
+   btn.addEventListener("click", (event) => {
+     const { pageX, pageY } = event;
+     console.log(pageX, pageY);
+   });
+   ```
+
+3.
