@@ -243,4 +243,85 @@ event.type 就可以判断触发事件的类型，比如触发的是 click 事�
    });
    ```
 
-3.
+3. 屏幕坐标
+
+   是距离屏幕左边（screenX）和顶部的距离（screenY）,和浏览器的位置就无关了，永远都是基于屏幕的位置。
+
+   ```js
+   const btn = document.getElementById("btn");
+   btn.addEventListener("click", (event) => {
+     const { screenX, screenY } = event;
+     console.log(screenX, screenY);
+   });
+   ```
+
+4. 修饰键
+
+   修饰键 Shift、Ctrl、Alt 和 Meta，分别对应 event 的 shiftKey、ctrlKey、altKey 和 metaKey，
+   比如在 windonw 上多选的时候会按住 Ctrl 键，然后使用鼠标左键进行多选。event 上的修饰键也是同样的，比如按住了 Ctrl 键，那么在用鼠标左键点击的时候，`event.ctrlKey`就会返回 true，否则返回 false。
+
+   ```js
+   btn.addEventListener("click", (event) => {
+     const { shiftKey } = event;
+     console.log(shiftKey); // 按着键盘的shift点击鼠标左键则返回true，否则为false
+   });
+   ```
+
+5. 相关元素
+
+   `relatedTarget`，只有监听在 muoseover 和 mouseout 事件时，event 身上才会有这个属性，如果监听的是 muoseout，那么这个属性得到的是从当前节点移出后，遇到第一个节点的信息，如果是 muoseover，那么得到的节点信息是，从那个节点移入到当前节点。
+
+   ```js
+   const btn = document.getElementById("btn");
+   btn.addEventListener("mouseout", (event) => {
+     const { relatedTarget } = event;
+     console.log(relatedTarget); // 从当前节点移出后遇到的第一个节点的节点信息
+   });
+   ```
+
+6. 鼠标按键
+
+   在 event 上有一个`button`属性，通常情况下 0 表示鼠标主键（左键）、1 表示鼠标中键（通常 也是滚轮键）、2 表示鼠标副键。
+
+7. 额外事件信息
+
+   在 event 上的`detail`属性，如果鼠标在当前节点上没有移动，并且快速单击鼠标左键，那么 detail 的值就会累加，统计你点击了多少次。
+
+   ```js
+   const btn = document.getElementById("btn");
+   const input = document.querySelector("input");
+   btn.addEventListener("click", (event) => {
+     const { detail } = event;
+     console.log(detail); // 鼠标不动，且不停的单击，detail的值就会累加
+   });
+   ```
+
+8. mousewheel 事件
+
+   监听 mousewheel 事件时，event 上会有一个`wheelDelta`的属性，鼠标滚轮往上滚的时得到的是一个 120 的值，往下滚得到的是 -120 的值，所以只需要判断正负就可以了
+
+   ```js
+   const btn = document.getElementById("btn");
+   btn.addEventListener("mousewheel", (event) => {
+     const { wheelDelta } = event;
+     console.log(wheelDelta); // 往上滚为120，往下滚为-120
+   });
+   ```
+
+### 键盘与输入事件
+
+- keydown 用户按下键盘的摸个键时触发，如果按住不放就会连续触发
+- textInput 当用户编辑的文本，被输入到输入框的时候触发
+- keyup 用户释放键盘上的某个键时。
+
+键盘事件也支持修饰键，shiftKey、ctrlKey、altKey 和 metaKey。比如可以判断用户是否同时按下了 ctrl + c 进行复制。
+
+```js
+window.addEventListener("keydown", (event) => {
+  const { ctrlKey, code, keyCode } = event;
+  if (keyCode === 67 && ctrlKey) {
+    event.preventDefault();
+    console.log("用户同时按下了ctrl + c 进行了复制,并且被阻止了");
+  }
+});
+```
