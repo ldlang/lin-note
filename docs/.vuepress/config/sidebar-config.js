@@ -43,6 +43,10 @@ export const jsConfig = {
           text: "16、事件",
           link: "/javaScript/red-book/event.md",
         },
+        {
+          text: "17、动画与canvas",
+          link: "/javaScript/red-book/animation-and-canvas.md",
+        },
       ],
     },
   ],
