@@ -316,6 +316,8 @@ event.type 就可以判断触发事件的类型，比如触发的是 click 事�
 
 键盘事件也支持修饰键，shiftKey、ctrlKey、altKey 和 metaKey。比如可以判断用户是否同时按下了 ctrl + c 进行复制。
 
+阻止用户使用 ctrl + c 复制网页的内容
+
 ```js
 window.addEventListener("keydown", (event) => {
   const { ctrlKey, code, keyCode } = event;
@@ -325,3 +327,115 @@ window.addEventListener("keydown", (event) => {
   }
 });
 ```
+
+1. 键码
+
+   键盘上的每个键都有自己`keyCode`，从 event 上获取每个键的`keyCode`
+
+   ```js
+   window.addEventListener("keydown", (event) => {
+     const { keyCode } = event;
+     console.log("keyCode", keyCode);
+   });
+   ```
+
+2. **textInput**事件
+
+   作 为对 keypress 的替代，textInput 事件的行为有些不一样。一个区别是 keypress 会在任何可以获 得焦点的元素上触发，而 textInput 只在可编辑区域上触发。另一个区别是 textInput 只在有新字 符被插入时才会触发，而 keypress 对任何可能影响文本的键都会触发（包括退格键）。
+
+### 合成事件
+
+- 在 compositionstart 事件中，包含正在编辑的文本（例如，已经选择了文本但还没替换）；
+
+- 在 compositionupdate 事件中，包含要插入的新字符（正在输入）；
+
+- 在 compositionend 事件中，包含本次合成过程中输入的全部内容（输入完成）。
+
+  ```js
+  const btn = document.getElementById("btn");
+
+  btn.addEventListener("compositionstart", (event) => {
+    console.log("开始输入", event.data);
+  });
+
+  btn.addEventListener("compositionupdate", (event) => {
+    console.log("正在输入", event.data);
+  });
+
+  btn.addEventListener("compositionend", (event) => {
+    console.log("结束输入", event.data);
+  });
+  ```
+
+### HTML5 事件 （有兼容性问题，谨慎使用）
+
+1. **contextmenu** 事件
+
+   监听鼠标右键的点击
+
+   ```js
+   window.addEventListener("contextmenu", (event) => {
+     event.preventDefault();
+     console.log("右键被点击了");
+   });
+   ```
+
+2. **beforeunload** 事件
+
+   如果当前这个窗口要打开一个新的网页，则会触发这个事件，并且弹出一个 confirm 的选择框
+
+   ```js
+   window.addEventListener("beforeunload", (event) => {
+     event.preventDefault();
+   });
+   ```
+
+3. **DOMContentLoaded** 事件
+
+   `load`事件时页面完全加载完毕（包括图片，css 等），而`DOMContentLoaded`则会在 dom 数构建完毕就触发，而不会等外部的资源加载完毕。
+
+   ```js
+   window.addEventListener("DOMContentLoaded", (event) => {
+     console.log("dom树已经加载完毕");
+   });
+   ```
+
+4. **hashchange** 事件
+
+   监听路由中`#`后面值的变化，得到的是完整的路径，event 对象中会新增两个值，分别是 oldURL 和 newURL
+
+   ```js
+   window.addEventListener("hashchange", (event) => {
+     console.log(event.oldURL, event.newURL);
+     console.log(location.hash); // 得到#后面的内容，包括#号
+   });
+   ```
+
+## 内存与性能
+
+### 事件委托
+
+通过个父级添加事件，利用事件的冒泡，给子级对应事件添加处理。
+
+```js
+const ulDom = document.querySelector("#ulDom");
+ulDom.addEventListener("click", (e) => {
+  switch (
+    Number(e.target.innerText) // 通过判断子级的文本来确定点击的子级
+  ) {
+    case 1:
+      alert("你点击了1");
+      break;
+    case 2:
+      alert("你点击了2");
+      break;
+    default:
+      alert("你点击了其他");
+      break;
+  }
+});
+```
+
+### 删除事件处理程序
+
+如何一个节点不是被`removeChild`或者`repalceChild`删除的，那么节点上注册的事件就不会在内存中被删除，依然会贮存在内存中，最好的方式就是如果这个节点不是被上面两个方式移除的，那么将他注册的事件一并移除。事件委托也能很好的解决这个问题。
