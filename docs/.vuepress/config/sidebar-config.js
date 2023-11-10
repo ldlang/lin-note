@@ -40,12 +40,20 @@ export const jsConfig = {
           link: "/javaScript/red-book/DOM2-and-DOM3.md",
         },
         {
-          text: "16、事件",
+          text: "17、事件",
           link: "/javaScript/red-book/event.md",
         },
         {
-          text: "17、动画与canvas",
+          text: "18、动画与canvas",
           link: "/javaScript/red-book/animation-and-canvas.md",
+        },
+        {
+          text: "19、表单脚本",
+          link: "/javaScript/red-book/form.md",
+        },
+        {
+          text: "20、javaScript-API",
+          link: "/javaScript/red-book/javaScript-API.md",
         },
       ],
     },
