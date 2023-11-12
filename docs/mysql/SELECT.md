@@ -148,3 +148,5 @@ SELECT 字段名 FROM 表名 WHERE 条件;
 ```sql
 SELECT * FROM emp WHERE salary > 5000;
 ```
+
+注意：WHERE 必须跟在 FORM 的后面

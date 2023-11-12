@@ -38,6 +38,10 @@ export const navbarConfig = [
         text: "运算符",
         link: "/mysql/operator.md",
       },
+      {
+        text: "排序和分页",
+        link: "/mysql/sort-and-limit.md",
+      },
     ],
   },
 ];
