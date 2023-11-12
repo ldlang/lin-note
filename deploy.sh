@@ -11,7 +11,7 @@ cd docs/.vuepress/dist
 
 git init
 git add -A
-git commit -m 'message'
+git commit -m '部署git-page'
 
 git push -f git@github.com:ldlang/lin-note.git master:gh-pages
 
