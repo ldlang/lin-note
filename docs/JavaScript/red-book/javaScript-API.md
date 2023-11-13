@@ -220,3 +220,62 @@ drop.addEventListener("drop", function (event) {
   }
 });
 ```
+
+## 原生拖放
+
+### 拖放事件
+
+1. 某个元素被拖动时，会依次执行 dragstart，drag，dragend 事件
+2. 当一个元素被拖拽到目标元素的时候，目标元素会依次触发 dragenter，dragover，dragleave 或 drop。如果元素在目标元素中释放，则会触发 drop 事件，如果离开的目标元素则会触发 dragleave 事件。
+
+### 自定义放置目标
+
+一个拖拽元素，如果放到不可放置的目标时，会出现一个红色的圆圈中间一条斜杆。可以通过覆盖元素 dragenter 和 dragover 事件的默认行为，可以把任何元素转为有限的放置目标。
+
+创建一个放置目标：
+
+```js
+const drag = document.querySelector("#drag");
+drag.addEventListener("dragenter", function (event) {
+  event.preventDefault();
+  console.log("dragenter");
+});
+drag.addEventListener("dragover", function (event) {
+  event.preventDefault();
+  console.log("dragover");
+});
+```
+
+### dataTransfer 对象
+
+dataTransfer 上有两个传递数据的方法 setData 和 getData，在拖拽元素上通过 setData 可以设置想要传递的值，在目标元素上通过 getData 可以接收到拖拽元素上的数据。传递数据之前要先声明传递数据的 MIME 类型。
+
+```js
+// 拖拽元素上
+const dragdiv = document.querySelector("#dragdiv");
+dragdiv.addEventListener("dragstart", function (event) {
+  event.dataTransfer.setData("text", "我是拖拽框的数据");
+});
+
+// 目标元素上
+const drag = document.querySelector("#drag");
+drag.addEventListener("dragenter", function (event) {
+  event.preventDefault();
+});
+drag.addEventListener("drop", function (event) {
+  event.preventDefault();
+  console.log(event.dataTransfer.getData("text")); // 我是拖拽框的数据
+});
+```
+
+### dropEffect 与 effectAllowed
+
+dropEffect 属性可以告诉浏览器允许那种放置行为，这些行为的更改必须在放置目标的 dragenter 事件中进行。
+
+- 'none'：被拖动的元素不能放到这里，这是除了文本以外是所有元素的默认值
+- 'move'：被拖动元素应该移动到放置目标。
+- 'copy'：被拖动元素应该复制到放置目标。
+- 'link'：表示放置目标会导航到被拖动元素。
+
+必须同时设置 effectAllowed，否则 dropEffect 设置也没有意义。effectAllowed 属性表示对被拖动的元素是否允许 dropEffect。必须在拖动元素的 dragstart 事件中设置这个属性的值。
+
