@@ -191,33 +191,32 @@ file.addEventListener("change", function (event) {
 通过监听任何一个元素的**dragleave**、**dragover** 和 **drop**的事件，**dragover** 事件必须阻止他的默认行为，不然释放鼠标左键时，`drop`事件无法捕获到文件信息。每个事件最好都阻止他们的默认行为，他们都会往 event 上添加一个 `dataTransfer`对象，里面就包含了退拽的文件，存储在`flies`里面。
 
 ```js
-const drop = document.querySelector('#drop')
-drop.addEventListener('dragover', function (event) {
-    event.preventDefault()
-    console.log("文件进入了目标框");
-})
+const drop = document.querySelector("#drop");
+drop.addEventListener("dragover", function (event) {
+  event.preventDefault();
+  console.log("文件进入了目标框");
+});
 
-drop.addEventListener('dragleave', function (event) {
-    event.preventDefault()
-    logger.log("文件离开了目标框");
-})
+drop.addEventListener("dragleave", function (event) {
+  event.preventDefault();
+  logger.log("文件离开了目标框");
+});
 
-drop.addEventListener('drop', function (event) {
-    event.preventDefault()
-    console.log("文件被拖拽到目标框，并且释放了鼠标左键");
-    console.log('drop', event.dataTransfer);
+drop.addEventListener("drop", function (event) {
+  event.preventDefault();
+  console.log("文件被拖拽到目标框，并且释放了鼠标左键");
+  console.log("drop", event.dataTransfer);
 
-    if (event.dataTransfer) {
-        const reader = new FileReader()
-        reader.readAsDataURL(event.dataTransfer.files[0])
-        reader.addEventListener('load', () => {
-            console.log(reader.result); // 得到拖拽文件的base64
-            // 将拖拽的图片放到页面上。
-            const img = document.createElement('img')
-            img.src = reader.result
-            document.querySelector('#box').appendChild(img)
-        })
-    }
-})
+  if (event.dataTransfer) {
+    const reader = new FileReader();
+    reader.readAsDataURL(event.dataTransfer.files[0]);
+    reader.addEventListener("load", () => {
+      console.log(reader.result); // 得到拖拽文件的base64
+      // 将拖拽的图片放到页面上。
+      const img = document.createElement("img");
+      img.src = reader.result;
+      document.querySelector("#box").appendChild(img);
+    });
+  }
+});
 ```
-
