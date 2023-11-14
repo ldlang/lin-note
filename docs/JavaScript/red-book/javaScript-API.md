@@ -272,6 +272,8 @@ drag.addEventListener("drop", function (event) {
 
 dropEffect 属性可以告诉浏览器允许那种放置行为，这些行为的更改必须在放置目标的 dragenter 事件中进行。
 
+dropEffect 的值：
+
 - 'none'：被拖动的元素不能放到这里，这是除了文本以外是所有元素的默认值
 - 'move'：被拖动元素应该移动到放置目标。
 - 'copy'：被拖动元素应该复制到放置目标。
@@ -279,3 +281,172 @@ dropEffect 属性可以告诉浏览器允许那种放置行为，这些行为的
 
 必须同时设置 effectAllowed，否则 dropEffect 设置也没有意义。effectAllowed 属性表示对被拖动的元素是否允许 dropEffect。必须在拖动元素的 dragstart 事件中设置这个属性的值。
 
+effectAllowed 的值：
+
+- "uninitialized"：没有给被拖动元素设置动作。
+- "none"：被拖动元素上没有允许的操作。
+- "copy"：只允许"copy"这种 dropEffect。
+- "link"：只允许"link"这种 dropEffect。
+- "move"：只允许"move"这种 dropEffect。
+- "copyLink"：允许"copy"和"link"两种 dropEffect。
+- "copyMove"：允许"copy"和"move"两种 dropEffect。
+- "linkMove"：允许"link"和"move"两种 dropEffect。
+- "all"：允许所有 dropEffect。
+
+### 可拖动能力
+
+默认的情况下，只有图片、链接和文本是可拖动的，其他的标签要拖动必须要设置 draggable 为 true，才是被拖动。
+
+```html
+<div draggable="true">我可以被拖动了</div>
+```
+
+## Notifications API
+
+### 通知权限
+
+通过 Notification 上的 requestPermission 方法查询是否能够发送通知的权限。requestPermission 方法返回一个 promise，通过结果可以得到是否能够向用户发送通知。granted 代表同意，denied 代表拒绝，一旦拒绝只能由用户手动开启，程序上无法做出任何更改。
+
+```js
+Notification.requestPermission().then((res) => {
+  console.log(res); // granted 同意
+});
+```
+
+### 显示和隐藏通知
+
+1. 在 window 中弹出一个通知。接收两个参数，一个标题和一个配置对象。
+
+   ```js
+   new Notification("在window中打开通知", {
+     body: "这是一条通知",
+     image: "./avatar.jpg",
+     vibrate: true, // 震动
+   });
+   ```
+
+2. 关闭通知
+
+   ```js
+   const n = new Notification("在window中打开通知", { body: "这是一条通知" });
+
+   setTimeout(() => {
+     // 关闭通知
+     n.close();
+   }, 2000);
+   ```
+
+### 通知生命周期回调
+
+通过监听 Notification 构造函数返回对象上的事件，可以得到弹窗的状态。
+
+- show：在通知显示时触发。
+- click：在通知被点击时触发。
+- close：在通知消失或通过 close()关闭时触发。
+- error：在发生错误阻止通知显示时触发。
+
+```js
+// 发送一个通知
+const n = new Notification("在window中打开通知", { body: "这是一条通知" });
+
+n.addEventListener("show", () => {
+  console.log("通知打开了");
+});
+
+n.addEventListener("close", () => {
+  console.log("通知关闭了");
+});
+
+n.addEventListener("click", () => {
+  console.log("通知被点击了");
+});
+
+n.addEventListener("error", () => {
+  console.log("通知打开失败了");
+});
+```
+
+## Page Visibility API
+
+查看当前标签页的状态，是被隐藏了还是显示。通过查看 document.visibilityState 确定。可以通过监听 visibilitychange 事件来实时监听当前标签页的状态。
+
+- hidden：隐藏
+- visible：显示
+- prerender：页面此时正在预渲染中，并且对用户是不可见的。
+
+```js
+window.addEventListener("visibilitychange", function () {
+  console.log(document.visibilityState); // hidden 隐藏
+});
+```
+
+## Web 组件
+
+### html 模板
+
+1. **DocumentFragment**
+
+   使用 DocumentFragment 的方式向页面添加节点，可以一次性添加所有子节点，并且最多只会有一次布局重排。添加完以后 DocumentFragment 里面的节点就会被清空。
+
+   ```html
+   <template id="temp">
+     <div>我的dom树已经被解析了，但是没有显示在页面上</div>
+   </template>
+   ```
+
+   - 通过 template 节点的 content 属性就可以拿到这个节点的 DocumentFragment，DocumentFragment 可以使用 dom 节点的查询方法查询其节点。
+
+     ```js
+     // 在DocumentFragment对象上使用节点查询的方法
+     const fragment = document.querySelector("#temp").content;
+     console.log(fragment.querySelector("p")); // <p>...<p>
+     ```
+
+   - 通过 new DocumentFragment 的方式创建这个对象。
+
+     ```js
+     const fragment = new DocumentFragment();
+     ```
+
+   - 向页面指定节点中添加节点
+
+     ```js
+     const foo = document.getElementById("foo");
+     // 创建 fragment 对象
+     const fragment = new DocumentFragment();
+     const button = document.querySelector("button");
+     button.addEventListener("click", () => {
+       // 创建节点
+       for (let i = 0; i < 10; i++) {
+         const p = document.createElement("p");
+         p.innerText = i;
+         fragment.appendChild(p);
+       }
+       // 把创建完的节点添加到指定节点下面
+       foo.appendChild(fragment);
+       // 节点向页面添加了，它里面的节点页就没了
+       console.log(fragment.children.length); // 0
+     });
+     ```
+
+2. \<template\>标签
+
+   将 template 里面的节点移动或复制到页面的指定节点下面。如果是移动 template 下面的节点也会被清空。如果是复制，那么需要借助 importNote 方法克隆。
+
+   ```js
+   <button>添加子节点</button>
+
+   <template id="foo">
+       <p>template</p>
+   </template>
+
+   const foo = document.getElementById('foo');
+   const fragment = foo.content
+   const button = document.querySelector('button');
+   button.addEventListener('click', () => {
+   	// 移动节点
+       button.appendChild(fragment)
+   	// 复制节点
+       button.appendChild(document.importNode(fragment, true))
+   });
+   ```
