@@ -55,6 +55,10 @@ export const jsConfig = {
           text: "20、javaScript-API",
           link: "/javaScript/red-book/javaScript-API.md",
         },
+        {
+          text: "20、错误处理与调试",
+          link: "/javaScript/red-book/err-and-debug.md",
+        },
       ],
     },
   ],
