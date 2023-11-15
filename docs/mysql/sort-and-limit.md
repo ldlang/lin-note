@@ -72,7 +72,3 @@ sidebar: auto
    ```sql
    SELECT 字段 FROM LIMIT 条目数 OFFSET 偏移量（页码）;
    ```
-
-   
-
-7. 

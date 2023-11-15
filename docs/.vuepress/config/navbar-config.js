@@ -24,24 +24,7 @@ export const navbarConfig = [
   },
   {
     text: "mysql",
+    link: "/mysql/",
     activeMatch: "^/mysql/",
-    children: [
-      {
-        text: "基础部分",
-        link: "/mysql/basis.md",
-      },
-      {
-        text: "SELECT部分",
-        link: "/mysql/SELECT.md",
-      },
-      {
-        text: "运算符",
-        link: "/mysql/operator.md",
-      },
-      {
-        text: "排序和分页",
-        link: "/mysql/sort-and-limit.md",
-      },
-    ],
   },
 ];

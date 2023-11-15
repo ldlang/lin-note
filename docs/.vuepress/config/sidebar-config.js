@@ -77,4 +77,27 @@ export const jsConfig = {
       ],
     },
   ],
+  "/mysql/": [
+    {
+      text: "mysql笔记",
+      children: [
+        {
+          text: "1、基础部分",
+          link: "/mysql/basis.md",
+        },
+        {
+          text: "2、SELECT部分",
+          link: "/mysql/SELECT.md",
+        },
+        {
+          text: "3、运算符",
+          link: "/mysql/operator.md",
+        },
+        {
+          text: "4、排序和分页",
+          link: "/mysql/sort-and-limit.md",
+        },
+      ],
+    },
+  ],
 };
