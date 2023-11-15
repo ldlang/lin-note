@@ -97,6 +97,10 @@ export const jsConfig = {
           text: "4、排序和分页",
           link: "/mysql/sort-and-limit.md",
         },
+        {
+          text: "5、多表查询",
+          link: "/mysql/multiple-select.md",
+        },
       ],
     },
   ],
