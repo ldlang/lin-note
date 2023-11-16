@@ -63,6 +63,10 @@ export const jsConfig = {
           text: "23、JSON",
           link: "/javaScript/red-book/JSON.md",
         },
+        {
+          text: "23、Web Socket",
+          link: "/javaScript/red-book/Web-Socket.md",
+        },
       ],
     },
   ],
