@@ -55,13 +55,13 @@ app.get(/a/, function (req, res) {
 
 ### 路径参数
 
-带有 : 的路径其实就是路径参数，获取路径参数通过req里面的params，最后会得到路径参数组成的对象。
+带有 : 的路径其实就是路径参数，获取路径参数通过 req 里面的 params，最后会得到路径参数组成的对象。
 
 ```js
 // 指定路由的参数
-app.get('/users/:userId/books/:bookId', function (req, res) {
-    res.send(req.params)
-})
+app.get("/users/:userId/books/:bookId", function (req, res) {
+  res.send(req.params);
+});
 // 其中:userId获取到的值就赋值给users，:bookId就赋值给books，组成一个对象
 // {user: userId的值, book: bookId的值 }
 ```
@@ -69,42 +69,46 @@ app.get('/users/:userId/books/:bookId', function (req, res) {
 带有 - 或 . 的参数
 
 ```js
-router.post('/user/:id-:name', function (req, res, next) {
-    res.send(req.params)
+router.post("/user/:id-:name", function (req, res, next) {
+  res.send(req.params);
 });
 // 请求方式
-axios.post('/api/user/15-tom')  //  响应结果 {"id":"15","name":"tom"}
+axios.post("/api/user/15-tom"); //  响应结果 {"id":"15","name":"tom"}
 
-router.post('/user/:id-:name', function (req, res, next) {
-    res.send(req.params)
+router.post("/user/:id-:name", function (req, res, next) {
+  res.send(req.params);
 });
 // 请求方式
-axios.post('/api/user/15.tom') // 响应结果 {"id":"15","name":"tom"}
+axios.post("/api/user/15.tom"); // 响应结果 {"id":"15","name":"tom"}
 ```
 
 ### 路线处理程序
 
-同一个路由由多个函数共同完成逻辑，但路由上一定要接收一个next参数，路由才能被放行到下一个函数里面。
+同一个路由由多个函数共同完成逻辑，但路由上一定要接收一个 next 参数，路由才能被放行到下一个函数里面。
 
 ```js
-router.get('/user/b', (req, res, next)=> {
-    console.log('我被执行了')
-    next()
-}, (req, res)=> {
-    res.send('我也被执行了')
-})
+router.get(
+  "/user/b",
+  (req, res, next) => {
+    console.log("我被执行了");
+    next();
+  },
+  (req, res) => {
+    res.send("我也被执行了");
+  }
+);
 
-也可以是一组函数
-    let cb1 = (req, res, next) => next() // 放行
-    let cb2 = (req, res) => res.send('我是c函数')
-    router.get('/user', [cb1, cb2])
+也可以是一组函数;
+let cb1 = (req, res, next) => next(); // 放行
+let cb2 = (req, res) => res.send("我是c函数");
+router.get("/user", [cb1, cb2]);
 
-或者
-	let cb0 = (req, res, next)=> next()
-    let cb1 = (req, res, next) => next()
-    router.get('/user', [cb0, cb1], (req, res) => {
-      res.send('我是响应结果')
-    })
+或者;
+let cb0 = (req, res, next) => next();
+let cb1 = (req, res, next) => next();
+router.get("/user", [cb0, cb1], (req, res) => {
+  res.send("我是响应结果");
+});
 ```
 
 ### route()
@@ -112,21 +116,22 @@ router.get('/user/b', (req, res, next)=> {
 同一个路由支持不同的请求方式,通过处理函数，请求方式不同，响应结果也不同
 
 ```js
-router.route('/user')
-    .get(function (req, res) {
-    res.send('get')
-})
-    .post(function (req, res) {
-    res.send('post')
-})
-    .put(function (req, res) {
-    res.send('put')
-})
+router
+  .route("/user")
+  .get(function (req, res) {
+    res.send("get");
+  })
+  .post(function (req, res) {
+    res.send("post");
+  })
+  .put(function (req, res) {
+    res.send("put");
+  });
 ```
 
 ### 路由分模块
 
-创建不同的路由模块，对不同模块下的js进行统一的处理
+创建不同的路由模块，对不同模块下的 js 进行统一的处理
 
 ```js
 创建一个users.js路由模块，写入一下内容
@@ -148,19 +153,19 @@ router.route('/user')
 
 ### 创建一个中间件
 
-一旦挂载了这个中间件，那么所有的路由都会先经过这个中间件，然后才会到达路由上去，中间件可以做很多需要统一处理的事，例如统一的校验token、cookie。
+一旦挂载了这个中间件，那么所有的路由都会先经过这个中间件，然后才会到达路由上去，中间件可以做很多需要统一处理的事，例如统一的校验 token、cookie。
 
 ```js
-let express = require('express');
+let express = require("express");
 let router = express.Router();
 
 // 创建中间件
-let middleware = (req, res, next)=> {
-  console.log('middleware')
-  next()
-}
+let middleware = (req, res, next) => {
+  console.log("middleware");
+  next();
+};
 // 挂载中间件
-router.use(middleware)
+router.use(middleware);
 ```
 
 ### 使用中间件
@@ -229,8 +234,7 @@ router.use(middleware)
 
 - **路由中间件**
 
-  > 就是挂载在路由模块上的中间件，也就是挂载在express.Router()，只有这个模块的路由才能触发这个中间件，使用方式和应用层中间件一致
-  >
+  > 就是挂载在路由模块上的中间件，也就是挂载在 express.Router()，只有这个模块的路由才能触发这个中间件，使用方式和应用层中间件一致
 
 - **错误处理中间件**
 
@@ -293,19 +297,19 @@ app.get("/user", (req, res) => {
 
 - **locals** 局部变量
 
-  这个变量能在app里面任何一个路由里面使用，但是在子路由中无法使用，子路由也可以定义自己的局部变量，但是要引入app。
+  这个变量能在 app 里面任何一个路由里面使用，但是在子路由中无法使用，子路由也可以定义自己的局部变量，但是要引入 app。
 
   ```js
-  定义变量
-  	app.locals.name = '张三'
-  
-  使用变量
-  	app.locals.name
-  
-  var express = require('express');
+  定义变量;
+  app.locals.name = "张三";
+
+  使用变量;
+  app.locals.name;
+
+  var express = require("express");
   var router = express.Router();
-  let app = express()
-  app.locals.name = '张三'
+  let app = express();
+  app.locals.name = "张三";
   ```
 
 - **mountpath** 安装子应用
@@ -343,17 +347,17 @@ app.get("/user", (req, res) => {
 
 - **all** 匹配相同路径的所有请求方法
 
-  只要路由的路径是'/user', 无论是使用GET、POST、PUT、DELETE还是任何其他HTTP请求方法,都能匹配。
+  只要路由的路径是'/user', 无论是使用 GET、POST、PUT、DELETE 还是任何其他 HTTP 请求方法,都能匹配。
 
   ```js
-  app.all('/user',(req,res)=>{
-      res.send('成功了')
-  })
-  
-  匹配任意方式的任意路由
-      app.all('*', (req, res) => {
-        res.send('成功了all')
-      })
+  app.all("/user", (req, res) => {
+    res.send("成功了");
+  });
+
+  匹配任意方式的任意路由;
+  app.all("*", (req, res) => {
+    res.send("成功了all");
+  });
   ```
 
 - **disable** 禁用特定的应用程序设置
@@ -374,34 +378,34 @@ app.get("/user", (req, res) => {
 - **listen**
 
   启动服务器并监听指定的路径和端口;
-  
+
   ```js
   app.listen(3000, "localhost", () => {
-      const { address, port } = server.address();
-      console.log(`服务器已启动，地址为 http://${address}:${port}`);
+    const { address, port } = server.address();
+    console.log(`服务器已启动，地址为 http://${address}:${port}`);
   });
   ```
+
 - **method** 方法
 
-  Express支持以下与同名HTTP方法相对应的路由方法:
+  Express 支持以下与同名 HTTP 方法相对应的路由方法:
 
-  checkout	copy	delete	get	head	lock	merge	mkactivity	mkcol	move
-  m-search	notify	options	patch	post	purge	put	report	search	subscribe
-  trace	unlock	unsubscribe
+  checkout copy delete get head lock merge mkactivity mkcol move
+  m-search notify options patch post purge put report search subscribe
+  trace unlock unsubscribe
 
 - **path**
 
   返回一个应用程序的根路径;
 
   ```js
-  
   var app = express();
   var blog = express();
   var blogAdmin = express();
-  
+
   app.use("/blog", blog);
   blog.use("/admin", blogAdmin);
-  
+
   console.dir(app.path()); // ''
   console.dir(blog.path()); // '/blog'
   console.dir(blogAdmin.path()); // '/blog/admin'
@@ -409,40 +413,42 @@ app.get("/user", (req, res) => {
 
 - **render**
 
-  通过返回视图的呈现HTMLcallback功能。它接受一个可选参数，该参数是一个包含视图局部变量的对象。这就像res.render()，只是它不能自己将呈现的视图发送给客户端。
+  通过返回视图的呈现 HTMLcallback 功能。它接受一个可选参数，该参数是一个包含视图局部变量的对象。这就像 res.render()，只是它不能自己将呈现的视图发送给客户端。
 
   ```js
-  app.render('email', function (err, html) {
-      // ...
-  })
+  app.render("email", function (err, html) {
+    // ...
+  });
   ```
 
 - **route**
 
   对同一个路径，书写不同的应用请求方法，以提高代码的可读性和维护性，不需要将同一个路径书写为很多个路由
-  
+
   ```js
-  app.route('/users')
-      .get((req, res) => {
-      res.send('获取用户');
-  })
-      .post((req, res) => {
-      res.send('创建用户');
-  })
-      .put((req, res) => {
-      res.send('更新用户');
-  });
+  app
+    .route("/users")
+    .get((req, res) => {
+      res.send("获取用户");
+    })
+    .post((req, res) => {
+      res.send("创建用户");
+    })
+    .put((req, res) => {
+      res.send("更新用户");
+    });
   ```
+
 - **set**
 
   设置应用程序的配置，具体配置参考官网
 
   ```js
   // 设置视图引擎为EJS
-  app.set('view engine', 'ejs');
-  
+  app.set("view engine", "ejs");
+
   // 设置应用程序的端口号
-  app.set('port', process.env.PORT || 3000);
+  app.set("port", process.env.PORT || 3000);
   ```
 
 - **use** 使用中间件
@@ -454,7 +460,6 @@ app.get("/user", (req, res) => {
   返回当前路由的根路径;
 
   ```js
-  
   // 在app上挂在的根路径
   app.use("/index", indexRouter);
   // 在子路中
@@ -510,9 +515,9 @@ app.get("/user", (req, res) => {
 
 - **ips**
 
-  当trust proxy环境不评估为false中指定的IP地址数组X-Forwarded-For请求标题。否则，它包含一个空数组。该报头可以由客户端或代理设置。
-  例如，如果X-Forwarded-For是client, proxy1, proxy2, req.ips会是["client", "proxy1", "proxy2"]，在哪里proxy2是最下游的地方。
-  
+  当 trust proxy 环境不评估为 false 中指定的 IP 地址数组 X-Forwarded-For 请求标题。否则，它包含一个空数组。该报头可以由客户端或代理设置。
+  例如，如果 X-Forwarded-For 是 client, proxy1, proxy2, req.ips 会是["client", "proxy1", "proxy2"]，在哪里 proxy2 是最下游的地方。
+
 - **method** 请求的方法
 
   ```js
@@ -525,28 +530,29 @@ app.get("/user", (req, res) => {
 - **originalUrl** 原始 url
 
   就是没有结果解析的，客户端发过来的请求路径是什么样子，他得到就是什么样子
-  
+
   ```js
-  axios.post('/api/index/users?15')
-  
-  router.post('/users', (req, res) => {
-      console.log(req.originalUrl)  	// '/index/users?15'
-      console.log(req.baseUrl); 		// '/index'
-      console.log(req.path); 			// '/users'
-      res.send(req.originalUrl);
-  })
+  axios.post("/api/index/users?15");
+
+  router.post("/users", (req, res) => {
+    console.log(req.originalUrl); // '/index/users?15'
+    console.log(req.baseUrl); // '/index'
+    console.log(req.path); // '/users'
+    res.send(req.originalUrl);
+  });
   ```
+
 - **params** 请求参数
 
   路径上的请求参数，客户端发来的和路由上接收的 组合成为一个对象
 
   ```js
-  axios.post('/api/index/users/15')
-  
-  router.post('/users/:id', (req, res) => {
-      console.log(req.params)			// 得到的结果 { id: '15' }
-      res.send(req.originalUrl);
-  })
+  axios.post("/api/index/users/15");
+
+  router.post("/users/:id", (req, res) => {
+    console.log(req.params); // 得到的结果 { id: '15' }
+    res.send(req.originalUrl);
+  });
   ```
 
 - **path** 包含请求 URL 的路径部分
@@ -555,7 +561,7 @@ app.get("/user", (req, res) => {
 
   ```js
   axios.post("/api/index/users/15");
-  
+
   router.post("/users/:id", (req, res) => {
     console.log(req.path); // 得到的结果/users/15
     res.send(req.path);
@@ -578,119 +584,123 @@ app.get("/user", (req, res) => {
   得到路径上的查询字符串，组合的对象
 
   ```js
-  axios.post('/api/index/users?name=15&sex=男')
-  
-  router.post('/users', (req, res) => {
-      console.log(req.query)		// 得到的结果  { name: '15', sex: '男' }
-      res.send(req.query);
-  })
+  axios.post("/api/index/users?name=15&sex=男");
+
+  router.post("/users", (req, res) => {
+    console.log(req.query); // 得到的结果  { name: '15', sex: '男' }
+    res.send(req.query);
+  });
   ```
 
 - **res**
 
   保存对响应对象与此请求对象相关的;
-  
+
 - **route**
 
-  保存着当前路由的信息，属性提供了有关当前路由的信息，包括路由的路径、HTTP方法和处理程序等
-  
+  保存着当前路由的信息，属性提供了有关当前路由的信息，包括路由的路径、HTTP 方法和处理程序等
+
 - **secure**
 
   查询当前请求是否是安全的，防护布尔值
-  	等同于 protocol === "https"
-  
+  等同于 protocol === "https"
+
 - **accepts**
 
-  用于检查客户端请求中的Accept头部信息，以确定客户端是否接受HTML响应格式。
-  
-  eq.accepts('html')将检查客户端请求的Accept头部信息，如果其中包含text/html或/，则返回html，否则返回false。
-  
+  用于检查客户端请求中的 Accept 头部信息，以确定客户端是否接受 HTML 响应格式。
+
+  eq.accepts('html')将检查客户端请求的 Accept 头部信息，如果其中包含 text/html 或/，则返回 html，否则返回 false。
+
   ```js
-  app.get('/', function(req, res) {
-      if (req.accepts('html')) {
-          // 客户端接受HTML格式的响应
-          res.send('<h1>Hello, World!</h1>');
-      } else {
-          // 客户端不接受HTML格式的响应
-          res.status(406).send('Not Acceptable');
-      }
+  app.get("/", function (req, res) {
+    if (req.accepts("html")) {
+      // 客户端接受HTML格式的响应
+      res.send("<h1>Hello, World!</h1>");
+    } else {
+      // 客户端不接受HTML格式的响应
+      res.status(406).send("Not Acceptable");
+    }
   });
   ```
 
 - **get**
 
   获取请求头的字段;
-  
+
   ```js
   router.post("/users", (req, res) => {
-      console.log(req.get("content-Type")); // "text/plain"
-      res.send(req.path);
+    console.log(req.get("content-Type")); // "text/plain"
+    res.send(req.path);
   });
   ```
+
 - **is**
 
-  用于检查请求的Content - Type头部字段是否与指定的MIME类型匹配;
-  
+  用于检查请求的 Content - Type 头部字段是否与指定的 MIME 类型匹配;
+
   ```js
   app.post("/upload", function (req, res) {
-      if (req.is("multipart/form-data")) {
-          // 请求的Content-Type头部字段为multipart/form-data
-          // 处理上传文件的逻辑
-          res.send("File uploaded successfully.");
-      } else {
-          // 请求的Content-Type头部字段不是multipart/form-data
-          res.status(400).send("Bad Request");
-      }
+    if (req.is("multipart/form-data")) {
+      // 请求的Content-Type头部字段为multipart/form-data
+      // 处理上传文件的逻辑
+      res.send("File uploaded successfully.");
+    } else {
+      // 请求的Content-Type头部字段不是multipart/form-data
+      res.status(400).send("Bad Request");
+    }
   });
   ```
+
 ### response 的 api —— 路由回调函数的第二个参数
 
 - **headersSent**
 
   用于检查响应头部是否已经被发送到客户端，返回布尔值
-  
+
   ```js
-  router.post('/users', (req, res) => {
-      console.log(res.headersSent) // false
-      res.send('OK')
-      console.log(res.headersSent) // true
-  })
+  router.post("/users", (req, res) => {
+    console.log(res.headersSent); // false
+    res.send("OK");
+    console.log(res.headersSent); // true
+  });
   ```
+
 - **locals**
 
-  局部变量，类似于app上的locals
-  
+  局部变量，类似于 app 上的 locals
+
 - **append**
 
-  设置响应头，如果响应头的key已经存在，那么覆盖他的value，如果不存在就新增一个
-  
+  设置响应头，如果响应头的 key 已经存在，那么覆盖他的 value，如果不存在就新增一个
+
   ```js
-  router.post('/users', (req, res) => {
-      res.append('Warning', 'response header')
-      res.send('OK')
-  })
+  router.post("/users", (req, res) => {
+    res.append("Warning", "response header");
+    res.send("OK");
+  });
   ```
+
 - **attachment**
 
   用于将响应设置为以附件形式下载
-  	res.attachment([filename])
-  
-  其中，filename是要在下载时显示的文件名。如果提供了filename参数，Express将自动设置		Content-Disposition头部字段，指示浏览器以附件形式下载响应内容。
+  res.attachment([filename])
+
+  其中，filename 是要在下载时显示的文件名。如果提供了 filename 参数，Express 将自动设置 Content-Disposition 头部字段，指示浏览器以附件形式下载响应内容。
 
 - **cookie**
 
-  设置cookie，以键值对的方式，还有第三个参数是一个配置对象，可以设置cookie的一些属性
+  设置 cookie，以键值对的方式，还有第三个参数是一个配置对象，可以设置 cookie 的一些属性
 
   ```js
-  router.get('/download', function(req, res) {
-      res.cookie('cart', 'buy')  // 设置cookie
-      res.send('请求成功')
+  router.get("/download", function (req, res) {
+    res.cookie("cart", "buy"); // 设置cookie
+    res.send("请求成功");
   });
   ```
 
 - **clearCookie**
 
-  清除指定key的cookie;
+  清除指定 key 的 cookie;
 
   ```js
   res.clearCookie("cart");
@@ -701,10 +711,14 @@ app.get("/user", (req, res) => {
   文件下载，接收三个参数，第一个为文件路径，第二个为可选参数，指定下载文件的名字，第三个为可选，错误的回调函数。
 
   ```js
-  router.get('/user', (req, res) => {
-    res.download(__dirname + '/../public/images/down.png', 'down.png', (err) => {
-      console.log(err)
-    })
+  router.get("/user", (req, res) => {
+    res.download(
+      __dirname + "/../public/images/down.png",
+      "down.png",
+      (err) => {
+        console.log(err);
+      }
+    );
   });
   ```
 
@@ -713,86 +727,87 @@ app.get("/user", (req, res) => {
   结束响应，之后的逻辑都不会响应到客户端
 
   ```js
-  router.get('/user', (req, res) => {
-      res.end()
-      res.send('ok') // 被end结束了，不会响应到服务端
+  router.get("/user", (req, res) => {
+    res.end();
+    res.send("ok"); // 被end结束了，不会响应到服务端
   });
   ```
 
 - **format**
 
-  根据请求头上的Accept，可以实现响应不同的结果，Accept 是一个 HTTP 请求头部字段，用于告知服务器客户端能够接受的响应内容类型。客户端可以通过设置 Accept 头部来表明它们所接受的媒体类型或内容协商的首选项。Accept 头部字段的值通常是一个逗号分隔的列表，包含了 MIME 类型或其他表示内容类型的标识符。每个标识符可以包含一个可选的参数，用来指定权重或其他质量因素。
-  
+  根据请求头上的 Accept，可以实现响应不同的结果，Accept 是一个 HTTP 请求头部字段，用于告知服务器客户端能够接受的响应内容类型。客户端可以通过设置 Accept 头部来表明它们所接受的媒体类型或内容协商的首选项。Accept 头部字段的值通常是一个逗号分隔的列表，包含了 MIME 类型或其他表示内容类型的标识符。每个标识符可以包含一个可选的参数，用来指定权重或其他质量因素。
+
   ```js
   axios.get('/user', { headers: { 'Accept' : 'application/json' } })
-  
+
   router.get('/user', function(req, res, next) {
       res.format({
           'text/plain': function () {
               res.send('hey')
           },
-  
+
           'application/json': function () {
               res.send({ message: 'hey' })   // 匹配到这个，响应对应的内容
           },
-  
+
           default: function () {
               // log the request and respond with 406
               res.status(406).send('Not Acceptable')
           }
       })
   });
-  
+
   简写形式：
   res.format({
       text: function () {
           res.send('hey')
       },
-  
+
       html: function () {
           res.send('<p>hey</p>')
       },
-  
+
       json: function () {
           res.send({ message: 'hey' })
       }
   })
   ```
+
 - **get 和 set**
 
   set：设置响应头
-  get：获取通过set设置的响应头指定key的内容
+  get：获取通过 set 设置的响应头指定 key 的内容
 
   ```js
-  router.get('/user', function(req, res) {
-      res.set('Content-Type', 'text/plain');  // 设置响应头
-      const contentType = res.get('Content-Type');   // 获取响应头的value
-      res.send(`Content-Type 的值为 ${contentType}`);
+  router.get("/user", function (req, res) {
+    res.set("Content-Type", "text/plain"); // 设置响应头
+    const contentType = res.get("Content-Type"); // 获取响应头的value
+    res.send(`Content-Type 的值为 ${contentType}`);
   });
   ```
 
 - **json**
 
-  响应json内容;
-  
+  响应 json 内容;
+
   ```js
   router.get("/user", function (req, res) {
     res.json({ user: "张三" });
   });
   ```
-  
+
 - **links**
 
   res.links 是一个 Express 框架中用于设置响应头部中的链接头部字段的方法。链接头部字段用于指定与当前资源相关的链接。
 
   ```js
-   router.get('/user', function(req, res) {
-       res.links({
-           next: 'http://api.example.com/users?page=2',
-           last: 'http://api.example.com/users?page=5'
-       })
-       res.json({user:'张三'});
-   });
+  router.get("/user", function (req, res) {
+    res.links({
+      next: "http://api.example.com/users?page=2",
+      last: "http://api.example.com/users?page=5",
+    });
+    res.json({ user: "张三" });
+  });
   ```
 
 - **location**
@@ -800,9 +815,9 @@ app.get("/user", (req, res) => {
   res.location 方法设置重定向的目标 URL 为 'http://example.com'。然后，我们使用 res.status 方法设置响应的状态码为 302（临时重定向）。最后，我们使用 res.send 方法发送 'Redirecting...' 作为响应内容。
 
   ```js
-  router.get('/user', function(req, res) {
-    res.location('http://example.com');
-    res.status(302).send('Redirecting...');
+  router.get("/user", function (req, res) {
+    res.location("http://example.com");
+    res.status(302).send("Redirecting...");
   });
   ```
 
@@ -811,16 +826,16 @@ app.get("/user", (req, res) => {
   路由重定向，当访问'/user'这个路由的时候，会将路由重定向到'/admin'这个路由上，最终客户端会发起两次请求。
 
   ```js
-  router.get('/user', function (req, res) {
-      res.redirect(301, '/admin') // 重定向到'/admin'，会增加一个请求
-      // 301为可选参数，意为临时重定向
+  router.get("/user", function (req, res) {
+    res.redirect(301, "/admin"); // 重定向到'/admin'，会增加一个请求
+    // 301为可选参数，意为临时重定向
   });
   ```
 
 - **render**
 
-  模板引擎根据视图模板和传递的数据渲染最终的 HTML。这个 HTML 响应将被发送回客户端。一般配合ejs来使用
-  
+  模板引擎根据视图模板和传递的数据渲染最终的 HTML。这个 HTML 响应将被发送回客户端。一般配合 ejs 来使用
+
 - **send**
 
   响应客户端的内容;
@@ -836,13 +851,14 @@ app.get("/user", (req, res) => {
 - **sendFile**
 
   发送指定文件，在给定的 path 传输文件。根据文件名的扩展名设置 Content-Type 响应 HTTP 标头字段。除非在选项对象中设置了 root 选项，否则 path 必须是文件的绝对路径。
-  
+
   ```js
-  router.get('/user', (req, res)=> {
-      res.sendFile(__dirname + '/../public/images/down.png')
-      res.send('ok')
+  router.get("/user", (req, res) => {
+    res.sendFile(__dirname + "/../public/images/down.png");
+    res.send("ok");
   });
   ```
+
 - **sendStatus 和 status**
 
   设置响应状态码
@@ -850,18 +866,18 @@ app.get("/user", (req, res) => {
   status：只会修改状态码，并不会终止响应，该响应什么内容，还是响应什么内容
 
   ```js
-  router.get('/user', function (req, res) {
-      res.sendStatus(200)
-      res.status(403)
-      res.send('ok')
+  router.get("/user", function (req, res) {
+    res.sendStatus(200);
+    res.status(403);
+    res.send("ok");
   });
   ```
 
 - **type**
 
   将 Content-Type HTTP 标头设置为由指定 type 确定的 MIME 类型。如果 type 包含 "/" 字符，则它将 Content-Type 设置为 type 的确切值，否则假定它是文件扩展名并使用 express.static.mime.lookup() 方法在映射中查找 MIME 类型
-  
+
   ```js
-  res.type('.html') // => 'text/html'
-  res.type('html') // => 'text/html'  
+  res.type(".html"); // => 'text/html'
+  res.type("html"); // => 'text/html'
   ```

@@ -34,6 +34,10 @@ export const navbarConfig = [
         text: "express 笔记",
         link: "/node/express.md",
       },
+      {
+        text: "jwt的使用",
+        link: "/node/jwt.md",
+      },
     ],
   },
   {
