@@ -38,6 +38,10 @@ export const navbarConfig = [
         text: "jwt的使用",
         link: "/node/jwt.md",
       },
+      {
+        text: "使用mysql",
+        link: "/node/use-mysql.md",
+      },
     ],
   },
   {
