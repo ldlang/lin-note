@@ -22,6 +22,20 @@ export const navbarConfig = [
       },
     ],
   },
+    {
+    text: "node",
+    activeMatch: "^/node/",
+    children: [
+      {
+        text: "node 笔记",
+        link: "/node/node.md",
+      },
+      {
+        text: "express 笔记",
+        link: "/node/express.md",
+      },
+    ],
+  },
   {
     text: "mysql",
     link: "/mysql/",
