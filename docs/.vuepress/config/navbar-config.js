@@ -22,7 +22,7 @@ export const navbarConfig = [
       },
     ],
   },
-    {
+  {
     text: "node",
     activeMatch: "^/node/",
     children: [
@@ -41,6 +41,20 @@ export const navbarConfig = [
       {
         text: "使用mysql",
         link: "/node/use-mysql.md",
+      },
+    ],
+  },
+  {
+    text: "vue",
+    activeMatch: "^/vue/",
+    children: [
+      {
+        text: "vue2",
+        link: "/vue/vue2.md",
+      },
+      {
+        text: "vue3",
+        link: "/vue/vue3.md",
       },
     ],
   },
