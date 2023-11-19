@@ -4,6 +4,8 @@ sidebar: auto
 
 # 多表查询
 
+## 实现多表查询
+
 1. 笛卡尔积的错误
 
    产生的原因：缺少了多表的连接条件，就会产生一张表的每一条记录，与另一张表的所有记录都匹配一次进行查询，最后得到的结果就是两张表数量的乘积。
@@ -110,7 +112,7 @@ sidebar: auto
 
   注意：自连接一定要指定每个字段是从那种表来的
 
-  查询 employees 表中 first_name，manager_id和他管理者的first_name和employee_id
+  查询 employees 表中 first_name，manager_id 和他管理者的 first_name 和 employee_id
 
   ```sql
   SELECT e1.first_name, e1.manager_id, e2.first_name, e2.employee_id
