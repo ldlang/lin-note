@@ -56,6 +56,14 @@ export const navbarConfig = [
         text: "vue3",
         link: "/vue/vue3.md",
       },
+      {
+        text: "常用插件",
+        link: "/vue/plugins.md",
+      },
+      {
+        text: "技巧积累",
+        link: "/vue/skill.md",
+      },
     ],
   },
   {
