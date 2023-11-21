@@ -78,6 +78,10 @@ export const jsConfig = {
           text: "canvas",
           link: "/javaScript/js-note/canvas.md",
         },
+        {
+          text: "class",
+          link: "/javaScript/js-note/class.md",
+        },
       ],
     },
   ],
