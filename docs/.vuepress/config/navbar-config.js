@@ -4,11 +4,6 @@ export const navbarConfig = [
     link: "/",
   },
   {
-    text: "git",
-    link: "/git/",
-    activeMatch: "^/git/",
-  },
-  {
     text: "javaScript",
     activeMatch: "^/javaScript/",
     children: [
@@ -19,6 +14,16 @@ export const navbarConfig = [
       {
         text: "红宝书笔记",
         link: "/javaScript/red-book/",
+      },
+    ],
+  },
+  {
+    text: "css",
+    activeMatch: "^/css/",
+    children: [
+      {
+        text: "grid布局",
+        link: "/css/grid.md",
       },
     ],
   },
@@ -43,6 +48,11 @@ export const navbarConfig = [
         link: "/node/use-mysql.md",
       },
     ],
+  },
+  {
+    text: "git",
+    link: "/git/",
+    activeMatch: "^/git/",
   },
   {
     text: "vue",
