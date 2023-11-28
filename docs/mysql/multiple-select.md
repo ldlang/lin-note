@@ -42,11 +42,11 @@ sidebar: auto
    WHERE 表1.字段1 = 表2.字段3
    ```
 
-   多张张表连接查询语法：
+   多张表连接查询语法：
 
    ```sql
    SELECT 表1.字段1, 表1.字段2, 表2.字段3, 表3.字段4
-   FROM 表1, 表2
+   FROM 表1, 表2, 表3
    WHERE 表1.字段1 = 表2.字段3
    AND 表2.字段3 = 表3.字段4
    ```
@@ -57,6 +57,22 @@ sidebar: auto
    SELECT employees.employee_id, departments.department_name , employees.salary
    FROM employees, departments
    WHERE employees.department_id = departments.department_id;
+   ```
+
+   查询 employees 表的 employee_id、salary 、 departments 表的 department_name 和 locations 表的 locations_id，并指定连接关系。
+
+   ```sql
+   SELECT e.employee_id, d.department_name , e.salary, l.city
+   FROM employees e, departments d,locations l
+   WHERE e.department_id = d.department_id
+   AND d.location_id = l.location_id;
+
+   # 使用 JOIN...ON...的方式
+   SELECT e.first_name, d.department_name, j.city
+   FROM employees e JOIN departments d
+   ON e.department_id = d.department_id
+   JOIN locations j
+   ON d.location_id = j.location_id
    ```
 
 4. 表示可以设置别名的，在 FROM 的表名后面接上别名即可，但是一旦给某张表齐了别名，name 所有用到这张表的地方都要使用这张表的别名。
@@ -123,3 +139,169 @@ sidebar: auto
 - 非自连接就是，不是从同一张表去连接查询
 
 ### 内连接和外连接
+
+1. 内连接
+
+   合并具有同一列的两个以上的表的行，结果集中不包含一个表与另一个表不匹配的行，就是在有两张表等于的条件下查询其他字段。
+
+   ```sql
+   # 必有 where...  ＝ 的条件基础下，对表进行查询
+   SELECT e.first_name, d.department_name
+   FROM employees e,departments d
+   WHERE e.department_id = d.department_id
+   ```
+
+   使用`JOIN...ON...`的方式实现两张表的内连接
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e JOIN departments d
+   ON e.department_id = d.department_id
+   ```
+
+   使用`JOIN...ON...`的方式实现多张表的内连接
+
+   ```sql
+   SELECT e.first_name, d.department_name, j.city
+   FROM employees e JOIN departments d
+   ON e.department_id = d.department_id
+   JOIN locations j
+   ON d.location_id = j.location_id
+   ```
+
+2. 外连接
+
+   合并具有同一列的两个以上的表的行，结果集中除了包含一个表与另一个表匹配的行之二爱，还查询到了左表和右边中不匹配的行。
+
+### 外连接的分类
+
+在`mysql`中使用`JOIN...ON...`实现，`JOIN...ON...`不仅仅是能解决外连接，也能实现其他的多表查询。
+
+1. 左外连接
+
+   两个表在连接过程中除了返回满足连接条件的行以外还返回了左表中不满足条件的行
+
+   `LEFT JOIN...ON...`，除了查询到所有满足条件的记录，还查询了左表(employees)不满足条件的记录
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e LEFT JOIN departments d
+   ON e.department_id = d.department_id
+   ```
+
+2. 右外连接
+
+   两个表在连接过程中除了返回满足连接条件的行以外还返回了右表中不满足条件的行
+
+   `RIGHT JOIN...ON...`，除了查询到所有满足条件的记录，还查询了右表(departments)不满足条件的记录
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e RIGHT JOIN departments d
+   ON e.department_id = d.department_id
+   ```
+
+3. 满连接 或 全连接
+
+   在 sql 的语法中是使用 `FULL JOIN...ON...`实现，但是`mysql`**不支持**，在`mysql`就得借助`UNION`实现
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e FULL JOIN departments d
+   ON e.department_id = d.department_id
+   ```
+
+### UNION
+
+1. `UNION`操作符返回两个查询的结果集的并集，去除重复记录。
+2. `UNION ALL`操作符返回两个查询的结果集的并集，不去除重复记录。
+
+注意：执行`UNION ALL`语句时，所需要的资源比`UNION`语句少，如果明确的指导合并数据后的结果不存在重复的数据，获取不需要去重，则尽量使用`UNION ALL`提高数据查询的效率
+
+### JION 的 7 中情况查询
+
+![image](/mysql/JOIN.png)
+
+1. 第 1 部分：左外连接
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e LEFT JOIN departments d
+   ON e.department_id = d.department_id
+   ```
+
+2. 第 2 部分：右外连接
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e RIGHT JOIN departments d
+   ON e.department_id = d.department_id
+   ```
+
+3. 第 3 部分：内连接
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e JOIN departments d
+   ON e.department_id = d.department_id
+   ```
+
+4. 第 4 部分：
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e LEFT JOIN departments d
+   ON e.department_id = d.department_id
+   WHERE e.department_id IS NULL;
+   ```
+
+5. 第 5 部分：
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e RIGHT JOIN departments d
+   ON e.department_id = d.department_id
+   WHERE e.department_id IS NULL;
+   ```
+
+6. 第 6 部分：满连接
+
+   第 1 部分和第 5 部分组合起来，或者第 2 部分和第 4 部分组合起来就是满连接
+
+   ```sql
+   # 第1部分和第5部分组合起来
+   SELECT e.first_name, d.department_name
+   FROM employees e LEFT JOIN departments d
+   ON e.department_id = d.department_id
+   UNION ALL
+   SELECT e.first_name, d.department_name
+   FROM employees e RIGHT JOIN departments d
+   ON e.department_id = d.department_id
+   WHERE e.department_id IS NULL;
+
+   # 第2部分和第2部分组合起来
+   SELECT e.first_name, d.department_name
+   FROM employees e RIGHT JOIN departments d
+   ON e.department_id = d.department_id
+   UNION ALL
+   SELECT e.first_name, d.department_name
+   FROM employees e LEFT JOIN departments d
+   ON e.department_id = d.department_id
+   WHERE e.department_id IS NULL;
+   ```
+
+7. 第 7 部分：
+
+   第 4 部分和第 5 部分组合起来就是第 7 部分
+
+   ```sql
+   SELECT e.first_name, d.department_name
+   FROM employees e LEFT JOIN departments d
+   ON e.department_id = d.department_id
+   WHERE e.department_id IS NULL
+   UNION ALL
+   SELECT e.first_name, d.department_name
+   FROM employees e RIGHT JOIN departments d
+   ON e.department_id = d.department_id
+   WHERE e.department_id IS NULL;
+   ```
