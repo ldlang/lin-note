@@ -82,6 +82,10 @@ export const jsConfig = {
           text: "class",
           link: "/javaScript/js-note/class.md",
         },
+        {
+          text: "js技巧积累",
+          link: "/javaScript/js-note/js-skill.md",
+        },
       ],
     },
   ],
@@ -108,6 +112,10 @@ export const jsConfig = {
         {
           text: "5、多表查询",
           link: "/mysql/multiple-select.md",
+        },
+        {
+          text: "6、函数",
+          link: "/mysql/function.md",
         },
       ],
     },
