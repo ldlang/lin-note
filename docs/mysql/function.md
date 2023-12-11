@@ -120,4 +120,154 @@ sidebar: auto
 
 ### 日期和时间函数
 
+#### 获取时间日期
+
+| 函数                                                         | 用法                           |
+| ------------------------------------------------------------ | ------------------------------ |
+| **CURDATE()** ，CURRENT_DATE()                               | 返回当前日期，只包含年、月、日 |
+| **CURTIME()** ， CURRENT_TIME()                              | 返回当前时间，只包含时、分、秒 |
+| **NOW()** / SYSDATE() / CURRENT_TIMESTAMP() / LOCALTIME() / LOCALTIMESTAMP() | 返回当前系统日期和时间         |
+| UTC_DATE()                                                   | 返回UTC（世界标准时间）日期    |
+| UTC_TIME()                                                   | 返回UTC（世界标准时间）时间    |
+
+#### 日期与时间戳的转换
+
+| 函数                     | 用法                                                         |
+| ------------------------ | ------------------------------------------------------------ |
+| UNIX_TIMESTAMP()         | 以UNIX时间戳的形式返回当前时间。SELECT UNIX_TIMESTAMP() ->1634348884 |
+| UNIX_TIMESTAMP(date)     | 将时间date以UNIX时间戳的形式返回。                           |
+| FROM_UNIXTIME(timestamp) | 将UNIX时间戳的时间转换为普通格式的时间                       |
+
+#### 获取月份、星期、星期数、天数等函数
+
+| 函数                                     | 用法                                            |
+| ---------------------------------------- | ----------------------------------------------- |
+| YEAR(date) / MONTH(date) / DAY(date)     | 返回具体的日期值                                |
+| HOUR(time) / MINUTE(time) / SECOND(time) | 返回具体的时间值                                |
+| MONTHNAME(date)                          | 返回月份：January，...                          |
+| DAYNAME(date)                            | 返回星期几：MONDAY，TUESDAY.....SUNDAY          |
+| WEEKDAY(date)                            | 返回周几，注意，周1是0，周2是1，。。。周日是6   |
+| QUARTER(date)                            | 返回日期对应的季度，范围为1～4                  |
+| WEEK(date) ， WEEKOFYEAR(date)           | 返回一年中的第几周                              |
+| DAYOFYEAR(date)                          | 返回日期是一年中的第几天                        |
+| DAYOFMONTH(date)                         | 返回日期位于所在月份的第几天                    |
+| DAYOFWEEK(date)                          | 返回周几，注意：周日是1，周一是2，。。。周六是7 |
+
+#### 日期的操作函数
+
+| 函数                    | 用法                                       |
+| ----------------------- | ------------------------------------------ |
+| EXTRACT(type FROM date) | 返回指定日期中特定的部分，type指定返回的值 |
+
+type取值说明
+
+| 值                 | 说明            |
+| ------------------ | --------------- |
+| MICROSECOND        | 毫秒            |
+| SECOND             | 秒              |
+| MINUTE             | 分              |
+| HOUR               | 时              |
+| DAY                | 天              |
+| WEEK               | 周              |
+| MONTH              | 月              |
+| QUARTER            | 季度            |
+| YEAR               | 年              |
+| SECOND_MICROSECOND | 秒.毫秒         |
+| MINUTE_MICROSECOND | 分.秒.毫秒      |
+| MINUTE_SECOND      | 分.秒           |
+| HOUR_MICROSECOND   | 小时.分.秒.毫秒 |
+| HOUR_SECOND        | 小时.分.秒      |
+| HOUR_MINUTE        | 小时.分         |
+| DAY_MICROSECOND    | 小时.分.秒.毫秒 |
+| DAY_SECOND         | 小时.分.秒      |
+| DAY_MINUTE         | 小时.分钟       |
+| DAY_HOUR           | 小时            |
+| YEAR_MONTH         | 年.月           |
+
+####  时间和秒钟转换的函数
+
+| 函数                 | 用法                                                         |
+| -------------------- | ------------------------------------------------------------ |
+| TIME_TO_SEC(time)    | 将 time 转化为秒并返回结果值。转化的公式为：`小时*3600+分钟*60+秒` |
+| SEC_TO_TIME(seconds) | 将 seconds 描述转化为包含小时、分钟和秒的时间                |
+
+#### 计算日期和时间的函数
+
+一组
+
+| 函数                                                         | 用法                                           |
+| ------------------------------------------------------------ | ---------------------------------------------- |
+| DATE_ADD(datetime, INTERVAL  expr type)，ADDDATE(date,INTERVAL expr type) | 返回与给定日期时间相差INTERVAL时间段的日期时间 |
+| DATE_SUB(date,INTERVAL expr type)，SUBDATE(date,INTERVAL expr type) | 返回与date相差INTERVAL时间间隔的日期           |
+
+type可选值
+
+| 值                 | 说明      |
+| ------------------ | --------- |
+| MICROSECOND        | 毫秒数    |
+| SECOND             | 秒数      |
+| MINUTE             | 分钟数    |
+| HOUR               | 小时数    |
+| DAY                | 天数      |
+| WEEK               | 周数      |
+| MONTH              | 月数      |
+| QUARTER            | 季度数    |
+| YEAR               | 年数      |
+| SECOND_MICROSECOND | 秒.豪秒   |
+| MINUTE_MICROSECOND | 分.豪秒   |
+| MINUTE_SECOND      | 分.秒     |
+| HOUR_MICROSECOND   | 小时.豪秒 |
+| HOUR_SECOND        | 小时.秒   |
+| HOUR_MINUTE        | 小时.分   |
+| DAY_MICROSECOND    | 天.豪秒   |
+| DAY_SECOND         | 天.秒     |
+| DAY_MINUTE         | 天.分钟   |
+| DAY_HOUR           | 天.小时   |
+| YEAR_MONTH         | 年.月     |
+
+二组
+
+| 函数                         | 用法                                                         |
+| ---------------------------- | ------------------------------------------------------------ |
+| ADDTIME(time1,time2)         | 返回time1加上time2的时间。当time2为一个数字时，代表的是`秒`，可以为负数 |
+| SUBTIME(time1,time2)         | 返回time1减去time2后的时间。当time2为一个数字时，代表的是`秒`，可以为负数 |
+| DATEDIFF(date1,date2)        | 返回date1 - date2的日期间隔天数                              |
+| TIMEDIFF(time1, time2)       | 返回time1 - time2的时间间隔                                  |
+| FROM_DAYS(N)                 | 返回从0000年1月1日起，N天以后的日期                          |
+| TO_DAYS(date)                | 返回日期date距离0000年1月1日的天数                           |
+| LAST_DAY(date)               | 返回date所在月份的最后一天的日期                             |
+| MAKEDATE(year,n)             | 针对给定年份与所在年份中的天数返回一个日期                   |
+| MAKETIME(hour,minute,second) | 将给定的小时、分钟和秒组合成时间并返回                       |
+| PERIOD_ADD(time,n)           | 返回time加上n后的时间                                        |
+
+#### 日期的格式化与解析
+
+| 函数                              | 用法                                       |
+| --------------------------------- | ------------------------------------------ |
+| DATE_FORMAT(date,fmt)             | 按照字符串fmt格式化日期date值              |
+| TIME_FORMAT(time,fmt)             | 按照字符串fmt格式化时间time值              |
+| GET_FORMAT(date_type,format_type) | 返回日期字符串的显示格式                   |
+| STR_TO_DATE(str, fmt)             | 按照字符串fmt对str进行解析，解析为一个日期 |
+
+上述`非GET_FORMAT`函数中fmt参数常用的格式符：
+
+| 格式符 | 说明                                                        | 格式符 | 说明                                                        |
+| ------ | ----------------------------------------------------------- | ------ | ----------------------------------------------------------- |
+| %Y     | 4位数字表示年份                                             | %y     | 表示两位数字表示年份                                        |
+| %M     | 月名表示月份（January,....）                                | %m     | 两位数字表示月份（01,02,03。。。）                          |
+| %b     | 缩写的月名（Jan.，Feb.，....）                              | %c     | 数字表示月份（1,2,3,...）                                   |
+| %D     | 英文后缀表示月中的天数（1st,2nd,3rd,...）                   | %d     | 两位数字表示月中的天数(01,02...)                            |
+| %e     | 数字形式表示月中的天数（1,2,3,4,5.....）                    |        |                                                             |
+| %H     | 两位数字表示小数，24小时制（01,02..）                       | %h和%I | 两位数字表示小时，12小时制（01,02..）                       |
+| %k     | 数字形式的小时，24小时制(1,2,3)                             | %l     | 数字形式表示小时，12小时制（1,2,3,4....）                   |
+| %i     | 两位数字表示分钟（00,01,02）                                | %S和%s | 两位数字表示秒(00,01,02...)                                 |
+| %W     | 一周中的星期名称（Sunday...）                               | %a     | 一周中的星期缩写（Sun.，Mon.,Tues.，..）                    |
+| %w     | 以数字表示周中的天数(0=Sunday,1=Monday....)                 |        |                                                             |
+| %j     | 以3位数字表示年中的天数(001,002...)                         | %U     | 以数字表示年中的第几周，（1,2,3。。）其中Sunday为周中第一天 |
+| %u     | 以数字表示年中的第几周，（1,2,3。。）其中Monday为周中第一天 |        |                                                             |
+| %T     | 24小时制                                                    | %r     | 12小时制                                                    |
+| %p     | AM或PM                                                      | %%     | 表示%                                                       |
+
+
+
 ## 多行函数
