@@ -267,3 +267,75 @@ type 可选值
 | %p     | AM 或 PM                                                      | %%      | 表示%                                                         |
 
 ## 流程控制函数
+
+流程处理函数可以根据不同的条件，执行不同的处理流程，可以在 SQL 语句中实现不同的条件选择。MySQL 中的流程处理函数主要包括 IF()、IFNULL()和 CASE()函数。
+
+| 函数                                                                           | 用法                                                                 |
+| ------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| IF(value,value1,value2)                                                        | 如果 value 的值为 TRUE，返回 value1，否则返回 value2，类似于三元运算 |
+| IFNULL(value1, value2)                                                         | 如果 value1 不为 NULL，返回 value1，否则返回 value2                  |
+| CASE WHEN 条件 1 THEN 结果 1 WHEN 条件 2 THEN 结果 2 .... [ELSE resultn] END   | 相当于 Js 的 if...else if...else...                                  |
+| CASE expr WHEN 常量值 1 THEN 值 1 WHEN 常量值 1 THEN 值 1 .... [ELSE 值 n] END | 相当于 Js 的 switch...case...                                        |
+
+示例
+
+```sql
+# IF
+SELECT salary, IF(salary > 6000, '高工资', '低工资') '工资' FROM employees;
+
+# IFNULL
+SELECT commission_pct, IFNULL(commission_pct, '是null') 'detail' FROM employees;
+
+#  CASE WHEN  THEN
+SELECT salary , CASE department_id
+	WHEN 10 THEN salary * 1.1
+	WHEN 20 THEN salary * 1.2
+	WHEN 30 THEN salary * 1.3
+	ELSE salary * 1.5
+END '增加的工资', department_id
+FROM employees
+
+SELECT salary , CASE
+	WHEN department_id = 10 THEN salary * 1.1
+	WHEN department_id = 20 THEN salary * 1.2
+	WHEN department_id = 30 THEN salary * 1.3
+	ELSE salary * 1.5
+END '增加的工资', department_id
+FROM employees
+```
+
+## 加密与解密函数
+
+加密与解密函数主要用于对数据库中的数据进行加密和解密处理，以防止数据被他人窃取。这些函数在保证数据库安全时非常有用。
+
+| 函数                        | 用法                                                                                                     |
+| --------------------------- | -------------------------------------------------------------------------------------------------------- |
+| PASSWORD(str)               | 返回字符串 str 的加密版本，41 位长的字符串。加密结果`不可逆`，常用于用户的密码加密                       |
+| MD5(str)                    | 返回字符串 str 的 md5 加密后的值，也是一种加密方式。若参数为 NULL，则会返回 NULL                         |
+| SHA(str)                    | 从原明文密码 str 计算并返回加密后的密码字符串，当参数为 NULL 时，返回 NULL。`SHA加密算法比MD5更加安全`。 |
+| ENCODE(value,password_seed) | 返回使用 password_seed 作为加密密码加密 value                                                            |
+| DECODE(value,password_seed) | 返回使用 password_seed 作为加密密码解密 value                                                            |
+
+## MySQL 信息函数
+
+MySQL 中内置了一些可以查询 MySQL 信息的函数。
+
+| 函数                                                  | 用法                                                       |
+| ----------------------------------------------------- | ---------------------------------------------------------- |
+| VERSION()                                             | 返回当前 MySQL 的版本号                                    |
+| CONNECTION_ID()                                       | 返回当前 MySQL 服务器的连接数                              |
+| DATABASE()，SCHEMA()                                  | 返回 MySQL 命令行当前所在的数据库                          |
+| USER()，CURRENT_USER()、SYSTEM_USER()，SESSION_USER() | 返回当前连接 MySQL 的用户名，返回结果格式为“主机名@用户名” |
+| CHARSET(value)                                        | 返回字符串 value 自变量的字符集                            |
+| COLLATION(value)                                      | 返回字符串 value 的比较规则                                |
+
+## 其他函数
+
+| 函数                           | 用法                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| FORMAT(value,n)                | 返回对数字 value 进行格式化后的结果数据。n 表示`四舍五入`后保留到小数点后 n 位 |
+| CONV(value,from,to)            | 将 value 的值进行不同进制之间的转换                                            |
+| INET_ATON(ipvalue)             | 将以点分隔的 IP 地址转化为一个数字                                             |
+| INET_NTOA(value)               | 将数字形式的 IP 地址转化为以点分隔的 IP 地址                                   |
+| BENCHMARK(n,expr)              | 将表达式 expr 重复执行 n 次。用于测试 MySQL 处理 expr 表达式所耗费的时间       |
+| CONVERT(value USING char_code) | 将 value 所使用的字符编码修改为 char_code                                      |
