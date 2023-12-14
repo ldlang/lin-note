@@ -89,6 +89,17 @@ export const jsConfig = {
       ],
     },
   ],
+  "/ts/": [
+    {
+      text: "ts笔记",
+      children: [
+        {
+          text: "1、日常类型",
+          link: "/ts/everyday-types.md",
+        },
+      ],
+    },
+  ],
   "/mysql/": [
     {
       text: "mysql笔记",

@@ -81,6 +81,11 @@ export const navbarConfig = [
     ],
   },
   {
+    text: "ts",
+    link: "/ts/",
+    activeMatch: "^/ts/",
+  },
+  {
     text: "mysql",
     link: "/mysql/",
     activeMatch: "^/mysql/",
