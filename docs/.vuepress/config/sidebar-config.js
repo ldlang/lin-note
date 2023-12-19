@@ -128,6 +128,10 @@ export const jsConfig = {
           text: "6、函数",
           link: "/mysql/function.md",
         },
+        {
+          text: "7、聚合函数",
+          link: "/mysql/aggregate-function.md",
+        },
       ],
     },
   ],
