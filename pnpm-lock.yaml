@@ -22,6 +22,9 @@ devDependencies:
   vuepress:
     specifier: 2.0.0-beta.67
     version: 2.0.0-beta.67(@vuepress/client@2.0.0-beta.67)(vue@3.3.4)
+  vuepress-code-copy:
+    specifier: ^1.1.0
+    version: 1.1.0
 
 packages:
 
@@ -1573,6 +1576,12 @@ packages:
       '@vue/runtime-dom': 3.3.4
       '@vue/server-renderer': 3.3.4(vue@3.3.4)
       '@vue/shared': 3.3.4
+
+  /vuepress-code-copy@1.1.0:
+    resolution: {integrity: sha512-W44aSXISKEG5i25a8Zzw6hBddhkHw53nfoYG9oTU/te1eE4StVPAQCHMmBPP/0vA5+1rKkB8cx797yY1e/Oosw==}
+    dependencies:
+      vue: 3.3.4
+    dev: true
 
   /vuepress-vite@2.0.0-beta.67(@vuepress/client@2.0.0-beta.67)(vue@3.3.4):
     resolution: {integrity: sha512-oaak2RPKBP0LeaDpDntlsQWLklCBf2vdeceXtPSLV2IzL/wtMHs5DQ/f7zXxCzvku3h/FIstmgoKq/vC0TvHkA==}
