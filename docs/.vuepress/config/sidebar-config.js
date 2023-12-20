@@ -97,6 +97,10 @@ export const jsConfig = {
           text: "1、日常类型",
           link: "/ts/everyday-types.md",
         },
+                {
+          text: "2、类型缩小",
+          link: "/ts/Narrowing.md",
+        },
       ],
     },
   ],
