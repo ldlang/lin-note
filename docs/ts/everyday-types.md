@@ -311,7 +311,7 @@ const obj2: y = {
 
 ### 类型断言
 
-有时候你比ts更加了解该数据的类型，此时就可以`as`关键字进行类型断言。
+有时候你比 ts 更加了解该数据的类型，此时就可以`as`关键字进行类型断言。
 
 **注意：**
 
@@ -321,20 +321,92 @@ const obj2: y = {
 4. any 可以被断言为任何类型
 5. 要使得 A 能够被断言为 B，只需要 A 兼容 B 或 B 兼容 A 即可
 
-* 断言为一致类型来使用这个类型的属性
+- 断言为一致类型来使用这个类型的属性
 
   ```typescript
   function fun(x: string | number) {
-      return (x as string).length;
+    return (x as string).length;
   }
   ```
 
-* 双重断言
+- 双重断言
 
   ```typescript
   function fun(x: number) {
-      return (x as any as string).length
+    return (x as any as string).length;
   }
   ```
 
-  
+### 字面类型
+
+- 使用 var、let 定义变量并赋值为简单的数据类型，那么 ts 会自动推断他的类型
+
+  ```typescript
+  // 推断str为 string类型
+  let str = "a";
+  ```
+
+- 使用 const 定义变量并赋值为简单的数据类型，那么这个变量的类型就是字面类型
+
+  ```typescript
+  // 推断str为 'a' 类型
+  const str = "a";
+
+  等同于;
+  const str: "a" = "a";
+  ```
+
+- 通过字面量组合成为联合字面量，类似于枚举值
+
+  ```typescript
+  // 此时 y只能被赋值为 'letf' 或 'center'
+  function fun(y: "letf" | "center") {}
+  ```
+
+- 字面量也可以和非字面类型结合使用
+
+  ```typescript
+  interface Options {
+    width: number;
+  }
+  function configure(x: Options | "auto") {}
+  configure({ width: 100 });
+  ```
+
+1. 字面推断
+
+   ```typescript
+   function fun(delay: number, methods: "post") {}
+
+   const req = { method: "post", delay: 5 };
+
+   // 此时req.method 只被推断为string的类型，不能赋值给'post'类型
+   fun(req.delay, req.method);
+   ```
+
+   解决方式一，将 req 变为字面量类型
+
+   ```typescript
+   const req = { method: "post", delay: 5 } as const;
+   ```
+
+   解决方式二，将 req.method 断言为 'post'
+
+   ```typescript
+   fun(req.delay, req.method as "post");
+   ```
+
+### 非空断言运算符（后缀 `!`）
+
+如果一个值可能是 null 或者 undefined，此时在同他身上读取属性是不行的，此时就可以使用非空断言，或者是 js 中的链判断运算符也行。非空断言是我们告诉程序这个值一定不会是空的，而链判断运算符是如果这个值为空就不往后面执行。
+
+非空断言其实也是类型断言，只不过是断言为该值不是 `null` 或 `undefined`。
+
+```typescript
+function fun(delay?: number) {
+  // 非空断言
+  return delay!.toString();
+  // 链判断运算符
+  return delay?.toString();
+}
+```
