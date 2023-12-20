@@ -88,4 +88,3 @@ function fun(x: string[] | string) {
   }
 }
 ```
-
