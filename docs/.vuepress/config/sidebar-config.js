@@ -109,6 +109,10 @@ export const jsConfig = {
           text: "4、对象类型-interface",
           link: "/ts/object-types.md",
         },
+        {
+          text: "4、类型操作",
+          link: "/ts/type-mainpulation.md",
+        },
       ],
     },
   ],
