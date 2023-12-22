@@ -88,3 +88,15 @@ function fun(x: string[] | string) {
   }
 }
 ```
+
+## `is`类型保护
+
+在 TypeScript 中，使用 is 运算符时，它的左边是函数的参数名，右边是要判断的类型。这种语法被称为类型谓词，用于在函数内部保护参数的类型，从而避免在函数体内执行特定操作时出现检查参数类型的运行时错误。
+
+使用的 pet is Fish 是一个类型保护谓词，它的作用是判断某个对象 pet 是否是 Fish 类型。如果条件成立，则该语句返回 true，并使得编译器将 pet 推断为 Fish 类型，从而避免在后续的代码中出现运行时错误或类型不匹配的问题。如果条件不成立，则该语句返回 false，pet 仍被推断为 Fish | Bird 类型。
+
+```typescript
+function isFish(pet: Fish | Bird): pet is Fish {
+  return (<Fish>pet).swim !== undefined;
+}
+```

@@ -105,6 +105,10 @@ export const jsConfig = {
           text: "3、关于函数",
           link: "/ts/more-on-function.md",
         },
+        {
+          text: "4、对象类型-interface",
+          link: "/ts/object-types.md",
+        },
       ],
     },
   ],
