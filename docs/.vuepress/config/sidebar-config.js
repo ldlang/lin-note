@@ -148,6 +148,10 @@ export const jsConfig = {
           text: "7、聚合函数",
           link: "/mysql/aggregate-function.md",
         },
+        {
+          text: "8、子查询",
+          link: "/mysql/subquery.md",
+        },
       ],
     },
   ],
