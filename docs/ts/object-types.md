@@ -201,6 +201,41 @@ let point: BPoint = {
 };
 ```
 
+### 接口重名
+
+1. 如果定义的接口重名了，那么接口里面的属性将会合并，如果同名属性被赋予了不同的类型，将会合并失败并报错。
+
+   ```typescript
+   interface Box {
+       height: number;
+       width: number;
+   }
+   interface Box {
+       width: number;
+       scale: number;
+   }
+   let box: Box = {
+       height: 0,
+       width: 0,
+       scale: 0
+   };
+   ```
+
+2. 如果接口中声明的是函数类型重名，则会进行函数重载。
+
+   ```typescript
+   interface Cloner {
+     clone(animal: Animal): Animal;
+   }
+   interface Cloner {
+     clone(animal: Sheep): Sheep;
+   }
+   interface Cloner {
+     clone(animal: Dog): Dog;
+     clone(animal: Cat): Cat;
+   }
+   ```
+
 ## 接口使用泛型
 
 在一些相同的或者会变化的类型就可以通过泛型去传递类型
@@ -220,3 +255,4 @@ const obj: Person<string> = {
   sex: "男",
 };
 ```
+

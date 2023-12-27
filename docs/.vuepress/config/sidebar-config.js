@@ -125,6 +125,10 @@ export const jsConfig = {
           text: "8、实用工具类型",
           link: "/ts/utils-type.md",
         },
+        {
+          text: "9、枚举",
+          link: "/ts/enum.md",
+        },
       ],
     },
   ],
