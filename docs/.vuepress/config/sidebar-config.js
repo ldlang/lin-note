@@ -113,6 +113,14 @@ export const jsConfig = {
           text: "5、类型操作",
           link: "/ts/type-mainpulation.md",
         },
+        {
+          text: "6、类",
+          link: "/ts/class.md",
+        },
+        {
+          text: "7、模块",
+          link: "/ts/modules.md",
+        },
       ],
     },
   ],
