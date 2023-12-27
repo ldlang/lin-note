@@ -297,3 +297,23 @@ const obj: convertOptions = {
 涉及一些莫名的 ts 方法[直接参考](https://ts.nodejs.cn/docs/handbook/2/mapped-types.html#%E9%80%9A%E8%BF%87-as-%E9%87%8D%E6%96%B0%E6%98%A0%E5%B0%84%E9%94%AE)
 
 ## 7、 模板字面类型
+
+字符串字面量类型，如果要统一的更改每个字面量类型时，目标字面类型就很有用。
+
+```typescript
+type str = "hello" | "world";
+type str1 = "wer";
+
+// type str2 = "hello_id" | "world_id"
+type str2 = `${str}_id`;
+//或者
+//type str2 = "hello-wer" | "world-wer"
+type str2 = `${str}-${str1}`;
+```
+
+### 内置方法
+
+- [Uppercase](https://ts.nodejs.cn/docs/handbook/2/template-literal-types.html#uppercasestringtype)：将字符串中的每个字符转换为大写版本。
+- [Lowercase](https://ts.nodejs.cn/docs/handbook/2/template-literal-types.html#lowercasestringtype)：将字符串中的每个字符转换为等效的小写字母。
+- [Capitalize](https://ts.nodejs.cn/docs/handbook/2/template-literal-types.html#capitalizestringtype)：将字符串中的第一个字符转换为等效的大写字母。
+- [Uncapitalize](https://ts.nodejs.cn/docs/handbook/2/template-literal-types.html#uncapitalizestringtype)：将字符串中的第一个字符转换为等效的小写字母。
