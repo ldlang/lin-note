@@ -16,19 +16,19 @@ sidebar: auto
   - 将子查询放在比较条件的右侧
   - 单行操作符对应单行子查询，多行操作符对应多行子查询
 
-例：查询工资比 Abel高的人的姓名和工资。
+例：查询工资比 Abel 高的人的姓名和工资。
 
-* 方式一
+- 方式一
 
   ```sql
   # 先查询 Abel 的工资，结果为 11000
-  SELECT salary FROM employees WHERE last_name = 'Abel' 
-  
+  SELECT salary FROM employees WHERE last_name = 'Abel'
+
   # 在查询工资比 11000 高的人
   SELECT last_name, salary FROM employees WHERE salary > 11000
   ```
 
-* 方式二
+- 方式二
 
   ```sql
   # 自连接
@@ -38,7 +38,7 @@ sidebar: auto
   AND e1.`salary` < e2.`salary`
   ```
 
-* 方式三
+- 方式三
 
   ```sql
   # 子查询
@@ -55,13 +55,13 @@ sidebar: auto
 
 分类方式一：按内查询的结果返回一条还是多条记录，将子查询分为`单行子查询`、`多行子查询`。
 
-* 单行子查询
-* 多行子查询
+- 单行子查询
+- 多行子查询
 
-分类方式2：按内查询是否被执行多次，将子查询划分为`相关(或关联)子查询`和`不相关(或非关联)子查询`。
+分类方式 2：按内查询是否被执行多次，将子查询划分为`相关(或关联)子查询`和`不相关(或非关联)子查询`。
 
-* 相关(或关联)子查询：子查询从数据表中查询了数据结果，如果这个数据结果只执行一次，然后这个数据结果作为主查询的条件进行执行，那么这样的子查询叫做不相关子查询
-* 不相关(或非关联)子查询：如果子查询需要执行多次，即采用循环的方式，先从外部查询开始，每次都传入子查询进行查询，然后再将结果反馈给外部，这种嵌套的执行方式就称为相关子查询
+- 相关(或关联)子查询：子查询从数据表中查询了数据结果，如果这个数据结果只执行一次，然后这个数据结果作为主查询的条件进行执行，那么这样的子查询叫做不相关子查询
+- 不相关(或非关联)子查询：如果子查询需要执行多次，即采用循环的方式，先从外部查询开始，每次都传入子查询进行查询，然后再将结果反馈给外部，这种嵌套的执行方式就称为相关子查询
 
 ### 单行子查询
 
@@ -81,23 +81,23 @@ sidebar: auto
 1. 单行子查询必须只能返回一条数据给主查询使用。
 2. 如果子查询的内容为空，那么主查询的内容也必为空。
 
-* 练习一
+- 练习一
 
-  返回job_id与141号员工相同，salary比143号员工多的员工姓名，job_id和工资
+  返回 job_id 与 141 号员工相同，salary 比 143 号员工多的员工姓名，job_id 和工资
 
   ```sql
   SELECT last_name, job_id, salary FROM employees
   WHERE job_id = (
   	SELECT job_id FROM employees WHERE employee_id = 141
-  ) 
-  AND salary > ( 
+  )
+  AND salary > (
       SELECT salary FROM employees WHERE employee_id = 143
   )
   ```
 
-* 练习二
+- 练习二
 
-  返回公司工资最少的员工的last_name,job_id和salary
+  返回公司工资最少的员工的 last_name,job_id 和 salary
 
   ```sql
   SELECT last_name, job_id, salary FROM employees
@@ -106,16 +106,16 @@ sidebar: auto
   )
   ```
 
-* 练习三
+- 练习三
 
-  查询与141号员工的manager_id和department_id相同的其他员工的employee_id，manager_id，department_id
+  查询与 141 号员工的 manager_id 和 department_id 相同的其他员工的 employee_id，manager_id，department_id
 
   ```sql
   SELECT employee_id, manager_id, department_id
-  FROM employees 
+  FROM employees
   WHERE manager_id = (
   	SELECT manager_id FROM employees WHERE employee_id = 141
-  ) 
+  )
   AND department_id = (
   	SELECT department_id FROM employees WHERE employee_id = 141
   )
@@ -134,9 +134,9 @@ sidebar: auto
   AND	employee_id <> 141;
   ```
 
-* 练习四
+- 练习四
 
-  查询最低工资大于50号部门最低工资的部门id和其最低工资
+  查询最低工资大于 50 号部门最低工资的部门 id 和其最低工资
 
   ```sql
   SELECT department_id, MIN(salary)
@@ -147,18 +147,15 @@ sidebar: auto
   )
   ```
 
-* 练习五
+- 练习五
 
-  显式员工的employee_id,last_name和location。其中，若员工department_id与location_id为1800的department_id相同，则location为Canada，其余则为USA。
+  显式员工的 employee_id,last_name 和 location。其中，若员工 department_id 与 location_id 为 1800 的 department_id 相同，则 location 为 Canada，其余则为 USA。
 
   ```sql
   SELECT employee_id, last_name,
          (CASE department_id
           WHEN
-              (SELECT department_id FROM departments WHERE location_id = 1800) 
+              (SELECT department_id FROM departments WHERE location_id = 1800)
           THEN 'Canada' ELSE 'USA' END) location
   FROM employees;
   ```
-
-  
-
