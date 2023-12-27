@@ -121,6 +121,10 @@ export const jsConfig = {
           text: "7、模块",
           link: "/ts/modules.md",
         },
+        {
+          text: "8、实用工具类型",
+          link: "/ts/utils-type.md",
+        },
       ],
     },
   ],
