@@ -51,3 +51,32 @@ const onPrintClick = async () => {
   customDiv.value.dispatchEvent(clickEvent);
 };
 ```
+
+## 下载服务端返回的文件流
+
+1. 通过请求获取到文件流
+2. 结合服务端返回的文件类型，指定 blob 的[MIME](https://www.runoob.com/http/mime-types.html)类型，将文件流转为 blob 流。
+3. 创建下载链接，创建 a 标签下载，删除链接，释放资源占用。
+
+```js
+axios
+  .post("./download", {
+    // 可以指定浏览器将要响应的数据类型为blob，也可以不指定
+    responseType: "blob",
+  })
+  .then((res) => {
+    // 将文件转为blob流
+    const blob = new Blob([res.data], {
+      type: "application/zip",
+    });
+    // 创建下载链接
+    const url = window.URL.createObjectURL(blob);
+    // 创建a标签，并赋值下载链接
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "下载文件名";
+    link.click();
+    // 释放资源的占用
+    URL.revokeObjectURL(url);
+  });
+```
