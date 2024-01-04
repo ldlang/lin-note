@@ -159,3 +159,92 @@ sidebar: auto
           THEN 'Canada' ELSE 'USA' END) location
   FROM employees;
   ```
+
+### 多行子查询
+
+* 也叫集合比较子查询
+* 内查询返回多行
+* 使用多行比较操作符
+
+多行子查询使用的操作符
+
+| 操作符 | 含义                                                         |
+| ------ | ------------------------------------------------------------ |
+| IN     | 等于列表中的**任意一个**                                     |
+| ANY    | 需要和单行比较操作符一起使用，和子查询返回的**某一个**值比较 |
+| ALL    | 需要和单行比较操作符一起使用，和子查询返回的**所有**值比较   |
+| SOME   | 实际上是ANY的别名，作用相同，一般常使用ANY                   |
+
+* 练习一
+
+  返回其它job_id中比job_id为‘IT_PROG’部门**任一**工资低的员工的员工号、姓名、job_id 以及salary
+
+  ```sql
+  SELECT employee_id, last_name, job_id, salary
+  FROM employees
+  WHERE job_id <> 'IT_PROG'
+  AND salary < ANY (
+  	SELECT salary FROM employees WHERE job_id = 'IT_PROG'
+  )
+  
+  ```
+
+* 练习二
+
+  返回其它job_id中比job_id为‘IT_PROG’部门所有工资**都**低的员工的员工号、姓名、job_id以及salary
+
+  ```sql
+  SELECT employee_id, last_name, job_id, salary
+  FROM employees
+  WHERE job_id <> 'IT_PROG'
+  AND salary < ALL (
+  	SELECT salary FROM employees WHERE job_id = 'IT_PROG'
+  )
+  ```
+
+* 练习三
+
+  查询平均工资最低的部门id
+
+  ```sql
+  # 解析
+  # 先查出每个部门的平均工资
+  SELECT department_id,AVG(salary) avg_sa
+  FROM employees
+  GROUP BY department_id
+  
+  # 把上面的结果单做一张表，查出他的最低工资
+  SELECT MIN(avg_sa) FROM (
+      SELECT department_id,AVG(salary) avg_sa
+      FROM employees
+      GROUP BY department_id
+  ) t_avg_sa
+  
+  # 用最低工资去等于查出对应的部门id
+  SELECT department_id , AVG(salary)
+  FROM employees
+  GROUP BY department_id
+  HAVING AVG(salary) = (
+  	SELECT MIN(avg_sa) FROM (
+  		SELECT department_id,AVG(salary) avg_sa
+  		FROM employees
+  		GROUP BY department_id
+  	) t_avg_sa
+  )
+  
+  # 方式二
+  # 解析子查询查出来的每个部门的平均工资，父查询只要小于平均工资全部的最小值
+  SELECT department_id , AVG(salary)
+  FROM employees
+  GROUP BY department_id
+  HAVING AVG(salary) <= ALL (
+  		SELECT AVG(salary) avg_sa
+  		FROM employees
+  		GROUP BY department_id
+  )
+  ```
+
+### 相关子查询
+
+
+
