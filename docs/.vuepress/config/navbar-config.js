@@ -71,6 +71,10 @@ export const navbarConfig = [
         link: "/vue/vue3.md",
       },
       {
+        text: "nuxt",
+        link: "/vue/nuxt.md",
+      },
+      {
         text: "常用插件",
         link: "/vue/plugins.md",
       },

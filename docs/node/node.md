@@ -4,7 +4,7 @@ sidebar: auto
 
 # node.js 笔记
 
-node 也是 js 的运行环境 但是无法调用 dom、bom 和 ajax 等的流浪器内置的 api
+node 也是 js 的运行环境 但是无法调用 dom、bom 和 ajax 等的浏览器内置的 api
 
 ### 如何用 node 运行 js 文件
 
