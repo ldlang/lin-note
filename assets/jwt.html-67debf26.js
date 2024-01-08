@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-4c884786","path":"/node/jwt.html","title":"","lang":"zh-CN","frontmatter":{"sidebar":"auto"},"headers":[{"level":2,"title":"jwt 认证机制","slug":"jwt-认证机制","link":"#jwt-认证机制","children":[]},{"level":2,"title":"前端使用","slug":"前端使用","link":"#前端使用","children":[]}],"git":{"updatedTime":1700211143000},"filePathRelative":"node/jwt.md"}');export{t as data};

@@ -1,0 +1,1 @@
+import{_ as t,o as n,c as a,d as e,e as c}from"./app-46ca9d3b.js";const o={},r=e("h1",{id:"nuxt",tabindex:"-1"},[e("a",{class:"header-anchor",href:"#nuxt","aria-hidden":"true"},"#"),c(" nuxt")],-1),s=[r];function _(d,i){return n(),a("div",null,s)}const h=t(o,[["render",_],["__file","nuxt.html.vue"]]);export{h as default};
