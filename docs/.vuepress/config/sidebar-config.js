@@ -168,6 +168,10 @@ export const jsConfig = {
           text: "8、子查询",
           link: "/mysql/subquery.md",
         },
+        {
+          text: "9、数据库表操作",
+          link: "/mysql/database-operation.md",
+        },
       ],
     },
   ],
