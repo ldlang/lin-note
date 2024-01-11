@@ -281,25 +281,23 @@ SHOW CREATE TABLE 表名\G
    ```
 
    TRUNCATE 语句**不能回滚**，而使用 DELETE 语句删除数据，可以回滚。
-   
-   DELETE FROM会回滚之前要先执行`SET autocommit = FALSE`，清空表之后再执行`ROLLBACK`即可将表回滚至清空之前的状态。
-   
+
+   DELETE FROM 会回滚之前要先执行`SET autocommit = FALSE`，清空表之后再执行`ROLLBACK`即可将表回滚至清空之前的状态。
+
    ```sql
    # 1
    SET autocommit = FALSE;
-   
+
    # 2
    DELETE FROM emp2;
    #TRUNCATE TABLE emp2;
-   
+
    # 3
    SELECT * FROM emp2;
-   
+
    # 4
    ROLLBACK;
-   
+
    # 5
    SELECT * FROM emp2;
    ```
-   
-   
