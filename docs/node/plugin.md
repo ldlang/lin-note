@@ -2,7 +2,9 @@
 sidebar: auto
 ---
 
-## jwt 认证机制
+# express 常用插件积累
+
+## 1、jwt
 
 1. jwt
 
@@ -138,7 +140,7 @@ sidebar: auto
    });
    ```
 
-## 前端使用
+**jwt 在前端使用**
 
 ```js
 // 登录获取token
@@ -158,3 +160,120 @@ axios
     console.log("用户接口", res.data);
   });
 ```
+
+## 2、mysql
+
+1. 安装 mysql 包
+
+   ```js
+   npm i mysql
+   ```
+
+2. 创建一个 js 文件，用于连接 mysql
+
+   ```js
+   const mysql = require("mysql");
+
+   const db = mysql.createConnection({
+     host: "localhost", // 地址
+     port: 3306, //端口号
+     user: "root", // 账户
+     password: "root", // 密码
+     database: "express", // 连接的表
+   });
+
+   // 封装查询数据库
+   const dbUtils = (sql) => {
+     return new Promise((resolve, reject) => {
+       db.query(sql, (err, res) => {
+         // query规定查询字符串的关键字
+         if (res) {
+           resolve(res);
+         } else {
+           reject(err);
+         }
+       });
+     });
+   };
+
+   module.exports = dbUtils; // 导出连接mysql的方法
+   ```
+
+3. 在路由中使用
+
+   在需要查询数据库的地方导入数据库连接的方法
+
+   ```js
+   const express = require("express");
+   const router = express.Router();
+   const dbUtils = require("../utils/db"); // 导入连接的方法
+
+   router.post("/user", async (req, res) => {
+     let bodyData = req.body;
+     let sql = `INSERT INTO user ( name,sex,age ) values ('${bodyData.name}','${bodyData.sex}',${bodyData.age})`;
+     let data = await dbUtils(sql);
+     res.send("ok");
+   });
+
+   module.exports = router;
+   ```
+
+**update 语句失败成功的判断**
+
+result.affectedRows 更新语句，如果只影响了一行那么说明更新成功，否则就是更新失败
+
+```js
+const sql = `update user set nickname = '${nickname}', email = '${email}' where id = ${id}`;
+db.query(sql, (err, result) => {
+  if (result.affectedRows === 1)
+    return res.send({ code: 200, data: result[0] });
+});
+```
+
+## 3、cors 解决跨域
+
+1. cors 的使用
+
+   ```js
+   npm i cors  // 下载插件
+
+   const cors = require('cors')   // 导入中间件
+
+   app.use(cors())  // 挂载中间件
+   ```
+
+2. cors 的原理
+
+   cors 全程 跨域资源共享 是由一些列的 http 响应头组成的，这些 http 响应头决定了浏览器是否阻止前端技术 js 代码跨域获取资源
+
+   ```js
+   Access-Control-Allow-Origin: *   // *代表所有的地址都能被访问
+   ```
+
+3. 指定域名不跨域
+
+   ```js
+   res.setHeader('Access-Control-Allow-Origin', 'http://lindalang.com')
+   指定只有 'http://lindalang.com'  访问服务器不跨域
+   ```
+
+4. CORS 仅支持客户端向服务器发送如下的 9 个请求头
+
+   **Accept、Accept-Language、Content-Language、DPR、Downlink、Save-Data、Viewport-Width、Width 、Content-Type** （值仅限于 **text/plain、multipart/form-data、application/x-www-form-urlencoded** 三者之一）
+   如果客户端向服务器发送了额外的请求头信息，则需要在服务器端，通过 Access-Control-Allow-Headers 对额外的请求头进行声明，否则这次请求会失败！
+
+   ```js
+   res.setHeader(
+     "Access-Control-Allow-Headers",
+     "Content-Type, X-Custom-Header"
+   );
+   ```
+
+5. 默认情况下，CORS 仅支持客户端发起 GET、POST、HEAD 请求
+
+   如果客户端希望通过 PUT、DELETE 等方式请求服务器的资源，则需要在服务器端，通过 Access-Control-Alow-Methods 来指明实际请求所允许使用的 HTTP 方法
+
+   ```js
+   res.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, HEAD");
+   res.setHEader("Access-Control-Allow-Methods", "*"); //支持所有请求方式
+   ```

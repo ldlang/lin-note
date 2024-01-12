@@ -44,12 +44,8 @@ export const navbarConfig = [
         link: "/node/express.md",
       },
       {
-        text: "jwt的使用",
-        link: "/node/jwt.md",
-      },
-      {
-        text: "使用mysql",
-        link: "/node/use-mysql.md",
+        text: "express常用插件积累",
+        link: "/node/plugin.md",
       },
     ],
   },
