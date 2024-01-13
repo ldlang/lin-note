@@ -182,7 +182,7 @@ sidebar: auto
     setPageLayout("top-menu");
   }, 1000);
   ```
-  
+
 - 当前页面禁用`layouts`布局
 
   ```js
@@ -193,7 +193,7 @@ sidebar: auto
 
 ### 路由
 
-1. `pages`文件夹下的`.vue`、`.js`、`.jsx`、`.mjs`、`.ts` 或 `.tsx`文件nuxt都会为他们创建路由。特殊的`index`会默认创建为`/`的路由
+1. `pages`文件夹下的`.vue`、`.js`、`.jsx`、`.mjs`、`.ts` 或 `.tsx`文件 nuxt 都会为他们创建路由。特殊的`index`会默认创建为`/`的路由
 
 2. 全匹配路由，跳转任意路由都会跳转到这个路由上
 
@@ -206,16 +206,16 @@ sidebar: auto
    跳转就需要 router.push("/home/home")
    ```
 
-4. 路由跳转，除了使用`vue-router`的跳转方式外，在nuxt中还提供了`navigateTo`的跳转方式，无需引用，使用方式和`vue-router`一样可以携带参数。但是使用时最好在前面加上`return`或者`await`。
+4. 路由跳转，除了使用`vue-router`的跳转方式外，在 nuxt 中还提供了`navigateTo`的跳转方式，无需引用，使用方式和`vue-router`一样可以携带参数。但是使用时最好在前面加上`return`或者`await`。
 
    ```js
-   function navigate(){
+   function navigate() {
      return navigateTo({
-       path: '/search',
+       path: "/search",
        query: {
-         name: 'zs',
-       }
-     })
+         name: "zs",
+       },
+     });
    }
    ```
 
@@ -223,44 +223,38 @@ sidebar: auto
 
    ```js
    definePageMeta({
-     title: '我的主页'
-   })
-   
-   console.log(route.meta.title) // 我的主页
+     title: "我的主页",
+   });
+
+   console.log(route.meta.title); // 我的主页
    ```
 
 ### 插件
 
-1. 类似于vue创建插件一样，在根目录下面创建`plugins`文件夹，里面顶层的文件才会被自动扫描为插件，如果文件夹的父级不直接是`plugins`那么则需要手动注册插件。
+1. 类似于 vue 创建插件一样，在根目录下面创建`plugins`文件夹，里面顶层的文件才会被自动扫描为插件，如果文件夹的父级不直接是`plugins`那么则需要手动注册插件。
 
    ```js
    // nuxt.config.ts
    export default defineNuxtConfig({
      // 注册baz和foz插件
-     plugins: [
-       '~/plugins/bar/baz',
-       '~/plugins/bar/foz'
-     ]
-   })
+     plugins: ["~/plugins/bar/baz", "~/plugins/bar/foz"],
+   });
    ```
 
-2. vue自定义指令
+2. vue 自定义指令
 
    ```js
    export default defineNuxtPlugin((nuxtApp) => {
-     nuxtApp.vueApp.directive('focus', {
-       mounted (el) {
-         el.focus()
+     nuxtApp.vueApp.directive("focus", {
+       mounted(el) {
+         el.focus();
        },
-       getSSRProps (binding, vnode) {
+       getSSRProps(binding, vnode) {
          // 你可以在这里提供SSR特定的props
-         return {}
-       }
-     })
-   })
+         return {};
+       },
+     });
+   });
    ```
 
 ## API
-
-
-
