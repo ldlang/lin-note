@@ -172,6 +172,10 @@ export const jsConfig = {
           text: "9、数据库表操作",
           link: "/mysql/database-operation.md",
         },
+        {
+          text: "10、DML增删改",
+          link: "/mysql/DML.md",
+        },
       ],
     },
   ],
