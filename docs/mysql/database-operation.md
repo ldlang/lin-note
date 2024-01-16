@@ -19,19 +19,19 @@ sidebar: auto
 
 - 方式 1：创建数据库
 
-```mysql
+```sql
 CREATE DATABASE 数据库名;
 ```
 
 - 方式 2：创建数据库并指定字符集
 
-```mysql
+```sql
 CREATE DATABASE 数据库名 CHARACTER SET 字符集;
 ```
 
 - 方式 3：判断数据库是否已经存在，不存在则创建数据库（`推荐`）
 
-```mysql
+```sql
 CREATE DATABASE IF NOT EXISTS 数据库名;
 ```
 
@@ -43,25 +43,25 @@ CREATE DATABASE IF NOT EXISTS 数据库名;
 
 - 查看当前所有的数据库
 
-```mysql
+```sql
 SHOW DATABASES; #有一个S，代表多个数据库
 ```
 
 - 查看当前正在使用的数据库
 
-```mysql
+```sql
 SELECT DATABASE();  #使用的一个 mysql 中的全局函数
 ```
 
 - 查看指定库下所有的表
 
-```mysql
+```sql
 SHOW TABLES FROM 数据库名;
 ```
 
 - 查看数据库的创建信息
 
-```mysql
+```sql
 SHOW CREATE DATABASE 数据库名;
 或者：
 SHOW CREATE DATABASE 数据库名\G
@@ -69,7 +69,7 @@ SHOW CREATE DATABASE 数据库名\G
 
 - 使用/切换数据库
 
-```mysql
+```sql
 USE 数据库名;
 ```
 
@@ -88,13 +88,13 @@ ALTER DATABASE 数据库名 CHARACTER SET 字符集;  #比如：gbk、utf8等
 
 - 方式 1：删除指定的数据库
 
-```mysql
+```sql
 DROP DATABASE 数据库名;
 ```
 
 - 方式 2：删除指定的数据库（`推荐`）
 
-```mysql
+```sql
 DROP DATABASE IF EXISTS 数据库名;
 ```
 

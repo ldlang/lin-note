@@ -176,6 +176,10 @@ export const jsConfig = {
           text: "10、DML增删改",
           link: "/mysql/DML.md",
         },
+        {
+          text: "11、数据类型",
+          link: "/mysql/dataType.md",
+        },
       ],
     },
   ],
