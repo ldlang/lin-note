@@ -52,13 +52,14 @@ sidebar: auto
 
    - content
 
-     上下文对象 content，content 中有三个值，分别是 attrs、emit 和 slots
+     上下文对象 content，content 中有四个值，分别是 attrs、emit、slots 和 expose
 
      参数说明：
 
      - attrs 父组件传过来的值，没有声明接收就放在 attr 里面
      - emit 分发自定义事件的函数，等于$emit
      - slots 收到的插槽内容，等于$slots
+     - expose 暴露的属性和方法
 
      ```js
      setup(props,content){

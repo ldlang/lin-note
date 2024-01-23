@@ -257,4 +257,224 @@ sidebar: auto
    });
    ```
 
-## API
+## 内置组件
+
+### \<ClientOnly> 客户端渲染
+
+默认插槽中的内容将会在客户端渲染，`fallback`插槽的东西将在服务端渲染，也就是这个页面刚回来的时候会显示`fallback`插槽面面的内容，在客户端内容渲染完毕后将会替换掉服务端渲染的内容
+
+```html
+<ClientOnly>
+  <template #fallback>
+    <p>这将在服务器端渲染</p>
+  </template>
+
+  <p>这将在客户端渲染</p>
+</ClientOnly>
+```
+
+### \<NuxtClientFallback> 客户端渲染
+
+实验性功能，暂不使用
+
+### \<NuxtPage> 等价于\<RouterView>
+
+是基于`RouterView`的封装。
+
+1. 组件属性
+
+   - name：告诉 `RouterView` 在匹配的路由记录的组件选项中使用对应名称渲染组件
+
+   - route：已解析所有组件的路由位置
+
+   - pageKey：控制何时重新渲染 `NuxtPage` 组件
+
+     ```html
+     <!--  组件在挂载时只会渲染一次 -->
+     <NuxtPage page-key="static" />
+
+     <!-- 任意路由及参数发生变化时就渲染 -->
+     <NuxtPage :page-key="route => route.fullPath" />
+     ```
+
+     ```js
+     // 也可在任意页面传入
+     <script setup lang="ts">
+     definePageMeta({
+       key: route => route.fullPath
+     })
+     </script>
+     ```
+
+2. 获取组件实例
+
+   一定要通过`pageRef`获取
+
+   ```js
+   <script setup lang="ts">
+   const page = ref()
+
+   onMounted(() => {
+     console.log(page.value.pageRef)
+   })
+   </script>
+
+   <template>
+     <NuxtPage ref="page" />
+   </template>
+   ```
+
+3. 自定义属性
+
+   往`NuxtPage `添加的自定义属性会传递到每一个子路由页面中，模板上通过`$attrs`，script 中通过`useAttrs()`即可获取对应的自定义属性
+
+   ```html
+   <NuxtPage foo="foo数据"></NuxtPage>
+
+   <!--  读取数据，在任意子页面中 -->
+   <div>{{ $attrs.foo }}</div>
+   ```
+
+### \<NuxtLayout> 布局组件
+
+`layout`布局组件，一般嵌套在`NuxtPage`组件的外层，给所有页面加上默认布局。
+
+1. 组件属性
+
+   - name：指定要渲染的 layout 布局组件，如果没有指定则默认使用`layouts`文件夹下的`default`组件。
+
+     ```html
+     <!--  指定使用layouts文件夹下的common组件布局 -->
+     <NuxtLayout name="common">
+       <NuxtPage></NuxtPage>
+     </NuxtLayout>
+     ```
+
+2. 自定义属性
+
+   往`NuxtLayout`添加的自定义属性会传递到对应的布局文件中，在布局文件中模板上通过`$attrs`，script 中通过`useAttrs()`即可获取对应的自定义属性。
+
+   ```html
+   <!-- 传递自定义属性 -->
+   <NuxtLayout title="我是一个自定义布局">
+     <NuxtPage></NuxtPage>
+   </NuxtLayout>
+
+   <!-- 在default组件中获取传递过来的值 -->
+   <div>{{ $attrs.title }}</div>
+   ```
+
+3. 获取组件实例
+
+   一定要通过`layoutRef`获取
+
+   ```js
+   <script setup lang="ts">
+   const layout = ref()
+
+   onMounted(() => {
+     console.log(layout.value.layoutRef)
+   })
+   </script>
+
+   <template>
+     <NuxtLayout ref="layout" />
+   </template>
+   ```
+
+### \<NuxtLink> 等价于\<RouterLink>
+
+- `to`：任意 URL 或 Vue Router 的 路由位置对象
+- `href`：`to` 的别名。如果与 `to` 一起使用，将忽略 `href`
+- `target`：链接上要应用的 `target` 属性值
+- `rel`：链接上要应用的 `rel` 属性值。对于外部链接，默认为 `"noopener noreferrer"`
+- `noRel`：如果设置为 `true`，链接将不会添加 `rel` 属性
+- `activeClass`：应用于活动链接的类。与 Vue Router 的 `active-class` 属性 在内部链接上的工作方式相同。默认为 Vue Router 的默认值 (`"router-link-active"`)
+- `exactActiveClass`：应用于精确活动链接的类。与 Vue Router 的 `exact-active-class` 属性在内部链接上的工作方式相同。默认为 Vue Router 的默认值 (`"router-link-exact-active"`)
+- `replace`：与 Vue Router 的 `replace` 属性在内部链接上的工作方式相同
+- `ariaCurrentValue`：应用于精确活动链接的 `aria-current` 属性值。与 Vue Router 的 `aria-current-value` 属性 在内部链接上的工作方式相同
+- `external`：强制将链接视为外部链接 (`true`) 或内部链接 (`false`)。这对处理边缘情况很有帮助
+- `prefetch` 和 **noPrefetch**：是否为进入视口的链接启用预加载资源
+- `prefetchedClass`：应用于已预加载链接的类
+- `custom`：是否将 `<NuxtLink>` 的内容包装在 `<a>` 元素中。它允许完全控制链接的渲染方式和点击时的导航工作。与 Vue Router 的 `custom` 属性的工作方式相同
+
+### \<NuxtLoadingIndicator /> 进度条
+
+1. [使用方式](https://nuxt.com.cn/docs/api/components/nuxt-loading-indicator)，好像不能正确的显示
+
+   ```html
+   <NuxtLayout>
+     <div>
+       <NuxtLoadingIndicator />
+       <!-- 在这里 -->
+       <NuxtPage />
+     </div>
+   </NuxtLayout>
+   ```
+
+2. 支持的属性
+
+   - `color`: 进度条的颜色。可以设置为 `false` 来关闭显式的颜色样式。
+   - `height`: 进度条的高度，以像素为单位（默认为 `3`）。
+   - `duration`: 进度条的持续时间，以毫秒为单位（默认为 `2000`）。
+   - `throttle`: 进度条出现和隐藏的节流时间，以毫秒为单位（默认为 `200`）
+
+3. 阅读源码后得到的使用方式
+
+   ```js
+   <template>
+     <div>
+       <NuxtLayout>
+         <NuxtLoadingIndicator ref="loadingIndicator"></NuxtLoadingIndicator>
+         <button @click="showLoadingIndicator">按钮</button>
+         <NuxtPage></NuxtPage>
+       </NuxtLayout>
+     </div>
+   </template>
+
+   <script setup lang="ts">
+   const loadingIndicator = ref()
+
+   function showLoadingIndicator() {
+     // 开启进度条
+     loadingIndicator.value.start()
+     setTimeout(() => {
+       // 关闭进度条
+       loadingIndicator.value.finish()
+     }, 10000)
+   }
+   </script>
+   ```
+
+### \<NuxtErrorBoundary> 捕获客户端错误
+
+组件用于处理在其默认插槽中发生的客户端错误
+
+`<NuxtErrorBoundary>`在底层使用了 Vue 的 onErrorCaptured 钩子。
+
+- @error：当组件的默认插槽抛出错误时触发的事件。
+
+  ```vue
+  <template>
+    <NuxtErrorBoundary @error="logSomeError">
+      <!-- ... -->
+    </NuxtErrorBoundary>
+  </template>
+  ```
+
+### \<NuxtIsland> 渲染静态组件
+
+实验性组件，用于渲染一个没有任何客户端 JS 的非交互式组件。
+
+### \<Teleport> 传送
+
+将插槽里面的内容传递到`to`指定的 dom 节点下面
+
+```html
+<template>
+  <Teleport to="body">
+      <p>来自模态框的问候！</p>
+    </div>
+  </Teleport>
+</template>
+```
