@@ -61,7 +61,7 @@ const onPrintClick = async () => {
 ```js
 axios
   .post("./download", {
-    // 可以指定浏览器将要响应的数据类型为blob，也可以不指定
+    // 可以指定浏览器将要响应的数据类型为blob，也可以不指定，最好指定响应的数据类型为blob
     responseType: "blob",
   })
   .then((res) => {
