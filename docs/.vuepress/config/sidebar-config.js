@@ -180,6 +180,10 @@ export const jsConfig = {
           text: "11、数据类型",
           link: "/mysql/dataType.md",
         },
+        {
+          text: "12、约束",
+          link: "/mysql/constraint.md",
+        },
       ],
     },
   ],

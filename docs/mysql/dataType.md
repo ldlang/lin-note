@@ -371,7 +371,7 @@ ENUM 类型也叫作枚举类型，ENUM 类型的取值范围需要在定义字�
 
 创建表如下：
 
-```mysql
+```sql
 CREATE TABLE test_enum(
 season ENUM('春','夏','秋','冬','unknow')
 );
@@ -379,7 +379,7 @@ season ENUM('春','夏','秋','冬','unknow')
 
 添加数据：
 
-```mysql
+```sql
 INSERT INTO test_enum
 VALUES('春'),('秋');
 
@@ -418,7 +418,7 @@ SET 类型在存储数据时成员个数越多，其占用的存储空间越大�
 
 创建表：
 
-```mysql
+```sql
 CREATE TABLE test_set(
 s SET ('A', 'B', 'C')
 );
@@ -426,7 +426,7 @@ s SET ('A', 'B', 'C')
 
 向表中插入数据：
 
-```mysql
+```sql
 INSERT INTO test_set (s) VALUES ('A'), ('A,B');
 
 #插入重复的SET类型成员时，MySQL会自动删除重复的成员
@@ -441,14 +441,14 @@ FROM test_set;
 
 举例：
 
-```mysql
+```sql
 CREATE TABLE temp_mul(
 gender ENUM('男','女'),
 hobby SET('吃饭','睡觉','打豆豆','写代码')
 );
 ```
 
-```mysql
+```sql
 INSERT INTO temp_mul VALUES('男','睡觉,打豆豆'); #成功
 
 # Data truncated for column 'gender' at row 1
@@ -506,7 +506,7 @@ JSON（JavaScript Object Notation）是一种轻量级的`数据交换格式`。
 在 MySQL 5.7 中，就已经支持 JSON 数据类型。在 MySQL 8.x 版本中，JSON 类型提供了可以进行自动验证的 JSON 文档和优化的存储结构，使得在 MySQL 中存储和读取 JSON 类型的数据更加方便和高效。
 创建数据表，表中包含一个 JSON 类型的字段 js 。
 
-```mysql
+```sql
 CREATE TABLE test_json(
 js json
 
@@ -515,14 +515,14 @@ js json
 
 向表中插入 JSON 数据。
 
-```mysql
+```sql
 INSERT INTO test_json (js)
 VALUES ('{"name":"张三", "age":18, "address":{"province":"地址", "city":"城市"}}');
 ```
 
 当需要检索 JSON 类型的字段中数据的某个具体值时，可以使用“->”和“->>”符号。
 
-```mysql
+```sql
 mysql> SELECT js -> '$.name' AS NAME,js -> '$.age' AS age ,js -> '$.address.province' AS province, js -> '$.address.city' AS city
     -> FROM test_json;
 +----------+------+-----------+-----------+
