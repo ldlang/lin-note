@@ -322,3 +322,188 @@ ALTER TABLE 表名 DROP INDEX 索引;
 4. mysql5 和 mysql8 的一点区别
 
    在 mysql5 中如果自增到 9，然后把 9 删了，再重启服务，那么在插入一条数据会是 9，而在 mysql8 中即使重启服务再插入一条数据也不会是 9，而是 10。原因是 MySQL 8.0 将自增主键的计数器持久化到`重做日志`中。每次计数器发生改变，都会将其写入重做日志中。如果数据库重启，InnoDB 会根据重做日志中的信息来初始化计数器的内存值。
+
+### 外键约束 (FOREIGN KEY)
+
+限定某个表的某个字段的引用完整性。
+
+主表（父表）：被引用的表，被参考的表
+
+从表（子表）：引用别人的表，参考别人的表
+
+1. 特点
+
+   - 从表的外键列，必须引用/参考主表的主键或唯一约束的列
+
+   为什么？因为被依赖/被参考的值必须是唯一的
+
+   - 在创建外键约束时，如果不给外键约束命名，**默认名不是列名，而是自动产生一个外键名**（例如 student_ibfk_1;），也可以指定外键约束名。
+
+   - 创建(CREATE)表时就指定外键约束的话，先创建主表，再创建从表
+
+   - 删表时，先删从表（或先删除外键约束），再删除主表
+
+   - 当主表的记录被从表参照时，主表的记录将不允许删除，如果要删除数据，需要先删除从表中依赖该记录的数据，然后才可以删除主表的数据
+
+   - 在“从表”中指定外键约束，并且一个表可以建立多个外键约束
+
+   - 从表的外键列与主表被参照的列名字可以不相同，但是数据类型必须一样，逻辑意义一致。如果类型不一样，创建子表时，就会出现错误“ERROR 1005 (HY000): Can't create table'database.tablename'(errno: 150)”。
+
+   例如：都是表示部门编号，都是 int 类型。
+
+   - **当创建外键约束时，系统默认会在所在的列上建立对应的普通索引**。但是索引名是外键的约束名。（根据外键查询效率很高）
+
+   - 删除外键约束后，必须`手动`删除对应的索引
+
+2. 建表时创建约束
+
+   ```sql
+   create table 主表名称(
+   	字段1  数据类型  primary key,
+       字段2  数据类型
+   );
+
+   create table 从表名称(
+   	字段1  数据类型  primary key,
+       字段2  数据类型,
+       [CONSTRAINT <外键约束名称>] FOREIGN KEY（从表的某个字段) references 主表名(被参考字段)
+   );
+   -- (从表的某个字段)的数据类型必须与主表名(被参考字段)的数据类型一致，逻辑意义也一样
+   -- (从表的某个字段)的字段名可以与主表名(被参考字段)的字段名一样，也可以不一样
+
+   -- FOREIGN KEY: 在表级指定子表中的列
+   -- REFERENCES: 标示在父表中的列
+   ```
+
+   例：
+
+   ```sql
+   create table dept( #主表
+   	did int primary key,		#部门编号
+       dname varchar(50)			#部门名称
+   );
+
+   create table emp(#从表
+   	eid int primary key,  #员工编号
+       ename varchar(5),     #员工姓名
+       deptid int,				#员工所在的部门
+       foreign key (deptid) references dept(did)   -- 在从表中指定外键约束
+       -- emp表的deptid和和dept表的did的数据类型一致，意义都是表示部门的编号
+   );
+   ```
+
+   > （1）主表 dept 必须先创建成功，然后才能创建 emp 表，指定外键成功。
+   > （2）删除表时，先删除从表 emp，再删除主表 dept
+
+3. 修改时增加约束
+
+   一般情况下，表与表的关联都是提前设计好了的，因此，会在创建表的时候就把外键约束定义好。不过，如果需要修改表的设计（比如添加新的字段，增加新的关联关系），但没有预先定义外键约束，那么，就要用修改表的方式来补充定义。
+
+   ```sql
+   ALTER TABLE 从表名 ADD [CONSTRAINT 约束名] FOREIGN KEY (从表的字段) REFERENCES 主表名(被引用字段) [on update xx][on delete xx];
+   ```
+
+   例：
+
+   ```sql
+   ALTER TABLE emp1
+   ADD [CONSTRAINT emp_dept_id_fk] FOREIGN KEY(dept_id) REFERENCES dept(dept_id);
+   ```
+
+4. 增删改特点
+
+   - 添加了外键约束后，主表的修改和删除数据受约束
+   - 添加了外键约束后，从表的添加和修改数据受约束
+   - 在从表上建立外键，要求主表必须存在
+   - 删除主表时，要求从表从表先删除，或将从表中外键引用该主表的关系先删除
+
+5. 等级约束
+
+   - `Cascade方式`：在父表上 update/delete 记录时，同步 update/delete 掉子表的匹配记录
+   - `Set null方式`：在父表上 update/delete 记录时，将子表上匹配记录的列设为 null，但是要注意子表的外键列不能为 not null
+   - `No action方式`：如果子表中有匹配的记录，则不允许对父表对应候选键进行 update/delete 操作
+   - `Restrict方式`：同 no action， 都是立即检查外键约束
+   - `Set default方式`（在可视化工具 SQLyog 中可能显示空白）：父表有变更时，子表将外键列设置成一个默认的值，但 Innodb 不能识别
+
+   如果没有指定等级，就相当于 Restrict 方式。
+
+   对于外键约束，最好是采用: `ON UPDATE CASCADE ON DELETE RESTRICT` 的方式。
+
+6. 删除外键约束
+
+   ```sql
+   (1)第一步先查看约束名和删除外键约束
+   SELECT * FROM information_schema.table_constraints WHERE table_name = '表名称';#查看某个表的约束名
+
+   ALTER TABLE 从表名 DROP FOREIGN KEY 外键约束名;
+
+   （2）第二步查看索引名和删除索引。（注意，只能手动删除）
+   SHOW INDEX FROM 表名称; #查看某个表的索引名
+
+   ALTER TABLE 从表名 DROP INDEX 索引名;
+   ```
+
+7. 总结
+
+   - 建和不建外键约束的区别，建外键约束，你的操作（创建表、删除表、添加、修改、删除）会受到限制，从语法层面受到限制。例如：在员工表中不可能添加一个员工信息，它的部门的值在部门表中找不到。不建外键约束，你的操作（创建表、删除表、添加、修改、删除）不受限制，要保证数据的`引用完整性`，只能依`靠程序员的自觉`，或者是`在java程序中进行限定`。
+   - 那么建和不建外键约束和查询没有关系，在 MySQL 里，外键约束是有成本的，需要消耗系统资源。对于大并发的 SQL 操作，有可能会不适合。比如大型网站的中央数据库，可能会`因为外键约束的系统开销而变得非常慢`。所以， MySQL 允许你不使用系统自带的外键约束，在`应用层面`完成检查数据一致性的逻辑。也就是说，即使你不用外键约束，也要想办法通过应用层面的附加逻辑，来实现外键约束的功能，确保数据的一致性。
+
+### 检查约束 (check)
+
+MySQL5.7 可以使用 check 约束，但 check 约束对数据验证没有任何作用。添加数据时，没有任何错误或警告
+
+**MySQL 8.0 中可以使用 check 约束了**
+
+### 默认值约束 (default)
+
+给某个字段/某列指定默认值，一旦设置默认值，在插入数据时，如果此字段没有显式赋值，则赋值为默认值。
+
+1. 创建时添加约束
+
+   默认值约束一般不在唯一键和主键列上加
+
+   ```sql
+   create table 表名称(
+   	字段名  数据类型  primary key,
+       字段名  数据类型  unique key not null,
+       字段名  数据类型  unique key,
+       字段名  数据类型  not null default 默认值,
+   );
+   create table 表名称(
+   	字段名  数据类型 default 默认值 ,
+       字段名  数据类型 not null default 默认值,
+       字段名  数据类型 not null default 默认值,
+       primary key(字段名),
+       unique key(字段名)
+   );
+   ```
+
+2. 修改表时添加
+
+   ```sql
+   alter table 表名称 modify 字段名 数据类型 default 默认值;
+
+   -- 如果这个字段原来有非空约束，你还保留非空约束，那么在加默认值约束时，还得保留非空约束，否则非空约束就被删除了
+   -- 同理，在给某个字段加非空约束也一样，如果这个字段原来有默认值约束，你想保留，也要在modify语句中保留默认值约束，否则就删除了
+   alter table 表名称 modify 字段名 数据类型 default 默认值 not null;
+   ```
+
+3. 删除默认值约束
+
+   ```sql
+   # 删除默认值约束，也不保留非空约束
+   alter table 表名称 modify 字段名 数据类型 ;
+
+   # 删除默认值约束，保留非空约束
+   alter table 表名称 modify 字段名 数据类型  not null;
+
+   #删除gender字段默认值约束，如果有非空约束，也一并删除
+   alter table employee modify gender char;
+
+   #删除tel字段默认值约束，保留非空约束
+   alter table employee modify tel char(11)  not null;
+   ```
+
+4. 注意
+
+   建表时，最好加 not null default '' 或 default 0，不想让表中出现 null 值，因为 null 是一种特殊值，比较时只能用专门的 is null 和 is not null 来比较。碰到运算符，通常返回 null，效率不高。影响提高索引效果。因此，我们往往在建表时 not null default '' 或 default 0。
