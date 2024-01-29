@@ -478,3 +478,15 @@ sidebar: auto
   </Teleport>
 </template>
 ```
+
+## composables Api
+
+### useAppConfig()
+
+读取根目录下`app.config.ts`的配置项。
+
+```js
+const appConfig = useAppConfig()
+console.log(appConfig)
+```
+
