@@ -657,3 +657,103 @@ useHead({
    - key：在你的 Nuxt 应用程序中标识数据的唯一键
    - get：返回初始数据的函数
    - set：在客户端接收数据的函数
+
+### useNuxtData
+
+读取请求通过`key`存储的值。
+
+```js
+const { data: res } = await useFetch<IData>('/api/index', {
+  key: 'index',
+})
+
+useNuxtData('index') // 得到index这个key请求的结果，是缓存的结果，并不会重新请求
+```
+
+### useRequestEvent
+
+函数来访问传入的请求事件，只能在服务端使用。
+
+```js
+// 获取底层请求事件
+const event = useRequestEvent()
+```
+
+### useRequestHeaders
+
+访问传入请求的头部信息。
+
+```js
+// 获取所有请求头信息
+const headers = useRequestHeaders()
+
+// 仅获取 cookie 请求头信息
+const headers = useRequestHeaders(['cookie'])
+```
+
+### useRequestURL
+
+访问传入的请求URL，[参数说明](https://developer.mozilla.org/zh-CN/docs/Web/API/URL#instance_properties)。
+
+```js
+const url = useRequestURL()
+```
+
+### useRuntimeConfig
+
+访问`nuxt.config.ts`的`runtimeConfig`配置信息
+
+```js
+// nuxt.config.ts
+export default defineNuxtConfig({
+  runtimeConfig: {
+    // 私有密钥仅在服务器端可用
+    apiSecret: '123',
+
+    // 对客户端暴露的公共密钥
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api'
+    }
+  }
+})
+
+// 任意文件中
+const config = useRuntimeConfig()
+```
+
+### useSeoMeta
+
+设置seo优化标题等，支持响应式数据，超过100多项配置，不罗列。
+
+```js
+useSeoMeta({
+  title: '我的神奇网站',
+  description: '这是我的神奇网站，让我告诉你关于它的一切。',
+  keywords: '神奇, 网站'
+})
+
+// 或者
+const title = ref('我的标题')
+useSeoMeta({
+  title,
+  description: () => `描述：${title.value}`
+})
+```
+
+### useServerSeoMeta
+
+等价于useSeoMeta，只是不支持响应式数据。
+
+### useState
+
+等同于pinia中的state，是一个全局共享的状态
+
+```js
+// 存储一个值
+const count = useState('counter', () => Math.round(Math.random() * 100))
+
+// 在任何页面读取值
+const count = useState('counter')
+console.log(count.value)
+```
+
