@@ -55,6 +55,16 @@ export const navbarConfig = [
     activeMatch: "^/git/",
   },
   {
+    text: "包管理",
+    activeMatch: "^/npm/",
+    children: [
+      {
+        text: "pnpm",
+        link: "/npm/pnpm.md",
+      },
+    ]
+  },
+  {
     text: "vue",
     activeMatch: "^/vue/",
     children: [

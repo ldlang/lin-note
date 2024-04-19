@@ -9,9 +9,7 @@ export default defineUserConfig({
   base: "/lin-note/",
   lang: "zh-CN",
   title: "学海无涯，苦乐自知。",
-
   description: "ldlang-note",
-  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
   plugins: [
     searchPlugin({
       locales: {
