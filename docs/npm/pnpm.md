@@ -48,9 +48,9 @@ npm i -g pnpm
 
 - 固定项目的`pnpm`版本
 
-  默认固定当前正在使用的版本，固定之后`package.json`中就会回增加`packageManager`的配置项用于记录固定版本**<包管理器名称>@<版本>+<哈希>**
+  默认固定当前正在使用的版本，固定之后`package.json`中就会回增加`packageManager`的配置项用于记录固定版本**<包管理器名称>@<版本>+<哈希>**，如果项目中的`pnpm`版本已经被固定了，那么再次执行这个命令会将固定的版本改为当前全局最新的版本。
 
-  ```
+  ```bash
   corepack use pnpm@latest
   ```
 
