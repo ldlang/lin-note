@@ -50,7 +50,7 @@ npm i -g pnpm
 
   默认固定当前正在使用的版本，固定之后`package.json`中就会回增加`packageManager`的配置项用于记录固定版本**<包管理器名称>@<版本>+<哈希>**
 
-  ```bash
+  ```
   corepack use pnpm@latest
   ```
 
