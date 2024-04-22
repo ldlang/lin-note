@@ -58,10 +58,10 @@ export const navbarConfig = [
     text: "包管理",
     activeMatch: "^/npm/",
     children: [
-      {
-        text: "pnpm",
-        link: "/npm/pnpm.md",
-      },
+      // {
+      //   text: "pnpm",
+      //   link: "/npm/pnpm.md",
+      // },
     ]
   },
   {

@@ -240,3 +240,41 @@ pnpm update "@babel/*" "\!@babel/core"
 - `--prod, -P`，仅删除 `dependencies` 中列出的依赖包。
 - `--dev, -D`，仅删除 `devDependencies` 中列出的依赖包。
 - `--no-optional`，仅删除 `optionalDependencies` 中列出的依赖包。
+
+### pnpm link
+
+让当前目录下的软件包在系统范围内或其它位置都可访问。
+
+作用：当你开发一个包的时候，又不想每次都传到`npm`上再下下来，就可以将包`link`到自己电脑的上，此时在你电脑任意一个项目里面再`link <包名>`即可使用刚刚的包。
+
+**別名： ** `ln`
+
+```bash
+pnpm link <dir>
+pnpm link --global
+pnpm link --global <pkg>
+```
+
+**配置项： **
+
+`--dir <dir>, -C`， 将链接的目标位置修改为 `<dir>`。
+
+### pnpm unlink
+
+断开某个软件包在全局范围内的链接（与 `pnpm link` 命令的功能相反）。
+
+如果不指定参数的话，当前项目下的所有已经链接的依赖项都将被切断链接。
+
+### pnpm audit
+
+检查已安装包的已知安全问题。如果发现安全问题，请尝试通过 `pnpm update` 更新您的依赖项。 如果简单的更新不能解决所有问题，请使用 `overrides` 来强制使用 不易受攻击的版本，或者`pnpm audit --fix`
+
+### pnpm list
+
+此命令会以一个树形结构输出所有的已安装`package`的版本及其依赖。
+
+**别名：** `ls`
+
+### pnpm outdated
+
+检查过期的 `packages`。 此命令可以通过提供参数来限制为已安装 `packages`的一个子集(支持 `patterns`)
