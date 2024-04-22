@@ -91,7 +91,7 @@ export const jsConfig = {
   ],
   "/ts/": [
     {
-      text: "ts笔记",
+      text: "ts官网笔记",
       children: [
         {
           text: "1、日常类型",
@@ -131,6 +131,15 @@ export const jsConfig = {
         },
       ],
     },
+    {
+      text: "阮一峰ts笔记",
+      children: [
+        {
+          text: "interface",
+          link: "/ts/ruanyifeng-ts/interface.md",
+        },
+      ]
+    }
   ],
   "/mysql/": [
     {
