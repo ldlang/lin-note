@@ -340,3 +340,21 @@ const b: B = {
 ```
 
 ## 3、`interface`的合并
+
+如果声明了两个同名的接口，那么他们将会自动合并，但是如果同名接口中同名`key`的`value`的类型不同将会报错。
+
+```typescript
+interface IPerson {
+  sex: number;
+}
+
+interface IPerson {
+  age: number;
+}
+
+const persen: IPerson = {
+  age: 0,
+  sex: 0,
+}
+```
+
