@@ -1,4 +1,4 @@
-export const jsConfig = {
+export const sidebar = {
   "/javaScript/red-book/": [
     {
       text: "红宝书笔记",

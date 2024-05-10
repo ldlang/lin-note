@@ -1,7 +1,7 @@
 import { defineUserConfig } from "vuepress";
 import { defaultTheme } from "vuepress";
-import { jsConfig } from "./config/sidebar-config.js";
-import { navbarConfig } from "./config/navbar-config.js";
+import { sidebar } from "./config/sidebar.js";
+import { navbar } from "./config/navbar.js";
 import { searchPlugin } from "@vuepress/plugin-search";
 import CodeCopyPulgin from 'vuepress-code-copy'
 
@@ -25,9 +25,7 @@ export default defineUserConfig({
   ],
   theme: defaultTheme({
     contributors: false,
-    navbar: [...navbarConfig],
-    sidebar: {
-      ...jsConfig,
-    },
+    navbar,
+    sidebar,
   }),
 });
