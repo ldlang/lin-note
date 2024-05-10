@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-562ec4eb","path":"/npm/npm.html","title":"npm","lang":"zh-CN","frontmatter":{"sidebar":"auto"},"headers":[{"level":2,"title":"快速使用","slug":"快速使用","link":"#快速使用","children":[{"level":3,"title":"npm版本管理","slug":"npm版本管理","link":"#npm版本管理","children":[]}]}],"git":{"updatedTime":1715239512000},"filePathRelative":"npm/npm.md"}');export{e as data};
