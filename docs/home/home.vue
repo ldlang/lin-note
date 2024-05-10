@@ -2,9 +2,9 @@
   <div class="container center">
     <img src="/avatar.jpg" class="avatar" />
     <h3 class="name">林达浪</h3>
-    <!-- <div class="center" style="height: 50px">
+    <div class="center" style="height: 50px">
       <h1 id="title" class="title"></h1>
-    </div> -->
+    </div>
   </div>
   <canvas-star />
 </template>
@@ -29,10 +29,14 @@ const wisdomList = [
 
 let typed;
 onMounted(() => {
-  typed = new Typed("#title", {
-    strings: [wisdomList[parseInt(Math.random() * 10)]],
-    typeSpeed: 50,
-  });
+  try {
+    typed = new Typed("#title", {
+      strings: [wisdomList[parseInt(Math.random() * 10)]],
+      typeSpeed: 50,
+    });
+  } catch (e) {
+    console.log(e)
+  }
 });
 onBeforeUnmount(() => {
   typed.destroy();
