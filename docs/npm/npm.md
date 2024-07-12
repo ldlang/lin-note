@@ -35,8 +35,8 @@ sidebar: auto
 1. 使用`npm install <package_name>`进行安装，简写`npm i <package_name> `
 
    ```bash
-   # 安装loadsh
-   npm i loadsh
+   # 安装lodash
+   npm i lodash
    ```
 
 ### 4、使用`package.json`
@@ -77,5 +77,88 @@ sidebar: auto
      }
      ```
 
-     
+3. 指定依赖关系
+
+   * **dependencies**：生产必须的包，默认安装为生产依赖。
+
+     安装命令：
+
+     ```bash
+     npm i lodash -S
+     # 或者
+     npm i lodash --save
+     ```
+
+   * **devDependencies**：仅用于开发测试的包。
+
+     ```bash
+     npm i lodash -D
+     # 或者
+     npm i lodash --save-dev
+     ```
+
+### 5、如何更新本地安装的包
+
+[npm updata]()
+
+### 6、如何卸载本地的包
+
+```bash
+# 实测此命令不管是开发包，还是生产包都能够卸载，不需要指定--save或--save-dev
+npm uninstall lodash
+#或者
+npm remove lodash
+```
+
+### 7、如何安装全局包
+
+```bash
+npm i -g lodash
+```
+
+### 8、如何更新全局包
+
+1. 更新指定的全局包
+
+   ```bash
+   npm update -g nodemon
+   ```
+
+2. 更新全局所有包，在指定范围内的包
+
+   ```bash
+   npm update -g
+   ```
+
+3. 更新全局所有包到npm上注册的最新版本
+
+   ```bash
+   npm install npm@latest -g
+   ```
+
+### 9、如何卸载全局包
+
+```bash
+npm uninstall -g nodemon
+# 或者
+npm remove -g nodemon
+```
+
+### 10、如何发布和更新包
+
+[npm login 和npm publish](https://www.npmjs.cn/getting-started/publishing-npm-packages/)
+
+### 11、如何使用作用域包(@)
+
+创建包的时候只需要将`package.json`中的`name`属性以`@`打头，如下作用域就是`@username`，包名就是`/`后面的`project-name`。
+
+```json
+{
+  "name": "@username/project-name"
+}
+```
+
+
+
+
 
