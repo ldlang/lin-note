@@ -235,7 +235,59 @@ npm缓存严格来说是缓存:不应该依赖它作为包数据的持久和可�
   4. 如果 `node_modules` 已存在，则在开始安装之前 `npm ci` 会自动将其删除。
   5. 它永远不会写入 `package.json` 或任何软件包锁：安装基本上是冻结的。
 
+### 4、config 配置
 
+1. 设置
+
+   ```bash
+   # 语法
+   npm config set key value
+   # 设置邮箱
+   npm config set init-author-email "your-email@example.com"
+   
+   # 设置镜像
+   npm config set registry https://registry.npmjs.org
+   ```
+
+2. 读取
+
+   ```bash
+   # 读取邮箱
+   npm config get init-author-email
+   
+   # 读取镜像
+   npm config set registry
+   ```
+
+3. 删除
+
+   ```bash
+   # 删除邮箱
+   npm config get init-author-email
+   
+   # 删除镜像
+   npm config set registry
+   ```
+
+4. 显示所有配置
+
+   ```bash
+   npm config list
+   
+   # 显示所有配置及默认值
+   npm config list -l
+   
+   # 以json的形式显示
+   npm config list -l --json
+   ```
+
+5. 在编辑器中打开配置文件。使用标志 `--global` 编辑全局配置。
+
+   ```bash
+   npm config edit
+   ```
+
+   
 
 
 
