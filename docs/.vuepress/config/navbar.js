@@ -61,11 +61,11 @@ export const navbar = [
       {
         text: "npm",
         link: "/npm/npm.md",
-      }
-      // {
-      //   text: "pnpm",
-      //   link: "/npm/pnpm.md",
-      // },
+      },
+      {
+        text: "pnpm",
+        link: "/npm/pnpm.md",
+      },
     ]
   },
   {
