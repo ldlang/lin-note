@@ -916,3 +916,6 @@ npm install lodash --save-optional
 ### 36、lint-staged 代码提交格式化
 
 要使用 `lint-staged`，你需要先安装它。通常，它与 `husky` 一起使用，以便在 Git 钩子（如 pre-commit 钩子）中运行。
+
+## 四、.npmrc
+
