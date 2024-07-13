@@ -797,7 +797,7 @@ npm install lodash --save-optional
 "os": [ "linux" ]
 ```
 
-### 30、cpu 只能能够运行的cpu
+### 30、cpu 指定能够运行的cpu
 
 ```json
 // 除了Intel 64-bit的cpu，其他都能运行
