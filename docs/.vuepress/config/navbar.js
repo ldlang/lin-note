@@ -56,15 +56,15 @@ export const navbar = [
   },
   {
     text: "包管理",
-    activeMatch: "^/npm/",
+    activeMatch: "^/pack/",
     children: [
       {
         text: "npm",
-        link: "/npm/npm.md",
+        link: "/pack/npm/",
       },
       {
         text: "pnpm",
-        link: "/npm/pnpm.md",
+        link: "/pack/pnpm.md",
       },
     ]
   },

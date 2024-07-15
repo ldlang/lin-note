@@ -89,6 +89,25 @@ export const sidebar = {
       ],
     },
   ],
+  "/pack/npm/":[
+    {
+      text: "npm",
+      children: [
+        {
+          text: "1、快速使用",
+          link: "/pack/npm/quick-acting.md",
+        },
+        {
+          text: "2、命令行（常用命令）",
+          link: "/pack/npm/command-line.md",
+        },
+        {
+          text: "3、package.json",
+          link: "/pack/npm/package-json.md",
+        },
+      ],
+    },
+  ],
   "/ts/": [
     {
       text: "ts官网笔记",
