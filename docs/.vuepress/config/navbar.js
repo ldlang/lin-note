@@ -8,8 +8,12 @@ export const navbar = [
     activeMatch: "^/javaScript/",
     children: [
       {
-        text: "js笔记",
+        text: "js",
         link: "/javaScript/js-note/",
+      },
+      {
+        text: "ES6",
+        link: "/javaScript/ES6/",
       },
       {
         text: "红宝书笔记",
@@ -36,15 +40,15 @@ export const navbar = [
     activeMatch: "^/node/",
     children: [
       {
-        text: "node 笔记",
+        text: "node",
         link: "/node/node.md",
       },
       {
-        text: "express 笔记",
+        text: "express",
         link: "/node/express.md",
       },
       {
-        text: "express常用插件积累",
+        text: "express插件",
         link: "/node/plugin.md",
       },
     ],

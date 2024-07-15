@@ -72,15 +72,11 @@ export const sidebar = {
   ],
   "/javaScript/js-note/": [
     {
-      text: "js笔记",
+      text: "js",
       children: [
         {
           text: "canvas",
           link: "/javaScript/js-note/canvas.md",
-        },
-        {
-          text: "class",
-          link: "/javaScript/js-note/class.md",
         },
         {
           text: "js技巧积累",
@@ -89,7 +85,18 @@ export const sidebar = {
       ],
     },
   ],
-  "/pack/npm/":[
+  "/javaScript/ES6/": [
+    {
+      text: "ES6",
+      children: [
+        {
+          text: "class",
+          link: "/javaScript/ES6/class.md",
+        },
+      ],
+    },
+  ],
+  "/pack/npm/": [
     {
       text: "npm",
       children: [
@@ -157,8 +164,8 @@ export const sidebar = {
           text: "interface",
           link: "/ts/ruanyifeng-ts/interface.md",
         },
-      ]
-    }
+      ],
+    },
   ],
   "/mysql/": [
     {
