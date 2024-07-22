@@ -222,4 +222,15 @@ export const sidebar = {
       ],
     },
   ],
+  "/interview/": [
+    {
+      text: "面试题",
+      children: [
+        {
+          text: "css篇",
+          link: "/interview/css.md",
+        },
+      ],
+    },
+  ],
 };

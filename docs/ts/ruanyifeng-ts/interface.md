@@ -90,22 +90,25 @@ interface IPerson {
 }
 ```
 
-1. `key`为`string`类型，字符串索引。
+1. `key`为`string`类型，字符串索引，不仅是对类型声明的约束，同时也是多使用类型值的约束。
 
    ```typescript
    interface IPerson {
-     readonly name: string;
-     sex: number;
+     [prop: string]: string
+     sex: boolean // 报错 value 被约束只能是string类型
    }
-
-   const person: IPerson = {
-     name: "李四",
-     sex: 0,
-   };
-   // 报错，因为这个属性是只读属性
-   person.name = "张三";
+   
+   // 声明只能是key，value为string的索引
+   interface IPerson {
+     [prop: string]: string
+   }
+   
+   const person: IPerson ={
+     name: 'zhangsan',
+     sex: false // 报错 value 被约束只能是string类型
+   }
    ```
-
+   
 2. `key`为`number`类型，数值索引。
 
    因为数组的`key`是数字，所以也可以用来描述数组。
@@ -114,11 +117,11 @@ interface IPerson {
    interface IPerson {
      [prop: number]: string;
    }
-
+   
    const person: IPerson = {
      5: "张三",
    };
-
+   
    const list: IPerson = ["张三", "李四"];
    ```
 
@@ -297,7 +300,7 @@ interface ErrorConstructor {
 
 ### 继承 `type`
 
-**注意： ** 如果`type`定义的不是对象那么将不能被继承。
+**注意：** 如果`type`定义的不是对象那么将不能被继承。
 
 ```typescript
 type IName = {
@@ -309,7 +312,7 @@ interface IPerson extends IName {
 }
 
 const persen: IPerson = {
-  name: "hua5",
+  name: "张三",
   age: 0,
 };
 ```
@@ -341,20 +344,148 @@ const b: B = {
 
 ## 3、`interface`的合并
 
-如果声明了两个同名的接口，那么他们将会自动合并，但是如果同名接口中同名`key`的`value`的类型不同将会报错。
+1. 如果声明了两个同名的接口，那么他们将会自动合并，但是如果同名接口中同名`key`的`value`的类型不同将会报错。
 
-```typescript
-interface IPerson {
-  sex: number;
-}
+   ```typescript
+   interface IPerson {
+     sex: number;
+   }
+   
+   interface IPerson {
+     age: number;
+   }
+   
+   const persen: IPerson = {
+     age: 0,
+     sex: 0,
+   }
+   ```
 
-interface IPerson {
-  age: number;
-}
+2. 同名接口，中函数名也同名，那么将会进行函数重载。
 
-const persen: IPerson = {
-  age: 0,
-  sex: 0,
-}
-```
+   优先级：字面量 > 后出现的 > 先出现的
+
+   ```typescript
+   interface Document {
+     createElement(tagName: any): Element;
+   }
+   interface Document {
+     createElement(tagName: "div"): HTMLDivElement;
+     createElement(tagName: "span"): HTMLSpanElement;
+   }
+   interface Document {
+     createElement(tagName: string): HTMLElement;
+     createElement(tagName: "canvas"): HTMLCanvasElement;
+   }
+   
+   // 等同于
+   interface Document {
+     createElement(tagName: "canvas"): HTMLCanvasElement;
+     createElement(tagName: "div"): HTMLDivElement;
+     createElement(tagName: "span"): HTMLSpanElement;
+     createElement(tagName: string): HTMLElement;
+     createElement(tagName: any): Element;
+   }
+   ```
+
+3. 两个接口组成联合类型，如果其中有同名的key，那么他们也会组成一个联合类型
+
+   ```typescript
+   interface IPerson {
+     sex: string
+   }
+   
+   interface IPerson2 {
+     sex: number
+   }
+   
+   // 此时的 sex 类型就是 string | sex
+   const person: IPerson | IPerson2 = {
+     // sex: 0 
+     sex: '男'
+   }
+   ```
+
+## 4、interface和type的异同
+
+### 同
+
+很多对象类型既可以用 `interface` 表示，也可以用 `type` 表示。而且，两者往往可以换用，几乎所有的 `interface` 命令都可以改写为 `type` 命令。
+
+### 异
+
+1. `type`能够表示非对象类型，而`interface`只能表示对象类型（包括数组、函数等）。
+
+2. `interface`可以继承，`type`不能，`type`只能通过`&`将多个类型合并成一个新的类型。
+
+   ```typescript
+   type TPerson = {
+     name: string
+   }
+   
+   interface IPerson {
+     sex: number
+   }
+   
+   // type 类型合并
+   type TPerson2 = TPerson & {
+     sex: number
+   }
+   
+   // type 与 interface 合并
+   type TPerson2 = TPerson & IPerson
+   
+   // interface 继承 type
+   interface IPerson2 extends TPerson {
+     sex: number
+   }
+   ```
+
+3. 同名`interface`会进行合并，而同名的`type`则会报错。
+
+4. `interface`不能包含属性映射（mapping），`type`可以。
+
+   ```typescript
+   // 正确
+   type TPerson = {
+     [Key in keyof Point]: Point[Key];
+   };
+   
+   // 报错
+   interface IPerson {
+     [Key in keyof Point]: Point[Key];
+   };
+   ```
+
+5. `this`关键字只能在`interface`上使用。
+
+   ```typescript
+   interface IPerson {
+     add(num:number): this;
+   };
+   ```
+
+6. `type`可以扩展原始数据类型，`interface` 不行。
+
+   ```typescript
+   type MyStr = string & {
+     type: 'new'
+   };
+   ```
+
+7. `interface`无法表达某些复杂类型（比如交叉类型和联合类型），但是`type`可以。
+
+   ```typescript
+   type A = { /* ... */ };
+   type B = { /* ... */ };
+   
+   type AorB = A | B;
+   type AorBwithName = AorB & {
+     name: string
+   };
+   ```
+
+   
+
+
 

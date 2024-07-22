@@ -108,4 +108,9 @@ export const navbar = [
     link: "/mysql/",
     activeMatch: "^/mysql/",
   },
+  {
+    text: "面试题",
+    link: "/interview/",
+    activeMatch: "^/interview/",
+  },
 ];
