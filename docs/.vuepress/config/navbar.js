@@ -115,7 +115,7 @@ export const navbar = [
   },
   {
     text: "Java",
-    link: "/Java/",
-    activeMatch: "^/Java/",
+    link: "/java/",
+    activeMatch: "^/java/",
   },
 ];

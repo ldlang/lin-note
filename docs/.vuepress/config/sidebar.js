@@ -238,7 +238,7 @@ export const sidebar = {
       text: "java",
       children: [
         {
-          text: "2、基础知识",
+          text: "1、基础知识",
           link: "/java/basics.md",
         },
       ],
