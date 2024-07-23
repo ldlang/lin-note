@@ -70,7 +70,7 @@ export const navbar = [
         text: "pnpm",
         link: "/pack/pnpm.md",
       },
-    ]
+    ],
   },
   {
     text: "vue",
@@ -112,5 +112,10 @@ export const navbar = [
     text: "面试题",
     link: "/interview/",
     activeMatch: "^/interview/",
+  },
+  {
+    text: "Java",
+    link: "/Java/",
+    activeMatch: "^/Java/",
   },
 ];
