@@ -164,6 +164,10 @@ export const sidebar = {
           text: "interface",
           link: "/ts/ruanyifeng-ts/interface.md",
         },
+        {
+          text: "泛型",
+          link: "/ts/ruanyifeng-ts/genericity.md",
+        },
       ],
     },
   ],

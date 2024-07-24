@@ -485,7 +485,20 @@ const b: B = {
    };
    ```
 
-   
+
+## 5、递归用法
+
+在定义接口的同时，就能使用本身这个类型
+
+```typescript
+interface IMenuItem {
+  id: number;
+  image: string;
+  children: IMenuItem[];
+}
+```
+
+
 
 
 
