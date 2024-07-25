@@ -250,7 +250,7 @@ const p: Person<string> = {
 
 ## 5、泛型参数的约束条件
 
-* 给泛型参数增加约束条件，使用`extends`关键字，比如各一个泛型增加必须要有`length`属性的约束，实际上相当于接口的继承，被约束的泛型，必须满足约束条件。
+* 给泛型参数增加约束条件，使用`extends`关键字，比如各一个泛型增加必须要有`length`属性的约束，实际上相当于接口的继承，被约束的泛型，必须满足约束条件，也就是说被约束者的类型要是约束者的子集。
 
   ```typescript
   interface IPerson<T extends { length: number } >{
@@ -263,6 +263,18 @@ const p: Person<string> = {
       name: 'ZS',
       hobbies: ['sports','music']
   }
+  ```
+
+  ```typescript
+  interface IPerson<T, U extends T> {
+      name: T;
+      hobbies: U;
+  }
+  
+  const person: IPerson<{a: string, b: number}, {a: string, b: number, c: number}> = {
+      name: {a: 'a', b: 1},
+      hobbies: {a: 'a', b: 1, c: 1},
+  };
   ```
 
 * 使用定义的类型给泛型增加约束
@@ -281,6 +293,22 @@ const p: Person<string> = {
   const person: IPerson<IHobbies> = {
       name: "ZS",
       hobbies: ['1', '2']
+  }
+  ```
+  
+* 泛型可以成为互相的约束条件，不论先后都可以成为对方的约束条件，但是**不能同时互相成为对方的约束条件**。
+
+  ```typescript
+  // 后者成为前者的约束条件
+  interface IPerson<T extends U, U> {
+      name: T;
+      hobbies: U;
+  }
+  
+  // 前者成为后者的约束条件
+  interface IPerson<T, U extends T> {
+      name: T;
+      hobbies: U;
   }
   ```
 
@@ -302,21 +330,16 @@ function getLength<T extends IHasLenght = Array<string>>(obj: T): number {
 getLength<Array<number>>([1, 2, 3]);
 ```
 
-* 泛型可以成为互相的约束条件，不论先后都可以成为对方的约束条件
+## 7、泛型嵌套
 
-  ```typescript
-  // 后者成为前者的约束条件
-  interface IPerson<T extends U, U> {
-      name: T;
-      hobbies: U;
-  }
-  
-  // 前者成为后者的约束条件
-  interface IPerson<T, U extends T> {
-      name: T;
-      hobbies: U;
-  }
-  ```
+泛型可以无限嵌套
+
+```typescript
+type TNest<T> = Array<T>
+type TMap<T> = Array<T>
+
+type TMap2<T> = TMap<TNest<T>>
+```
 
 
 
