@@ -168,6 +168,10 @@ export const sidebar = {
           text: "泛型",
           link: "/ts/ruanyifeng-ts/genericity.md",
         },
+        {
+          text: "类型断言",
+          link: "/ts/ruanyifeng-ts/type-assertion.md",
+        },
       ],
     },
   ],
