@@ -165,5 +165,54 @@ let red = Color.red;
 let green = Color.green as const;
 ```
 
+## 4、非空断言
 
+对于一些**可选属性**或者是**不一定有值**的变量，在使用这些变量的时候，我们知道这个变量是一定有值的，但`TS`不知道，这个时候就可以使用非空断言，告诉`TS`这个一定有值，但是在不一定有值的是有最好还是加上非空的判断。非空断言只有在打开编译选项`strictNullChecks`时才有意义。如果不打开这个选项，编译器就不会检查某个变量是否可能为`undefined`或`null`。
 
+```typescript
+// x 是可选属性，不一定有值，所以他可能为 undefined 再去调 toFixed 就会报错，
+// 加入 非空断言 TS就认为他是有值的，TS 就不会报错。
+const fun = (x?: number)=> {
+    return x!.toFixed(2)
+}
+
+// 也可以使用链判断运算符
+const fun = (x?: number)=> {
+    return x?.toFixed(2)
+}
+```
+
+```typescript
+interface IUser {
+  id: number;
+  name?: string;
+}
+
+const user: IUser = {
+  id: 1,
+  name: 'John',
+};
+
+// 如果不加入 非空断言， 那么toName的类型就是 string | undefined，介入非空断言则是 string
+let toName = user.name!;
+```
+
+## 5、断言函数
+
+断言函数是一种特殊函数，用于保证函数参数符合某种类型。如果函数参数达不到要求，就会抛出错误，中断程序执行；如果达到要求，就不进行任何操作，让代码按照正常流程运行。
+
+**说明：** `asserts x is string`其中`asserts ... is`是关键字，`x`是函数的参数名，`string`是函数参数的预期类型，这里代表的的意思是，告诉`TS`如果传入的参数类型不是`string`，那么程序就会中断。
+
+```typescript
+function isString(x: unknown): asserts x is string {
+  if (typeof x !== 'string')
+    throw new Error('Not a string');
+}
+
+function toUpper(x: string|number) {
+  isString(x);
+  return x.toUpperCase();
+}
+```
+
+> 断言函数的`asserts`语句等同于`void`类型，所以如果返回除了`undefined`和`null`以外的值，都会报错。
