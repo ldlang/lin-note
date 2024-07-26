@@ -176,6 +176,10 @@ export const sidebar = {
           text: "declare",
           link: "/ts/ruanyifeng-ts/declare.md",
         },
+        {
+          text: ".d.ts 类型声明文件",
+          link: "/ts/ruanyifeng-ts/declaration.md",
+        }
       ],
     },
   ],
