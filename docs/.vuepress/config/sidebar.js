@@ -172,6 +172,10 @@ export const sidebar = {
           text: "类型断言",
           link: "/ts/ruanyifeng-ts/type-assertion.md",
         },
+        {
+          text: "declare",
+          link: "/ts/ruanyifeng-ts/declare.md",
+        },
       ],
     },
   ],
