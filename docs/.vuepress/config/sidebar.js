@@ -161,25 +161,29 @@ export const sidebar = {
       text: "阮一峰ts笔记",
       children: [
         {
-          text: "interface",
+          text: "10、interface",
           link: "/ts/ruanyifeng-ts/interface.md",
         },
         {
-          text: "泛型",
+          text: "12、泛型",
           link: "/ts/ruanyifeng-ts/genericity.md",
         },
         {
-          text: "类型断言",
+          text: "14、类型断言",
           link: "/ts/ruanyifeng-ts/type-assertion.md",
         },
         {
-          text: "declare",
+          text: "19、declare",
           link: "/ts/ruanyifeng-ts/declare.md",
         },
         {
-          text: ".d.ts 类型声明文件",
+          text: "20、.d.ts 类型声明文件",
           link: "/ts/ruanyifeng-ts/declaration.md",
-        }
+        },
+        {
+          text: "21、类型运算符",
+          link: "/ts/ruanyifeng-ts/type-operator.md",
+        },
       ],
     },
   ],
