@@ -274,7 +274,7 @@ declare module 'vue-router' {
   };
   ```
 
-### 7、enum
+## 7、enum
 
 所有正确的`enum`都可以加上`declare`
 

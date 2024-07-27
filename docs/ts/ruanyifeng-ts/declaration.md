@@ -170,3 +170,82 @@ sidebar: auto
    }
    ```
 
+## 4、三斜杆命令
+
+如果声明文件被拆分为了很多个文件，但是又需要统一入口，那么就可以通过三斜杆命令将其他的声明文件引入到一个文件中。
+
+**注意：**三斜杆命令前面只能有其他三斜杆命令、单行注释或多行注释，否则三斜杆命令会被当做一个普通的注释。
+
+```typescript
+/// <reference path="./types.d.ts" />
+```
+
+三斜杆命令的三种参数
+
+- path
+- types
+- lib
+
+### `/// <reference path="" />`
+
+编译器会在预处理阶段，找出所有三斜杠引用的文件，将其添加到编译列表中，然后一起编译。`path`参数指定了所引入文件的路径。如果该路径是一个相对路径，则基于当前脚本的路径进行计算。编译参数`noResolve`，则忽略三斜杠指令。将其当作一般的注释，原样保留在编译产物中。
+
+**注意事项:**
+
+- `path`参数必须指向一个存在的文件，若文件不存在会报错。
+- `path`参数不允许指向当前文件。
+
+1. `/// <reference path="" />`是最常见的三斜杠命令，告诉编译器在编译时需要包括的文件，常用来声明当前脚本依赖的类型文件。
+
+    ```typescript
+    function add(a: number, b: number): number {
+      return a + b;
+    }
+    ```
+
+    ```typescript
+    /// <reference path="./test.ts" />
+
+    let count = add(1, 2)
+    ```
+
+    上面示例表示，当前脚本依赖于`./test.ts`，里面是`add()`的定义。编译当前脚本时，还会同时编译`./lib.ts`。编译产物会有两个 JS 文件，一个当前脚本，另一个就是`./test.js`。
+    
+2. 当前脚本依赖于 其他 类型声明文件
+
+    ```typescript
+    /// <reference path="node.d.ts"/>
+    import * as URL from "url";
+    let myUrl = URL.parse("https://www.typescriptlang.org");
+    ```
+
+### `/// <reference types="" />`
+
+types 参数用来告诉编译器当前脚本依赖某个 DefinitelyTyped 类型库，通常安装在`node_modules/@types`目录。
+
+types 参数的值是类型库的名称，也就是安装到`node_modules/@types`目录中的子目录的名字。
+
+```typescript
+/// <reference types="node" />
+```
+
+上面示例中，这个三斜杠命令表示编译时添加 Node.js 的类型库，实际添加的脚本是`node_modules`目录里面的`@types/node/index.d.ts`。
+
+可以看到，这个命令的作用类似于`import`命令。
+
+注意，这个命令只在你自己手写类型声明文件（`.d.ts`文件）时，才有必要用到，也就是说，只应该用在`.d.ts`文件中，普通的`.ts`脚本文件不需要写这个命令。如果是普通的`.ts`脚本，可以使用`tsconfig.json`文件的`types`属性指定依赖的类型库。
+
+### `/// <reference lib="" />`
+
+`/// <reference lib="..." />`命令允许脚本文件显式包含内置 lib 库，等同于在`tsconfig.json`文件里面使用`lib`属性指定 lib 库。
+
+前文说过，安装 TypeScript 软件包时，会同时安装一些内置的类型声明文件，即内置的 lib 库。这些库文件位于 TypeScript 安装目录的`lib`文件夹中，它们描述了 JavaScript 语言和引擎的标准 API。
+
+库文件并不是固定的，会随着 TypeScript 版本的升级而更新。库文件统一使用“lib.[description].d.ts”的命名方式，而`/// <reference lib="" />`里面的`lib`属性的值就是库文件名的`description`部分，比如`lib="es2015"`就表示加载库文件`lib.es2015.d.ts`。
+
+```
+/// <reference lib="es2017.string" />
+```
+
+上面示例中，`es2017.string`对应的库文件就是`lib.es2017.string.d.ts`。
+
