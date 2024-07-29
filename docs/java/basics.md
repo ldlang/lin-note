@@ -210,7 +210,114 @@ System.out.println(num4); // b
         ```
     
 
-## 6、变量、产量、作用域
+## 6、变量、常量、作用域
 
+### 6.1、变量
 
+**注意事项：**
 
+1. java是强类型语言，所以每个变量都必须有类型。
+2. 创建变量的语法：**类型 变量名 = 值;**
+
+**变量可分为：**
+
+1. 类变量
+
+   通过`static`关键字在类下面定义的变量。
+
+   ```java
+   public class LetClass {
+       // 类变量
+       static int money = 10000;
+   
+       public static void main(String[] args) {
+           System.out.println(money); // 10000
+       }
+   }
+   
+   ```
+
+2. 实例变量
+
+   类实例化后才能使用的变量，也就是类下面没有`static`关键字的变量。
+
+   ```java
+   public class LetClass {
+       // 实例变量
+       String name = "张三";
+   
+       public static void main(String[] args) {
+           // 需要通过 new 类 名后才能使用
+           LetClass letClass = new LetClass();
+           System.out.println(letClass.name);
+       }
+   }
+   ```
+
+3. 局部变量
+
+   在方法内部定义的变量，只能在这个方法里面使用。
+
+   ```java
+   public class LetClass {
+       public static void main(String[] args) {
+           // 局部变量，只能在 main 这个方法里面使用
+           int i = 10;
+           System.out.println(i);
+       }
+   }
+   ```
+
+**变量默认值**
+
+| 类型     | 默认值   |
+| -------- | -------- |
+| 数字     | 0 或 0.0 |
+| 布尔值   | false    |
+| 引用类型 | null     |
+
+### 6.2、常量（final）
+
+不会变化的量，使用关键字`final`定义，并且常量名一般用全大写字母表示。
+
+```java
+public class FinalClass {
+    // 定义一个常量 WIDTH
+    static final int WIDTH = 80;
+
+    public static void main(String[] args) {
+        System.out.println(WIDTH);
+    }
+}
+```
+
+## 7、运算符
+
+| 运算符类型           | 运算符                           |
+| -------------------- | -------------------------------- |
+| 算术运算符           | +，-，*，/，%，++，--            |
+| 赋值运算符           | =                                |
+| 关系元素符           | <，>，>=，<=，==，!=，instanceof |
+| 逻辑运算符           | &&，\|\|，!                      |
+| 位运算符（了解即可） | &，\|，^，~，>>，<<，>>>         |
+| 条件运算符           | ? ... :                          |
+| 扩展赋值元素符       | +=，-=，*=，/=                   |
+
+**注意：**java中有类型的存在
+
+```java
+byte,short -> int -> long -> float -> double
+```
+
+1. 如果两个`int`类型的数**相除**得到是小数，如果没有将其中一个的类型转为`flaot`或者`double`那么得到永远是**舍去小数位**的整数。
+2. 小于`int`或者包含`int`的任意两个类型的值相加得到的都是`int`类型的值。
+3. 大于任意类型的值与`int`或者大于`int`类型的值相加，得到的值都是最大那个类型的值。
+
+> 如何验证：
+>
+> ```java
+> int e = 1;
+> long f = 1;
+> // 转为不能转的类型的时候，就会报错(Inconvertible types; cannot cast 'long' to 'java.lang.String'),以此来证明相加后的类型。
+> System.out.println((String) (e + f));
+> ```
