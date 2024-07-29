@@ -317,13 +317,103 @@ type T3 = IPerson[key]
 type T2 = IPerson['a' + 'ge']
 ```
 
+## 4、extends...?: 条件运算符
+
+类似于三元运算符，如果一个类型`A`是`B`的子类型，那么就返回`A`，否则返回`B`。
+
+**子类型说明：如果一个类型A包含了B的所有属性，那么A是B的子类型。**
+
+```typescript
+type T = A extends B ? A : B
+```
+
+* 若果是联合类型进行运算，那么将会被展开运算，但是只有返回的是数组好像才有这个问题。
+
+  ```typescript
+  (A|B) extends U ? X : Y
+  
+  // 等同于
+  (A extends U ? X : Y) |
+  (B extends U ? X : Y)
+  ```
+
+  ```typescript
+  type ToArray<Type> =
+    Type extends any ? Type[] : never;
+  
+  // string[]|number[]
+  type T = ToArray<string|number>;
+  ```
+
+  使用`[]`将类型包裹起来，可以解决这个问题。
+
+  ```typescript
+  type ToArray<Type> =
+    [Type] extends [any] ? Type[] : never;
+  
+  // (string | number)[]
+  type T = ToArray<string|number>;
+  ```
+
+* 类似以三元运算符，也可以嵌套使用。
+
+  ```typescript
+  A extends B ? B extends C ? A : B : C
+  ```
+
+## 5、infer 运算符
+
+一般在和条件运算符`extends`配合使用，相当于定义一个被`TS`推断的类型出来。下面使用`infer`推断了一个`U`的类型，`U`类型就可以在后面使用。
+
+```typescript
+type TInfer<T> = T extends (infer U)[] ? U : T;
+
+// (infer U)[]推断为是一个 U[]，也就是说如果传入 T是一个数组，那么 U[] 就是这个数组的类型。
+type TInfer2 = TInfer<number[]>
+```
+
+如果没有进行`infer`推断上面，那么上面就要显示传入`U`的类型，就会比较麻烦。
+
+```typescript
+type TInfer<T, U> = T extends U[] ? U : T;
+
+type TInfer3 = TInfer<number[], number>
+```
+
+例：
+
+* 传入函数返回函数的`promise`版本
+
+  ```typescript
+  type ReturnPromise<T> = T extends (...args: infer A) => infer R  ? (...args: A) => Promise<R> : T;
+  
+  // type ReturnPromise2 = (a: number) => Promise<number>
+  type ReturnPromise2 = ReturnPromise<number>
+  ```
+
+* 传入对象，提取对象`value`的类型，组成数组。
+
+  ```typescript
+  type TInferObj<T> = T extends { a: infer U, b: infer K } ? [U, K] : T;
+  
+  // type TInferObj2 = [number, string]
+  type TInferObj2 = TInferObj<{ a: number, b: string }>
+  ```
+
+### 6、Is 运算符
 
 
 
 
 
 
-   
 
- 
+
+
+
+
+
+
+
+
 
