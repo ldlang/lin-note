@@ -184,6 +184,14 @@ export const sidebar = {
           text: "21、类型运算符",
           link: "/ts/ruanyifeng-ts/type-operator.md",
         },
+        {
+          text: "22、类型映射",
+          link: "/ts/ruanyifeng-ts/type-map.md",
+        },
+        {
+          text: "24、注释指令",
+          link: "/ts/ruanyifeng-ts/annotation.md",
+        },
       ],
     },
   ],
