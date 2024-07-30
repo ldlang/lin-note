@@ -6,59 +6,59 @@ sidebar: auto
 
 ## 1、基础说明
 
-* 语法
+- 语法
 
   1. `<类型>值`
 
      ```typescript
-     const person:unknown = 'ZS'
-     const personZ:string = <string>person
+     const person: unknown = "ZS";
+     const personZ: string = <string>person;
      ```
 
   2. `值 as 类型`
 
      ```typescript
-     const person:unknown = 'ZS'
-     const personZ:string = person as string
+     const person: unknown = "ZS";
+     const personZ: string = person as string;
      ```
 
-* 有些时候，`TS`自己的类型推断，推断出来的类型并不是我们想要的类型，这样再去使用这个类型的时候就会报错，使用类型断言就是告诉`TS`这个类型应该被推断为什么样子，这样`TS`就会跳过对这个类型的检查，使用断言后的类型。
+- 有些时候，`TS`自己的类型推断，推断出来的类型并不是我们想要的类型，这样再去使用这个类型的时候就会报错，使用类型断言就是告诉`TS`这个类型应该被推断为什么样子，这样`TS`就会跳过对这个类型的检查，使用断言后的类型。
 
   ```typescript
-  type TPersons = 'ZS' | 'LS' | 'WZ'
-  
-  let person = 'ZS'
-  
+  type TPersons = "ZS" | "LS" | "WZ";
+
+  let person = "ZS";
+
   // person 被推断为了 string ,给 personZ 就会报错
-  const personZ: TPersons = person
-  
+  const personZ: TPersons = person;
+
   // 正确方式
-  const personZ: TPersons = person as TPersons
+  const personZ: TPersons = person as TPersons;
   ```
 
-* 对于`unknown`类型就需要使用类型断言来确定类型
+- 对于`unknown`类型就需要使用类型断言来确定类型
 
   ```typescript
-  const person:unknown = 'ZS'
-  const personZ:string = person as string
+  const person: unknown = "ZS";
+  const personZ: string = person as string;
   ```
 
 ## 2、类型断言的条件
 
-* 类型断言并不能直接将一个类型断言为与当前类型毫无相关的类型，类型断言的实际类型和断言的类型要兼容，可以将其断言为一个更**广泛**或者更**精准**的类型。
+- 类型断言并不能直接将一个类型断言为与当前类型毫无相关的类型，类型断言的实际类型和断言的类型要兼容，可以将其断言为一个更**广泛**或者更**精准**的类型。
 
   ```typescript
-  const num = 1
+  const num = 1;
   // 类型 "number" 到类型 "string" 的转换可能是错误的，因为两种类型不能充分重叠。
   // 如果这是有意的，请先将表达式转换为 "unknown"。
-  const str:string = num as string
+  const str: string = num as string;
   ```
 
-* 非要强行断言为一个毫不相干的类型，可以先断言为`any`或者`unkonwn`类型
+- 非要强行断言为一个毫不相干的类型，可以先断言为`any`或者`unkonwn`类型
 
   ```typescript
-  const num = 1
-  const str:string = num as unknown as string
+  const num = 1;
+  const str: string = num as unknown as string;
   ```
 
 ## 3、as const 断言
@@ -70,13 +70,13 @@ sidebar: auto
 1. `值 as const`
 
    ```typescript
-   let person = 'ZS' as const
+   let person = "ZS" as const;
    ```
 
 2. `<const>值`
 
    ```typescript
-   let person = <const>'ZS'
+   let person = <const>"ZS";
    ```
 
 ### 断言为常量
@@ -85,12 +85,12 @@ sidebar: auto
 
 ```typescript
 // 如果没有使用 as const 断言，那么 person 会被推断为 string 类型
-let person = 'ZS' as const
+let person = "ZS" as const;
 // 等价于
-const person = 'ZS'
+const person = "ZS";
 
-type TPersons = 'ZS' | 'LS' | 'WZ'
-const personZS: TPersons = person
+type TPersons = "ZS" | "LS" | "WZ";
+const personZS: TPersons = person;
 ```
 
 ### 断言限制
@@ -98,12 +98,12 @@ const personZS: TPersons = person
 const 断言只能作用于枚举成员、字符串、数字、布尔值、数组或对象字面量，用于断言表单或者变量就会报错。
 
 ```typescript
-let person = 'ZS'
+let person = "ZS";
 
-type TPersons = 'ZS' | 'LS' | 'WZ'
+type TPersons = "ZS" | "LS" | "WZ";
 
 // 报错 'const' 断言只能作用于枚举成员、字符串、数字、布尔值、数组或对象字面量
-const personZS: TPersons = person as const
+const personZS: TPersons = person as const;
 ```
 
 ### 断言对象
@@ -113,43 +113,43 @@ const personZS: TPersons = person as const
 const map = {
   x: 1,
   y: 2,
-}; 
+};
 
 // 类型是 { x: 1; y: number; }
 const map = {
   x: 1 as const,
   y: 2,
-}; 
+};
 
 // 类型是 { readonly x: 1; readonly y: 2; }
 const map = {
   x: 1,
   y: 2,
-} as const; 
+} as const;
 ```
 
 ### 断言数组
 
-* 如果没有使用`as const`对`persons`断言，那`persons`就会被推断为 `string[]`，那么则不能对`personZS`赋值
+- 如果没有使用`as const`对`persons`断言，那`persons`就会被推断为 `string[]`，那么则不能对`personZS`赋值
 
-    ```typescript
-    const persons = ['ZS', 'LS', 'WZ'] as const
-    type TPersons = 'ZS' | 'LS' | 'WZ'
+  ```typescript
+  const persons = ["ZS", "LS", "WZ"] as const;
+  type TPersons = "ZS" | "LS" | "WZ";
 
-    const personZS: TPersons = persons[0]
-    ```
+  const personZS: TPersons = persons[0];
+  ```
 
-* 给函数传入`rest`（使用`...`拓展后的不定量参数）参，下面如果没有使用`as const`断言，那么`add`函数不知道`...nums`有几个参数，`add`函数就不能使用`...nums`作为`rest`参数。
+- 给函数传入`rest`（使用`...`拓展后的不定量参数）参，下面如果没有使用`as const`断言，那么`add`函数不知道`...nums`有几个参数，`add`函数就不能使用`...nums`作为`rest`参数。
 
-    ```typescript
-    function add(x:number, y:number) {
-      return x + y;
-    }
-    
-    // 类型 readonly [1, 2]
-    const nums = [1, 2] as const;
-    const total = add(...nums);
-    ```
+  ```typescript
+  function add(x: number, y: number) {
+    return x + y;
+  }
+
+  // 类型 readonly [1, 2]
+  const nums = [1, 2] as const;
+  const total = add(...nums);
+  ```
 
 ### 断言枚举
 
@@ -172,14 +172,14 @@ let green = Color.green as const;
 ```typescript
 // x 是可选属性，不一定有值，所以他可能为 undefined 再去调 toFixed 就会报错，
 // 加入 非空断言 TS就认为他是有值的，TS 就不会报错。
-const fun = (x?: number)=> {
-    return x!.toFixed(2)
-}
+const fun = (x?: number) => {
+  return x!.toFixed(2);
+};
 
 // 也可以使用链判断运算符
-const fun = (x?: number)=> {
-    return x?.toFixed(2)
-}
+const fun = (x?: number) => {
+  return x?.toFixed(2);
+};
 ```
 
 ```typescript
@@ -190,7 +190,7 @@ interface IUser {
 
 const user: IUser = {
   id: 1,
-  name: 'John',
+  name: "John",
 };
 
 // 如果不加入 非空断言， 那么toName的类型就是 string | undefined，介入非空断言则是 string
@@ -205,11 +205,10 @@ let toName = user.name!;
 
 ```typescript
 function isString(x: unknown): asserts x is string {
-  if (typeof x !== 'string')
-    throw new Error('Not a string');
+  if (typeof x !== "string") throw new Error("Not a string");
 }
 
-function toUpper(x: string|number) {
+function toUpper(x: string | number) {
   isString(x);
   return x.toUpperCase();
 }

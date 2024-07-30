@@ -94,21 +94,21 @@ interface IPerson {
 
    ```typescript
    interface IPerson {
-     [prop: string]: string
-     sex: boolean // 报错 value 被约束只能是string类型
+     [prop: string]: string;
+     sex: boolean; // 报错 value 被约束只能是string类型
    }
-   
+
    // 声明只能是key，value为string的索引
    interface IPerson {
-     [prop: string]: string
+     [prop: string]: string;
    }
-   
-   const person: IPerson ={
-     name: 'zhangsan',
-     sex: false // 报错 value 被约束只能是string类型
-   }
+
+   const person: IPerson = {
+     name: "zhangsan",
+     sex: false, // 报错 value 被约束只能是string类型
+   };
    ```
-   
+
 2. `key`为`number`类型，数值索引。
 
    因为数组的`key`是数字，所以也可以用来描述数组。
@@ -117,11 +117,11 @@ interface IPerson {
    interface IPerson {
      [prop: number]: string;
    }
-   
+
    const person: IPerson = {
      5: "张三",
    };
-   
+
    const list: IPerson = ["张三", "李四"];
    ```
 
@@ -350,15 +350,15 @@ const b: B = {
    interface IPerson {
      sex: number;
    }
-   
+
    interface IPerson {
      age: number;
    }
-   
+
    const persen: IPerson = {
      age: 0,
      sex: 0,
-   }
+   };
    ```
 
 2. 同名接口，中函数名也同名，那么将会进行函数重载。
@@ -377,7 +377,7 @@ const b: B = {
      createElement(tagName: string): HTMLElement;
      createElement(tagName: "canvas"): HTMLCanvasElement;
    }
-   
+
    // 等同于
    interface Document {
      createElement(tagName: "canvas"): HTMLCanvasElement;
@@ -388,25 +388,25 @@ const b: B = {
    }
    ```
 
-3. 两个接口组成联合类型，如果其中有同名的key，那么他们也会组成一个联合类型
+3. 两个接口组成联合类型，如果其中有同名的 key，那么他们也会组成一个联合类型
 
    ```typescript
    interface IPerson {
-     sex: string
+     sex: string;
    }
-   
+
    interface IPerson2 {
-     sex: number
+     sex: number;
    }
-   
+
    // 此时的 sex 类型就是 string | sex
    const person: IPerson | IPerson2 = {
-     // sex: 0 
-     sex: '男'
-   }
+     // sex: 0
+     sex: "男",
+   };
    ```
 
-## 4、interface和type的异同
+## 4、interface 和 type 的异同
 
 ### 同
 
@@ -420,24 +420,24 @@ const b: B = {
 
    ```typescript
    type TPerson = {
-     name: string
-   }
-   
+     name: string;
+   };
+
    interface IPerson {
-     sex: number
+     sex: number;
    }
-   
+
    // type 类型合并
    type TPerson2 = TPerson & {
-     sex: number
-   }
-   
+     sex: number;
+   };
+
    // type 与 interface 合并
-   type TPerson2 = TPerson & IPerson
-   
+   type TPerson2 = TPerson & IPerson;
+
    // interface 继承 type
    interface IPerson2 extends TPerson {
-     sex: number
+     sex: number;
    }
    ```
 
@@ -450,7 +450,7 @@ const b: B = {
    type TPerson = {
      [Key in keyof Point]: Point[Key];
    };
-   
+
    // 报错
    interface IPerson {
      [Key in keyof Point]: Point[Key];
@@ -461,30 +461,33 @@ const b: B = {
 
    ```typescript
    interface IPerson {
-     add(num:number): this;
-   };
+     add(num: number): this;
+   }
    ```
 
 6. `type`可以扩展原始数据类型，`interface` 不行。
 
    ```typescript
    type MyStr = string & {
-     type: 'new'
+     type: "new";
    };
    ```
 
 7. `interface`无法表达某些复杂类型（比如交叉类型和联合类型），但是`type`可以。
 
    ```typescript
-   type A = { /* ... */ };
-   type B = { /* ... */ };
-   
+   type A = {
+     /* ... */
+   };
+   type B = {
+     /* ... */
+   };
+
    type AorB = A | B;
    type AorBwithName = AorB & {
-     name: string
+     name: string;
    };
    ```
-
 
 ## 5、递归用法
 
@@ -497,8 +500,3 @@ interface IMenuItem {
   children: IMenuItem[];
 }
 ```
-
-
-
-
-
