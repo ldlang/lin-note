@@ -2,9 +2,15 @@
 sidebar: auto
 ---
 
+<style scoped>
+  .sidebar{
+    width: 650px;
+  }
+</style>
+
 # 实用工具类型
 
-## Awaited<`Type`>
+## Awaited<`Type`> 取出 promise 的返回值类型
 
 这种类型旨在模拟 `async` 函数中的 `await` 之类的操作，或 `Promise` 上的 `.then()` 方法 - 特别是它们递归解包 `Promise` 的方式。
 
@@ -54,7 +60,7 @@ interface A {
 type B = Readonly<A>;
 ```
 
-## Record<Keys, Type>
+## Record<Keys, Type> 返回 keys 和 Type 组成对象类型
 
 构造一个对象类型，其属性键为 `Keys`，其属性值为 `Type`。 此实用程序可用于将一种类型的属性映射到另一种类型。
 
@@ -73,53 +79,34 @@ const cats: Record<CatName, CatInfo> = {
 };
 ```
 
-## Pick<Type, Keys>
+## Pick<Type, Keys> 挑选`Keys`是`Type`里面被选定的键名
 
 通过从 `Type` 中选取一组属性 `Keys`（字符串字面或字符串字面的并集）来构造一个类型。
 
 ```typescript
-interface Todo {
-  title: string;
-  description: string;
-  completed: boolean;
+interface A {
+  x: number;
+  y: number;
 }
 
-type TodoPreview = Pick<Todo, "title" | "completed">;
-
-const todo: TodoPreview = {
-  title: "Clean room",
-  completed: false,
-};
+type T1 = Pick<A, "x">; // { x: number }
+type T2 = Pick<A, "y">; // { y: number }
+type T3 = Pick<A, "x" | "y">; // { x: number; y: number }
 ```
 
-## Omit<Type, Keys>
+## Omit<Type, Keys> 删除指定的属性`Keys`
 
 通过从 `Type` 中选择所有属性然后删除 `Keys`（字符串字面或字符串字面的并集）来构造一个类型。 与 Pick 相反。
 
 ```typescript
-interface Todo {
-  title: string;
-  description: string;
-  completed: boolean;
-  createdAt: number;
+interface A {
+  x: number;
+  y: number;
 }
 
-type TodoPreview = Omit<Todo, "description">;
-
-const todo: TodoPreview = {
-  title: "Clean room",
-  completed: false,
-  createdAt: 1615544252770,
-};
-
-type TodoInfo = Omit<Todo, "completed" | "createdAt">;
-
-const todoInfo: TodoInfo = {
-  title: "Pick up kids",
-  description: "Kindergarten closes at 5pm",
-};
-
-todoInfo;
+type T1 = Omit<A, "x">; // { y: number }
+type T2 = Omit<A, "y">; // { x: number }
+type T3 = Omit<A, "x" | "y">; // { }
 ```
 
 ## Exclude<UnionType, ExcludedMembers> 交集之外的
@@ -140,7 +127,7 @@ type T0 = Extract<"a" | "b" | "c", "a" | "f">;
 // type T0 = "a"
 ```
 
-## NonNullable<`Type`>
+## NonNullable<`Type`>从 `Type` 中排除 `null` 和 `undefined` 来构造一个类型。
 
 通过从 `Type` 中排除 `null` 和 `undefined` 来构造一个类型。
 
@@ -149,27 +136,31 @@ type T0 = NonNullable<string | number | undefined>;
 // type T0 = string | number
 ```
 
-## Parameters<`Type`>
+## Parameters<`Type`> 函数类型`Type`里面提取参数类型，组成一个元组返回。
 
 从函数类型 `Type` 的参数中使用的类型构造元组类型。
 
 ```typescript
-declare function f1(arg: { a: number; b: string }): void;
+type T1 = Parameters<() => string>; // []
 
-type T0 = Parameters<() => string>;
-// type T0 = []
+type T2 = Parameters<(s: string) => void>; // [s:string]
+
+type T3 = Parameters<<T>(arg: T) => T>; // [arg: unknown]
+
+type T4 = Parameters<(x: { a: number; b: string }) => void>; // [x: { a: number, b: string }]
+
+type T5 = Parameters<(a: number, b: number) => number>; // [a:number, b:number]
 ```
 
-## ConstructorParameters<`Type`>
+## ConstructorParameters<`Type`> 提取构造方法`Type`的参数类型，组成一个元组类型返回。
 
 从构造函数类型的类型构造元组或数组类型。 它生成一个包含所有参数类型的元组类型（如果 `Type` 不是函数，则生成类型 `never`）。
 
 ```typescript
-type T0 = ConstructorParameters<ErrorConstructor>;
-// type T0 = [message?: string]
+type T1 = ConstructorParameters<new (x: string, y: number) => object>; // [x: string, y: number]
 ```
 
-## ReturnType<`Type`> 返回值类型
+## ReturnType<`Type`> 读取函数返回值类型
 
 构造一个由函数 `Type` 的返回类型组成的类型。
 
@@ -180,7 +171,7 @@ type T0 = ReturnType<() => string>;
 // type T0 = string
 ```
 
-## InstanceType<`Type`>
+## InstanceType<`Type`> 提取构造函数的返回值的类型
 
 构造一个由 `Type` 中的构造函数的实例类型组成的类型。
 
@@ -195,17 +186,19 @@ type T0 = InstanceType<typeof C>;
 let c: T0 = new C();
 ```
 
-## ThisParameterType<`Type`>
+## ThisParameterType<`Type`> 提取函数类型中`this`参数的类型。
 
 提取函数类型的此参数的类型，如果函数类型没有 `this` 参数，则提取 unknown。
 
 ```typescript
-function toHex(this: Number) {
+function toHex(this: number) {
   return this.toString(16);
 }
+
+type T = ThisParameterType<typeof toHex>; // number
 ```
 
-## OmitThisParameter<`Type`>
+## OmitThisParameter<`Type`> 函数类型中移除 this 参数。
 
 从 `Type` 中删除 this 参数。 如果 `Type` 没有显式声明的 `this` 参数，则结果只是 `Type`。 否则，将从 `Type` 创建一个没有 `this` 参数的新函数类型。 泛型被删除，只有最后一个重载签名被传播到新的函数类型中。
 
@@ -214,11 +207,33 @@ function toHex(this: Number) {
   return this.toString(16);
 }
 
+type T = OmitThisParameter<typeof toHex>; // () => stringfunction toHex(this: Number) {
+  return this.toString(16);
+}
+
 const fiveToHex: OmitThisParameter<typeof toHex> = toHex.bind(5);
 
 console.log(fiveToHex());
 ```
 
-## ThisType<`Type`>
+## ThisType<`Type`> 不返回类型，只用来跟其他类型组成交叉类型
 
 此实用程序不返回转换后的类型。 相反，它用作上下文 this 类型的标记。
+
+```typescript
+interface HelperThisValue {
+  logError: (error: string) => void;
+}
+
+let helperFunctions: { [name: string]: Function } & ThisType<HelperThisValue> =
+  {
+    hello: function () {
+      this.logError("Error: Something wrong!"); // 正确
+      this.update(); // 报错
+    },
+  };
+```
+
+## ReadonlyArray 只读数组
+
+`ReadonlyArray<Type>`用来生成一个只读数组类型，类型参数`Type`表示数组成员的类型。
