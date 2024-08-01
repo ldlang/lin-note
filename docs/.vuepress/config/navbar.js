@@ -23,17 +23,8 @@ export const navbar = [
   },
   {
     text: "css",
+    link: "/css/",
     activeMatch: "^/css/",
-    children: [
-      {
-        text: "grid布局",
-        link: "/css/grid.md",
-      },
-      {
-        text: "过渡与动画",
-        link: "/css/transition-and-animation.md",
-      },
-    ],
   },
   {
     text: "node",

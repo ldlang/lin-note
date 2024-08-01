@@ -300,7 +300,7 @@ public class FinalClass {
 | 关系元素符           | <，>，>=，<=，==，!=，instanceof |
 | 逻辑运算符           | &&，\|\|，!                      |
 | 位运算符（了解即可） | &，\|，^，~，>>，<<，>>>         |
-| 条件运算符           | ? ... :                          |
+| 三元运算符           | ? ... :                          |
 | 扩展赋值元素符       | +=，-=，*=，/=                   |
 
 **注意：**java中有类型的存在
@@ -321,3 +321,52 @@ byte,short -> int -> long -> float -> double
 > // 转为不能转的类型的时候，就会报错(Inconvertible types; cannot cast 'long' to 'java.lang.String'),以此来证明相加后的类型。
 > System.out.println((String) (e + f));
 > ```
+
+## 8、包机制
+
+1. java中有包机制，用于区别类名的命名空间。
+    **语法：**
+
+    ```java
+    package pkg1[.pag2[.pkg3...]]
+    ```
+
+    **例：** 有这样一个目录结构 `src/com/ldlang/Pack.java`
+
+    ```java
+    // 在这个(src/com/ldlang)目录下的所有java文件的顶层都要加入以下代码
+    package com.ldlang;
+    ```
+    
+    > 注意：一般利用公司域名倒置作为包名; com.ldlang.www
+
+
+2. 为了能够在一个包中能够使用另一个包的成员，可以使用`import`来导入。
+
+    **例：**在`src/top/ldlang/PackTop.java`中使用`src/com/ldlang/Pack.java`这个文件。
+
+    ```java
+    // Pack.java 文件
+    package com.ldlang;
+
+    public class Pack {
+
+        public void main() {
+            System.out.println("main");
+        }
+    }
+    ```
+
+    ```java
+    // PackTop.java 文件
+    package top.ldlang;
+    import com.ldlang.Pack; // import 语句必须放在 package 之后
+
+    public class PackTop {
+        public static void main(String[] args) {
+            Pack pack = new Pack();
+            pack.main(); // main
+        }
+    }
+    ```
+
