@@ -96,6 +96,25 @@ export const sidebar = {
       ],
     },
   ],
+  "/css/": [
+    {
+      text: "css",
+      children: [
+        {
+          text: "css选择器",
+          link: "/css/css-selector.md",
+        },
+        {
+          text: "grid布局",
+          link: "/css/grid.md",
+        },
+        {
+          text: "过渡与动画",
+          link: "/css/transition-and-animation.md",
+        },
+      ],
+    },
+  ],
   "/pack/npm/": [
     {
       text: "npm",
