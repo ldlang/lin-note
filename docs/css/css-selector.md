@@ -34,3 +34,58 @@ sidebar: auto
 | [attribute^=value]  | 以某个值**开头**的属性选择器             | [custom^=test]  | 选择所有 custom 的 value 以 test **开头**的元素                                                         |
 | [attribute$=value]  | 以某个值**结尾**的属性选择器             | [custom$=test]  | 选择所有 custom 的 value 以 test **结尾**的元素                                                         |
 | [attribute*=value]  | 模糊匹配属性选择器                       | [custom*=test]  | 选择所有 custom 的 value 能 like 查询（**模糊匹配**）到 test 的元素                                     |
+
+## 4、否定伪类选择器
+
+| 选择器         | 示例       | 说明                                |
+| -------------- | ---------- | ----------------------------------- |
+| :not(selector) | p:not(.p2) | 选择所有 p 元素中不含有 p2 类的元素 |
+
+## 5、伪类选择器
+
+| 选择器                                       | 名称                                       | 示例           | 说明                                          |
+| -------------------------------------------- | ------------------------------------------ | -------------- | --------------------------------------------- |
+| :link                                        | 链接伪类选择器（未访问过）                 | \*:link        | 选择所有**未被访问过**的链接                  |
+| :visited                                     | 链接伪类选择器（访问过）                   | \*:visited     | 选择所有**访问过**的链接                      |
+| :active                                      | 用户行为选择器（鼠标点击未松开时）         | div:active     | div 元素点击时触发这个伪类选中                |
+| :hover                                       | 用户行为选择器（鼠标移到节点时）           | div:hover      | div 在鼠标移入时触发这个伪类选中              |
+| :focus                                       | 用户行为选择器（具有焦点的元素获得焦点时） | input:focus    | 在 input 获得焦点的时候触发这个伪类           |
+| :first-letter                                | 首字符选择（只能用于块级元素）             | p:first-letter | 选择 p 元素第一**个**字符                     |
+| :first-line                                  | 首行文字选择（只能用于块级元素）           | p:first-line   | 选择 p 元素第一**行**字符                     |
+| [:first-child](./css-selector/#:dirst-child) | 第一个子元素                               | p:first-child  | 指定只有当 p 元素是其父级的第一个子级的样式。 |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+|                                              |                                            |                |                                               |
+
+## 6、特别说明
+
+### :first-child
+
+```html
+<div class="container">
+    <p class="p1">1</p>
+    <p class="p3">2</p>
+    <p class="p2">3</p>
+    <div>
+        <p class="p4">4</p>
+        <p class="p5">5</p>
+        <p class="p6">6</p>
+    </div>
+</div>
+
+<style>
+    /* 此时选中的是 p1 和 p4 */
+    .container:first-child {
+        color: red;
+    }
+</style>
+```
+
