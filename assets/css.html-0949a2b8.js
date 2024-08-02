@@ -1,0 +1,1 @@
+import{_ as e,o as s,c,b as t}from"./app-2e989fd2.js";const o={},_=t("p",null,"css",-1),n=[_];function r(a,l){return s(),c("div",null,n)}const f=e(o,[["render",r],["__file","css.html.vue"]]);export{f as default};
