@@ -4,11 +4,11 @@ sidebar: auto
 
 # 基础知识
 
-## 1、Java三大版本
+## 1、Java 三大版本
 
 1. JavaSE：标准版（桌面程序，控制台开发...）
 2. JavaME：嵌入式开发（手机，小家电...） 几乎已淘汰
-3. JavaEE：E企业级开发（web端，服务器开发...）
+3. JavaEE：E 企业级开发（web 端，服务器开发...）
 
 ## 2、注释
 
@@ -61,25 +61,25 @@ String _1name = "张三";
 
 1. 整数类型
 
-   * **byte**：占1个字节 ，范围 -128 到 127
+   - **byte**：占 1 个字节 ，范围 -128 到 127
 
      ```java
      byte num1 = 11;
      ```
 
-   * **short**：占2个字节 ，范围-32768到32767
+   - **short**：占 2 个字节 ，范围-32768 到 32767
 
      ```java
      short num2 = 10;
      ```
 
-   * **int**：（**最常用**）占4个字节，范围-2147483648到2147483647。
+   - **int**：（**最常用**）占 4 个字节，范围-2147483648 到 2147483647。
 
      ```java
      int num = 1; // 最常用
      ```
 
-   * **long**：占8个字节，**long类型要在数字后面加个L**，范围-9223372036854775808到9223372036854775807。
+   - **long**：占 8 个字节，**long 类型要在数字后面加个 L**，范围-9223372036854775808 到 9223372036854775807。
 
      ```java
      long num3 = 10L; // long类型要在数字后面加个L
@@ -89,13 +89,13 @@ String _1name = "张三";
 
    **最好完全避免使用小数类型的值进行比较，因为存在精度问题**
 
-   * **float**：占4个字节，**float 类型要在后面加个F**。
+   - **float**：占 4 个字节，**float 类型要在后面加个 F**。
 
      ```java
      float num4 = 10.12F; // float 类型要在后面加个F
      ```
 
-   * **double**：占8个字节
+   - **double**：占 8 个字节
 
      ```java
      double num5 = 10.1231;
@@ -103,7 +103,7 @@ String _1name = "张三";
 
 3. 字符类型
 
-   * **char**：占2个字节，里面只能有一个字符，并且只能使用单引号。
+   - **char**：占 2 个字节，里面只能有一个字符，并且只能使用单引号。
 
      ```java
      char aChar = 'a';
@@ -116,7 +116,7 @@ String _1name = "张三";
 
 4. 布尔类型
 
-   * **boolean**：占1位。
+   - **boolean**：占 1 位。
 
      ```java
      boolean flag = false;
@@ -124,7 +124,7 @@ String _1name = "张三";
 
 ## 5、类型转换
 
-运算中不同类型的数据先转换为同一类型的数据才开始进行计算。数据类型容量排序，由低到高。`byte`，`short`，`char`之间不会相互转换，他们在计算时首先会转换为int类型。
+运算中不同类型的数据先转换为同一类型的数据才开始进行计算。数据类型容量排序，由低到高。`byte`，`short`，`char`之间不会相互转换，他们在计算时首先会转换为 int 类型。
 
 ```java
 byte,short,char -> int -> long -> float -> double
@@ -137,7 +137,7 @@ byte,short,char -> int -> long -> float -> double
 3. 在把高容量转换到低容量时，要进行强制转换。
 4. 转换的时候肯存在内存溢出，或者精度问题。
 
-> 补充：jdk7中数字之间可以用 _ 连接，并且不会影响到数字真正的值。
+> 补充：jdk7 中数字之间可以用 \_ 连接，并且不会影响到数字真正的值。
 >
 > ```java
 > System.out.println(10000 == 1_0000); // true
@@ -163,52 +163,51 @@ System.out.println(num4); // b
 
 1. **语法:**
 
-    * (类型)变量名
+   - (类型)变量名
 
-      ```java
-      int num5 = 97;
-      char cha1 = (char) num5;
-      System.out.println(cha1); // a
-      ```
+     ```java
+     int num5 = 97;
+     char cha1 = (char) num5;
+     System.out.println(cha1); // a
+     ```
 
-    * (类型)(表达式)
+   - (类型)(表达式)
 
-      ```java
-      int num5 = 97;
-      char cha2 = (char) (num5 + 1);
-      System.out.println(cha2); // b
-      ```
-    
+     ```java
+     int num5 = 97;
+     char cha2 = (char) (num5 + 1);
+     System.out.println(cha2); // b
+     ```
+
 2. 高转低可能会出现内存溢出，或者精度问题，得到的结果就无法预料。
 
-    * 内存溢出
+   - 内存溢出
 
-        ```java
-        int num6 = 9999;
-        byte num7 = (byte) num6;
-        System.out.println(num7); // 15
-        
-        int num10 = 10_0000_0000;
-        int num11 = 30;
-        // 已经超过了int能承载的最大值，导致了内存溢出。
-        int num12 = num10 * num11; 
-        System.out.println(num12); // -64771072
-        
-        // 在进行乘之前需要转换为 long 类型
-        long num13 = num10 * (long) num11;
-        // 或者
-        long num13 = (long) num10 * (long) num11;
-        System.out.println(num13); // 30000000000
-        ```
-        
-    * 精度问题
-    
-        ```java
-        float num8 = 3.14f;
-        int num9 = (int) num8;
-        System.out.println(num9); // 3
-        ```
-    
+     ```java
+     int num6 = 9999;
+     byte num7 = (byte) num6;
+     System.out.println(num7); // 15
+
+     int num10 = 10_0000_0000;
+     int num11 = 30;
+     // 已经超过了int能承载的最大值，导致了内存溢出。
+     int num12 = num10 * num11;
+     System.out.println(num12); // -64771072
+
+     // 在进行乘之前需要转换为 long 类型
+     long num13 = num10 * (long) num11;
+     // 或者
+     long num13 = (long) num10 * (long) num11;
+     System.out.println(num13); // 30000000000
+     ```
+
+   - 精度问题
+
+     ```java
+     float num8 = 3.14f;
+     int num9 = (int) num8;
+     System.out.println(num9); // 3
+     ```
 
 ## 6、变量、常量、作用域
 
@@ -216,7 +215,7 @@ System.out.println(num4); // b
 
 **注意事项：**
 
-1. java是强类型语言，所以每个变量都必须有类型。
+1. java 是强类型语言，所以每个变量都必须有类型。
 2. 创建变量的语法：**类型 变量名 = 值;**
 
 **变量可分为：**
@@ -229,12 +228,12 @@ System.out.println(num4); // b
    public class LetClass {
        // 类变量
        static int money = 10000;
-   
+
        public static void main(String[] args) {
            System.out.println(money); // 10000
        }
    }
-   
+
    ```
 
 2. 实例变量
@@ -245,7 +244,7 @@ System.out.println(num4); // b
    public class LetClass {
        // 实例变量
        String name = "张三";
-   
+
        public static void main(String[] args) {
            // 需要通过 new 类 名后才能使用
            LetClass letClass = new LetClass();
@@ -295,15 +294,15 @@ public class FinalClass {
 
 | 运算符类型           | 运算符                           |
 | -------------------- | -------------------------------- |
-| 算术运算符           | +，-，*，/，%，++，--            |
+| 算术运算符           | +，-，\*，/，%，++，--           |
 | 赋值运算符           | =                                |
 | 关系元素符           | <，>，>=，<=，==，!=，instanceof |
 | 逻辑运算符           | &&，\|\|，!                      |
 | 位运算符（了解即可） | &，\|，^，~，>>，<<，>>>         |
 | 三元运算符           | ? ... :                          |
-| 扩展赋值元素符       | +=，-=，*=，/=                   |
+| 扩展赋值元素符       | +=，-=，\*=，/=                  |
 
-**注意：**java中有类型的存在
+**注意：** java 中有类型的存在
 
 ```java
 byte,short -> int -> long -> float -> double
@@ -324,49 +323,66 @@ byte,short -> int -> long -> float -> double
 
 ## 8、包机制
 
-1. java中有包机制，用于区别类名的命名空间。
-    **语法：**
+1. java 中有包机制，用于区别类名的命名空间。
+   **语法：**
 
-    ```java
-    package pkg1[.pag2[.pkg3...]]
-    ```
+   ```java
+   package pkg1[.pag2[.pkg3...]]
+   ```
 
-    **例：** 有这样一个目录结构 `src/com/ldlang/Pack.java`
+   **例：** 有这样一个目录结构 `src/com/ldlang/Pack.java`
 
-    ```java
-    // 在这个(src/com/ldlang)目录下的所有java文件的顶层都要加入以下代码
-    package com.ldlang;
-    ```
-    
-    > 注意：一般利用公司域名倒置作为包名; com.ldlang.www
+   ```java
+   // 在这个(src/com/ldlang)目录下的所有java文件的顶层都要加入以下代码
+   package com.ldlang;
+   ```
 
+   > 注意：一般利用公司域名倒置作为包名; com.ldlang.www
 
 2. 为了能够在一个包中能够使用另一个包的成员，可以使用`import`来导入。
 
-    **例：**在`src/top/ldlang/PackTop.java`中使用`src/com/ldlang/Pack.java`这个文件。
+   **例：** 在`src/top/ldlang/PackTop.java`中使用`src/com/ldlang/Pack.java`这个文件。
 
-    ```java
-    // Pack.java 文件
-    package com.ldlang;
+   ```java
+   // Pack.java 文件
+   package com.ldlang;
 
-    public class Pack {
+   public class Pack {
 
-        public void main() {
-            System.out.println("main");
-        }
-    }
-    ```
+       public void main() {
+           System.out.println("main");
+       }
+   }
+   ```
 
-    ```java
-    // PackTop.java 文件
-    package top.ldlang;
-    import com.ldlang.Pack; // import 语句必须放在 package 之后
+   ```java
+   // PackTop.java 文件
+   package top.ldlang;
+   import com.ldlang.Pack; // import 语句必须放在 package 之后
 
-    public class PackTop {
-        public static void main(String[] args) {
-            Pack pack = new Pack();
-            pack.main(); // main
-        }
-    }
-    ```
+   public class PackTop {
+       public static void main(String[] args) {
+           Pack pack = new Pack();
+           pack.main(); // main
+       }
+   }
+   ```
 
+3. 同时同一文件夹下的所有包
+
+   ```java
+   import com.ldlang.*;
+   ```
+
+## 9、javaDoc
+
+```java
+/**
+ * @param 参数名
+ * @return 返回值
+ * @throws 异常抛出情况
+ * @author 作者名
+ * @version 版本号
+ * @since 指明最早使用的jdk版本
+ */
+```

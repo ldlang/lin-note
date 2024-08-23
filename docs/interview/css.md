@@ -2,7 +2,7 @@
 sidebar: auto
 ---
 
-# css
+# css 面试题
 
 ## 1、可继承的属性(7 类)
 

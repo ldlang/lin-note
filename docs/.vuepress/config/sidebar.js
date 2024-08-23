@@ -277,6 +277,10 @@ export const sidebar = {
           text: "css篇",
           link: "/interview/css.md",
         },
+        {
+          text: "js篇",
+          link: "/interview/js.md",
+        },
       ],
     },
   ],
@@ -287,6 +291,10 @@ export const sidebar = {
         {
           text: "1、基础知识",
           link: "/java/basics.md",
+        },
+        {
+          text: "2、流程控制",
+          link: "/java/process-control.md",
         },
       ],
     },
