@@ -201,3 +201,259 @@ curryingAdd(1)(2);
 ### 8.2、高阶函数
 
 高阶函数是指可以接受一个或多个函数作为参数，或者返回一个函数的函数。如`map`、`filter`、`find`本身就是一些高阶函数。
+
+## 9、事件循环
+
+js 是单线程，但是 js 为了不发生阻塞，会使用事件循环的方式去解决。在 js 中**异步任务也分为宏任务和微任务**，
+
+1. 微任务
+   - promise.then
+   - MutationObserver
+   - Object.observe(已废弃，Proxy 对象代替)
+   - process.nextTick (node.js)
+   - await 后面的也会被放入微任务
+2. 宏任务
+   - setTimeout 和 setInterval
+   - I/O 操作
+   - DOM 事件：例如点击事件、输入事件等。
+   - AJAX 请求的回调函数：AJAX 完成时，其回调函数会被放入宏任务队列中。
+   - postMessage 和 MessageChannel
+
+执行流程
+
+```
+1. 执行 script 宏任务
+   -> 遇到 setTimeout，推入宏任务队列
+   -> 遇到 Promise.then，推入微任务队列
+
+2. script 宏任务执行完毕
+   -> 检查并执行所有微任务队列中的 Promise.then
+
+3. 微任务队列清空
+   -> 浏览器渲染（如果需要）
+
+4. 回到事件循环
+   -> 从宏任务队列中取出 setTimeout 执行
+   -> 重复上述过程
+```
+
+举个例子
+
+```js
+console.log("script start");
+
+async function async1() {
+  await async2();
+  console.log("async1 end");
+}
+
+async function async2() {
+  console.log("async2 end");
+}
+
+async1();
+
+setTimeout(function () {
+  console.log("setTimeout");
+}, 0);
+
+new Promise((resolve) => {
+  console.log("Promise");
+  resolve();
+})
+  .then(function () {
+    console.log("promise1");
+  })
+  .then(function () {
+    console.log("promise2");
+  });
+
+console.log("script end");
+
+// 执行结果
+/* 	  
+script start
+async2 end
+Promise
+script end
+async1 end
+promise1
+promise2
+setTimeout
+*/
+```
+
+执行结果分析
+
+1. `console.log('script start')`为同步代码直接执行，输出结果`script start`。
+2. 运行`async1()`函数，因为`await`会阻塞`promise`所以执行`async2()`，输出`async2 end`，同时将`console.log('async1 end');`放入微任务队列。
+3. `setTimeout`直接放入宏任务队列等待执行
+4. 输出`Promise`，后面的两个`.then`放入微任务队列
+5. 执行`console.log('script end')`，输出`script end`
+6. 开始往下执行微任务，输出
+   1. async1 end
+   2. promise1
+   3. promise2
+7. 执行宏任务队列，输出`setTimeout`
+
+## 10、触底加载
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #box {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      img {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container" style="height: 500px; overflow-y: scroll">
+      <div id="box"></div>
+    </div>
+
+    <script>
+      const box = document.querySelector("#box");
+      const container = document.querySelector("#container");
+
+      for (let i = 0; i < 20; i++) {
+        box.innerHTML += `<img src="./logo.png">`;
+      }
+      // 获取容器的高度
+      let containerHeight = container.getBoundingClientRect().height;
+
+      container.onscroll = function () {
+        // 获取容器滚出的高度
+        let scrollTop = container.scrollTop;
+        // 获取内容的高度
+        let scrollHeight = box.scrollHeight;
+        // 容器滚出的高度 + 获取容器的高度 >= 内容的高度 则触底加载
+        if (scrollTop + containerHeight >= scrollHeight) {
+          for (let i = 0; i < 8; i++) {
+            box.innerHTML += `<img src="./logo.png">`;
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
+```
+
+## 11、js 继承的方式
+
+1. 原型链继承
+
+   直接将实例赋值给函数的`prototype`上
+
+   ```js
+   function Parent() {
+     this.name = "parent1";
+   }
+   function Child() {
+     this.type = "child2";
+   }
+   Child.prototype = new Parent();
+   ```
+
+2. 构造函数继承
+
+   ```js
+   function Parent(value) {
+     this.value = value;
+   }
+
+   function Child(value) {
+     Parent.call(this, value);
+   }
+
+   var child = new Child(true);
+   console.log(child.value); // true
+   ```
+
+3. 组合继承
+
+   ```js
+   function Parent(value) {
+     this.value = value;
+   }
+
+   Parent.prototype.getValue = function () {
+     return this.value;
+   };
+
+   function Child(value) {
+     Parent.call(this, value);
+   }
+
+   Child.prototype = new Parent();
+
+   var child = new Child(true);
+   console.log(child.getValue()); // true
+   ```
+
+4. ES6 class 的 extends 关键字
+
+   ```js
+   class Parent {
+     constructor(value) {
+       this.value = value;
+     }
+
+     getValue() {
+       return this.value;
+     }
+   }
+
+   class Child extends Parent {
+     constructor(value) {
+       super(value);
+     }
+   }
+
+   const child = new Child(true);
+   console.log(child.getValue()); // true
+   ```
+
+## 12、数字计算精度问题如何解决
+
+转换为整数进行计算
+
+```js
+/**
+ * 精确加法函数，用于处理浮点数加法时的精度问题
+ * @param {number} num1 第一个加数
+ * @param {number} num2 第二个加数
+ * @returns {number} 两个加数的和，保持最大精度
+ */
+function add(num1, num2) {
+    // 获取num1的小数位数
+    const decimal1 = (num1.toString().split('.')[1]?.length;
+    // 获取num2的小数位数
+    const decimal2 = (num2.toString().split('.')[1]?.length;
+    // 确定转换基数，即10的多少次方，以确保两个数相加时小数部分不会丢失精度
+    const baseFactor = Math.pow(10,Math.max(decimal1,decimal2));
+    // 将两个数转换为整数（通过乘以基数），相加，然后再转换回原来的比例
+    return (num1 * baseFactor + num2 * baseFactor) / baseFactor;
+}
+```
+
+## 13、箭头函数与普通函数有什么区别
+
+1. 箭头函数没有自己的`this`
+2. 不能被实例化，也就是不能使用`new`
+3. 没有`arguments`，但可以使用`rest`参数代替
