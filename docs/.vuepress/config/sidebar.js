@@ -281,6 +281,10 @@ export const sidebar = {
           text: "js篇",
           link: "/interview/js.md",
         },
+        {
+          text: "vue2篇",
+          link: "/interview/vue2.md",
+        },
       ],
     },
   ],
