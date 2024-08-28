@@ -285,6 +285,10 @@ export const sidebar = {
           text: "vue2篇",
           link: "/interview/vue2.md",
         },
+        {
+          text: "TS篇",
+          link: "/interview/TS.md",
+        },
       ],
     },
   ],
