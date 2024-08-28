@@ -55,7 +55,7 @@ sidebar: auto
 
 5. 删除节点
 
-   - `emoveChild` 从父节点中删除指定的子节点
+   - `removeChild` 从父节点中删除指定的子节点
 
 ## 2、== 和 ===
 
