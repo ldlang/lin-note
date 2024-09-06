@@ -274,6 +274,10 @@ export const sidebar = {
       text: "面试题",
       children: [
         {
+          text: "基础知识篇",
+          link: "/interview/base-interview.md",
+        },
+        {
           text: "css篇",
           link: "/interview/css.md",
         },
