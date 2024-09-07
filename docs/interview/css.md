@@ -129,3 +129,41 @@ sidebar: auto
 - inline-block
 
   简单来说就是将对象呈现为 inline 对象，但是对象的内容作为 block 对象呈现。之后的内联对象会被排列在同一行内。
+
+## 6、盒子模型
+
+- 标准盒模型 （box-sizing: content-box;）
+
+  盒子总宽：content + padding + border + margin
+
+  > 设置 width 也就是设置 content 的宽度
+
+- IE 怪异盒模型 （box-sizing: border-box;）
+
+  盒子总宽：width + margin
+
+  > 设置 width 也就是设置 content + padding + border 的总宽度
+
+## 7、BFC (块级格式化上下文)
+
+`BFC`就相当于是一个隔离的的独立容器，容器里面的盒子不会影响到外面的元素，同一个`BFC`两个相邻的盒子的 margin 会发生塌陷；
+
+如何触发`BFC`：
+
+1. 在外出包裹一个父级，并且父级上有`display: flex`或者`overflow: hidden;`
+2. 给当前元素是设置`display: inline-block;`或者`position: fixed | absolute`
+
+## 8、定位（position）
+
+- `relative`和`sticky`所有方向设为 0 盒子不会被拉伸
+- `absolute`会铺满父级盒子，`fixed`会铺满整个页面
+
+## 9、css3 动画
+
+- `animation`要配合`@keyframes`才能实现动画
+- `transform`
+  - translate： 位移
+  - scale：缩放
+  - rotate：旋转
+  - skew：倾斜
+- `transition` 过渡动画

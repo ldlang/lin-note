@@ -64,7 +64,7 @@ sidebar: auto
    一般会将比较的两个值进行**隐式转换**再进行比较。
 
    - 简单数据类型的比较，字符串和布尔值都会转换为数值
-   - 简单数据类型和复杂数据类型比较，会先取复杂数量类型的`valueOf`
+   - 简单数据类型和复杂数据类型比较，会先取复杂数量类型的`valueOf`，取不到则是`[object Object]`
    - 复杂数据类型比较，比较的是引用地址
    - 只要存在`NaN`则为`false`，即使是两个`NaN`比较也是`false`
    - `null`和`undefined`，只有和自身比较，或者相互比较才返回`true`
@@ -81,10 +81,16 @@ sidebar: auto
 
 使用`Object.prototype.toString.call`来判断，会返回一个`[object Number]`这样的字符串，`Number`就是变量的数据类型。
 
+```js
+const int1 = BigInt(15);
+Object.prototype.toString.call(int1); // [object BigInt]
+Object.prototype.toString.call(int1).slice(8, -1); // BigInt
+```
+
 为什么不用`typeof`和`instanceof`
 
 1. `typeof`只能准确判断基本数据类型，`null`除外，对于引用数据类型，除了`function`都只能得到`object`
-2. `instanceof` 主要用于检查一个对象是否是其原型链上某个构造函数的实例。由于这种机制依赖于原型链和构造函数，它特别适用于复杂数据类型（如对象、数组、函数等），而不适用于没有原型链的基本数据类型。对于基本数据类型
+2. `instanceof` 主要用于检查一个对象是否是其原型链上某个构造函数的实例。由于这种机制依赖于原型链和构造函数，它特别适用于复杂数据类型（如对象、数组、函数等），而不适用于没有原型链的基本数据类型。
 
 ## 4、new 操作符具体做了什么
 
