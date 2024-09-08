@@ -274,6 +274,10 @@ export const sidebar = {
       text: "面试题",
       children: [
         {
+          text: "基础知识篇",
+          link: "/interview/base-interview.md",
+        },
+        {
           text: "css篇",
           link: "/interview/css.md",
         },
@@ -282,8 +286,12 @@ export const sidebar = {
           link: "/interview/js.md",
         },
         {
-          text: "vue2篇",
-          link: "/interview/vue2.md",
+          text: "vue篇",
+          link: "/interview/vue.md",
+        },
+        {
+          text: "TS篇",
+          link: "/interview/TS.md",
         },
       ],
     },
