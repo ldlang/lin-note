@@ -287,7 +287,7 @@ export const sidebar = {
         },
         {
           text: "vue篇",
-          link: "/interview/vue2.md",
+          link: "/interview/vue.md",
         },
         {
           text: "TS篇",
