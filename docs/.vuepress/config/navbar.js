@@ -80,6 +80,10 @@ export const navbar = [
         link: "/vue/nuxt.md",
       },
       {
+        text: "jsx",
+        link: "/vue/jsx.md",
+      },
+      {
         text: "常用插件",
         link: "/vue/plugins.md",
       },
