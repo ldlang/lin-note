@@ -80,6 +80,10 @@ export const navbar = [
         link: "/vue/nuxt.md",
       },
       {
+        text: "jsx",
+        link: "/vue/jsx.md",
+      },
+      {
         text: "常用插件",
         link: "/vue/plugins.md",
       },
@@ -100,7 +104,7 @@ export const navbar = [
     activeMatch: "^/mysql/",
   },
   {
-    text: "面试题",
+    text: "前端面试题",
     link: "/interview/",
     activeMatch: "^/interview/",
   },
@@ -108,5 +112,20 @@ export const navbar = [
     text: "Java",
     link: "/java/",
     activeMatch: "^/java/",
+  },
+  {
+    text: "linux",
+    link: "/linux/",
+    activeMatch: "^/linux/",
+    children: [
+      {
+        text: "linux",
+        link: "/linux/linux.md",
+      },
+      {
+        text: "shell",
+        link: "/linux/shell.md",
+      },
+    ],
   },
 ];
