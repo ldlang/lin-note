@@ -370,3 +370,292 @@ history
 ```bash
 history -c
 ```
+
+## 2、用户管理命令
+
+### useradd
+
+添加用户，建立用户账号。
+
+```bash
+useradd [-mMnr][-c <备注>][-d <登入目录>][-e <有效期限>][-f <缓冲天数>][-g <群组>][-G <群组>][-s <shell>][-u <uid>][用户帐号]
+```
+
+或者
+
+```bash
+useradd -D [-b][-e <有效期限>][-f <缓冲天数>][-g <群组>][-G <群组>][-s <shell>]
+```
+
+参数：
+
+- -c：加上备注文字。备注文字会保存在 passwd 的备注栏位中。
+- -d：指定用户登入时的启始目录。
+- -D：变更预设值．
+- -e：指定帐号的有效期限。
+- -f：指定在密码过期后多少天即关闭该帐号。
+- -g：指定用户所属的群组。
+- -G：指定用户所属的附加群组。
+- -m：自动建立用户的登入目录。
+- -M：不要自动建立用户的登入目录。
+- -n：取消建立以用户名称为名的群组．
+- -r：建立系统帐号。
+- -s：指定用户登入后所使用的 shell。
+- -u：指定用户 ID。
+
+例：
+
+1. 添加一个`lin`的用户
+
+   ```bash
+   useradd lin
+   ```
+
+2. 添加一个`lin`的用户，并且指定为`root`的用户组
+
+   ```bash
+   useradd -g root lin
+   ```
+
+3. 创建一个`lin`的系统用户
+
+   ```bash
+   useradd -r lin
+   ```
+
+4. 创建一个`lin`的用户并指定`ID`
+
+   ```bash
+   useradd lin -u 555
+   ```
+
+### passwd
+
+设置用户密码
+
+```bash
+passwd [-k] [-l] [-u [-f]] [-d] [-S] [username]
+```
+
+参数：
+
+- -d 删除密码
+- -f 强制执行
+- -k 更新只能发送在过期之后
+- -l 停止账号使用
+- -S 显示密码信息
+- -u 启用已被停止的账户
+- -x 设置密码的有效期
+- -g 修改群组密码
+- -i 过期后停止用户账号
+
+例：
+
+1. 设置`lin`用户的密码，如果没有设置过密码就是新加密码，如果设置过就是修改密码。
+
+   ```bash
+   passwd lin
+   ```
+
+2. 删除`lin`用户的密码
+
+   ```bash
+   passwd -d lin
+   ```
+
+3. 显示`lin`用户的密码信息
+
+   ```bash
+   passwd -S lin
+   ```
+
+### id
+
+显示用户的 ID，以及所属群组的 ID。
+
+```bash
+id [-gGnru][--help][--version][用户名称]
+```
+
+参数
+
+- -g：显示用户所属群组的 ID。
+- -G：显示用户所属附加群组的 ID。
+- -n：显示用户，所属群组或附加群组的名称。
+- -r：显示实际 ID。
+- -u：显示用户 ID。
+- -help：显示帮助。
+- -version：显示版本信息。
+
+例：
+
+1. 查看`lin`用户是否存在，存在则显示用户信息
+
+   ```bash
+   id lin
+   ```
+
+2. 显示当前用户信息
+
+   ```bash
+   id
+   ```
+
+> 查看创建了那些用户：cat /etc/passwd
+
+### su
+
+切换登录的用户
+
+```bash
+su [-fmp] [-c command] [-s shell] [--help] [--version] [-] [USER [ARG]]
+```
+
+参数：
+
+- -f 或 --fast 不必读启动档（如 csh.cshrc 等），仅用于 csh 或 tcsh
+- -m -p 或 --preserve-environment 执行 su 时不改变环境变数
+- -c command 或 --command=command 变更为帐号为 USER 的使用者并执行指令（command）后再变回原来使用者
+- -s shell 或 --shell=shell 指定要执行的 shell （bash csh tcsh 等），预设值为 /etc/passwd 内的该使用者（USER） shell
+- --help 显示说明文件
+- --version 显示版本资讯
+- \- -l 或 --login 这个参数加了之后，就好像是重新 login 为该使用者一样，大部份环境变数（HOME SHELL USER 等等）都是以该使用者（USER）为主，并且工作目录也会改变，如果没有指定 USER ，内定是 root
+- USER 欲变更的使用者帐号
+- ARG 传入新的 shell 参数
+
+例：
+
+1. 切换至`lin`用户
+
+   ```bash
+   su lin
+   ```
+
+2. 切换账号为`lin`，并改变工作目录至`lin`的家目录
+
+   ```bash
+   su - lin
+   ```
+
+### userdel
+
+删除用户
+
+```bash
+userdel [-r][用户帐号]
+```
+
+参数：
+
+- -r：删除用户登入目录以及目录中所有文件。
+
+例：
+
+1. 删除`lin`用户
+
+   ```bash
+   userdel lin
+   ```
+
+2. 删除`lin`用户及该用户的所有文件
+
+   ```bash
+   userdel -r lin
+   ```
+
+### usermod
+
+修改用户信息
+
+```bash
+usermod [-LU][-c <备注>][-d <登入目录>][-e <有效期限>][-f <缓冲天数>][-g <群组>][-G <群组>][-l <帐号名称>][-s <shell>][-u <uid>][用户帐号]
+```
+
+参数：
+
+- -c：修改用户帐号的备注文字。
+- -d：修改用户登入时的目录。
+- -e：修改帐号的有效期限。
+- -f：修改在密码过期后多少天即关闭该帐号。
+- -g：修改用户所属的群组。
+- -G：修改用户所属的附加群组。
+- -l：修改用户帐号名称。
+- -L：锁定用户密码，使密码无效。
+- -s：修改用户登入后所使用的 shell。
+- -u：修改用户 ID。
+- -U：解除密码锁定。
+
+例：
+
+1. 修改`lin`用户的 uid
+
+   ```bash
+   usermod -u 777 lin
+   ```
+
+2. 修改`lin`用户名称为`deep`
+
+   ```bash
+   user -l lin deep
+   ```
+
+### sudo
+
+此命令可以让非 root 的用户运行只有 root 才有权限执行的命令。
+
+参考：[Linux 基本功系列之 sudo 命令](https://blog.csdn.net/m0_60259116/article/details/135170503?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_utm_term~default-0-135170503-blog-138045148.235^v43^control&spm=1001.2101.3001.4242.1&utm_relevant_index=3)
+
+### groupadd
+
+新增组
+
+```bash
+groupadd [option] 组名
+```
+
+参数：
+
+- -f：如果组已经存在则成功退出，并且如果 GID 已经存在则取消 -g
+- -g：为新组使用 GID
+- -h：显示此帮助信息并推出
+- -k：不使用 /etc/login.defs 中的默认值
+- -o：允许创建有重复 GID 的组
+- -p：为新组使用此加密过的密码
+- -r：创建一个系统账户
+- -R：chroot 到的目录
+
+例：
+
+1. 创建一个`lin`组
+
+   ```bash
+   groupadd lin
+   ```
+
+2. 指定`lin`租的 id
+
+   ```bash
+   groupadd -g 500 lin
+   ```
+
+### groupdel
+
+删除组名
+
+```bash
+groupdel [option] [群组名称]
+```
+
+### groupmod
+
+修改组名
+
+```bash
+groupmod [option] 新组名 老组名
+```
+
+参数：
+
+- -g：设置欲使用的群组识别码。
+- -o：重复使用群组识别码。
+- -n：设置欲使用的群组名称。
