@@ -128,4 +128,9 @@ export const navbar = [
       },
     ],
   },
+  {
+    text: "Nginx",
+    link: "/Nginx/",
+    activeMatch: "^/Nginx/",
+  },
 ];
