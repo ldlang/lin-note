@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-f83dd842","path":"/JavaScript/red-book/promise.html","title":"期约(Promise)与异步函数","lang":"zh-CN","frontmatter":{"sidebar":"auto"},"headers":[],"git":{"updatedTime":1698126330000},"filePathRelative":"JavaScript/red-book/promise.md"}');export{e as data};

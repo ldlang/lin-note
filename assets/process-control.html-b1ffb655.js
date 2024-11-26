@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-9d9d0da4","path":"/java/process-control.html","title":"流程控制","lang":"zh-CN","frontmatter":{"sidebar":"auto"},"headers":[{"level":2,"title":"1、Scanner 对象","slug":"_1、scanner-对象","link":"#_1、scanner-对象","children":[]}],"git":{"updatedTime":1732626124000},"filePathRelative":"java/process-control.md"}');export{e as data};
