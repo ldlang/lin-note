@@ -53,3 +53,15 @@ sidebar: auto
    ```java
    scanner.close();
    ```
+
+## 以下的内容和 js 一样，待续补充
+
+## 2、if
+
+## 3、switch
+
+## 4、while
+
+## 5、do...while
+
+## 6、for...in
