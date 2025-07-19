@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-9fe77d4a","path":"/java/methods.html","title":"方法","lang":"zh-CN","frontmatter":{},"headers":[{"level":2,"title":"1、什么是方法？","slug":"_1、什么是方法","link":"#_1、什么是方法","children":[]},{"level":2,"title":"2、方法的重载","slug":"_2、方法的重载","link":"#_2、方法的重载","children":[]}],"git":{"updatedTime":1752729451000},"filePathRelative":"java/methods.md"}');export{e as data};
