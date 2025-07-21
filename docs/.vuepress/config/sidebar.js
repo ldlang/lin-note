@@ -308,6 +308,18 @@ export const sidebar = {
           text: "2、流程控制",
           link: "/java/process-control.md",
         },
+        {
+          text: "3、方法",
+          link: "/java/methods.md",
+        },
+        {
+          text: "4、数组",
+          link: "/java/array.md",
+        },
+        {
+          text: "5、面向对象",
+          link: "/java/object-oriented.md",
+        },
       ],
     },
   ],

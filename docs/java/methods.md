@@ -1,3 +1,7 @@
+---
+sidebar: auto
+---
+
 # 方法
 
 ## 1、什么是方法？
@@ -29,10 +33,10 @@
 
 1. 什么是重载
 
-   * 方法名必须相同
-   * 参数必须不通（个数不通，或类型不同，或者参数排列顺序不同）
-   * 方法的返回类型可同可不同
-   * 仅仅返回类型不同，不足以成为方法的重载
+   - 方法名必须相同
+   - 参数必须不通（个数不通，或类型不同，或者参数排列顺序不同）
+   - 方法的返回类型可同可不同
+   - 仅仅返回类型不同，不足以成为方法的重载
 
 2. 例
 
@@ -41,25 +45,25 @@
        int a = max(10,9,11);
        System.out.println(a);
    }
-   
+
    // 重载1
    public static int max(int a, int b,int c) {
        if (a == b ) return 0;
        return Math.max(a,Math.max(b,c));
    }
-   
+
    // 重载2
    public static double max(double a, double b) {
        if (a == b ) return 0;
        return Math.max(a, b);
    }
-   
+
    // 重载3
    public static int max(int a, int b) {
        if (a == b ) return 0;
        return Math.max(a, b);
    }
-   
+
    // 参数相同，返回类型不同，不是重载
    public static double max(int a, int b) {
        if (a == b ) return 0;
@@ -67,13 +71,13 @@
    }
    ```
 
-## 3、可变参数（js中的剩余参数）
+## 3、可变参数（js 中的剩余参数）
 
 1. 什么是可变参数
 
-   * JDK 1.5 开始，Java支持传递同类型的可变参数给一个方法。
-   * 在方法声明中，在指定参数类型后加一个省略号(...)
-   * 一个方法中只能指定一个可变参数，它必须是方法的最后一个参数。任何普通的参数必须在它之前声明。
+   - JDK 1.5 开始，Java 支持传递同类型的可变参数给一个方法。
+   - 在方法声明中，在指定参数类型后加一个省略号(...)
+   - 一个方法中只能指定一个可变参数，它必须是方法的最后一个参数。任何普通的参数必须在它之前声明。
 
 2. 例子
 
@@ -82,7 +86,7 @@
        int max = maxVal(9,4,62,34,123,4,1);
        System.out.println(max);
    }
-   
+
    // 找寻最大数字
    public static int maxVal(int... num) {
        int max = 0;
@@ -99,8 +103,8 @@
 
 1. 什么是递归
 
-   * 自己调用自己
-   * 自己调用自己的时候必须要有条件控制，不然就是死循环
+   - 自己调用自己
+   - 自己调用自己的时候必须要有条件控制，不然就是死循环
 
 2. 例子
 
@@ -108,7 +112,7 @@
    public static void main(String[] args) {
        System.out.println(max(10));
    }
-   
+
    public static int max(int n) {
        if (n <= 1)  return n;
        // 这里自己调用自己
@@ -116,4 +120,60 @@
    }
    ```
 
-   
+## 5、静态方法
+
+1. 有 `static` 的方法就是静态方法，静态方法不用实例化对象就可以调用。
+   **同一个包下面不需要导入类**
+
+```java
+// Main.java
+package methods.ldlang;
+
+public class Main {
+    public static void main(String[] args) {
+        // 不需要实例化就能调用静态方法
+        Student.say();
+    }
+}
+
+// Student.java
+package methods.ldlang;
+
+public class Student {
+    public static void say (){
+        System.out.println("我是学生说话");
+    }
+}
+```
+
+## 6、非静态方法
+
+1. 非静态方法必须实例化对象才能调用
+
+```java
+// Main.java
+package methods.ldlang;
+
+public class Main {
+    public static void main(String[] args) {
+        // 对象类型 对象名 = 对象值
+        Student student = new Student();
+        student.say();
+    }
+}
+
+// Student.java
+package methods.ldlang;
+
+public class Student {
+    public void say (){
+        System.out.println("我是学生说话");
+    }
+}
+
+```
+
+## 7、不同方法之间的调用
+
+1. 在同一个类里面静态方法能直接调用静态方法，**非**静态静态方法也能直接调用**非**静态方法，但是静态方法却不能调用非静态方法，非静态方法却能调用静态方法
+   > 原因是：静态方法是和类一起加载的，存在的时间较早，而非静态方法则需要实例化对象后才能调用，实例化对象需要时间更长，所以静态方法不能调用非静态方法，非静态方法可以调用静态方法
