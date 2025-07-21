@@ -64,4 +64,4 @@ sidebar: auto
 
 ## 5、do...while
 
-## 6、for...in
+## 6、for
