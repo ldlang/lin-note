@@ -1,0 +1,1 @@
+import{_ as r,o as a,c as n,b as e,d as o}from"./app-7345e46e.js";const c={};function d(s,t){return a(),n("div",null,t[0]||(t[0]=[e("h1",{id:"面向对象",tabindex:"-1"},[e("a",{class:"header-anchor",href:"#面向对象","aria-hidden":"true"},"#"),o(" 面向对象")],-1),e("p",null,"以类的方式组织代码，以对象的组织（封装）数据",-1)]))}const i=r(c,[["render",d],["__file","object-oriented.html.vue"]]);export{i as default};

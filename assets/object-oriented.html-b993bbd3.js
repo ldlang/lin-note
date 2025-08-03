@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-bb8f7aca","path":"/java/object-oriented.html","title":"面向对象","lang":"zh-CN","frontmatter":{"sidebar":"auto"},"headers":[],"git":{"updatedTime":1753075571000},"filePathRelative":"java/object-oriented.md"}');export{e as data};
