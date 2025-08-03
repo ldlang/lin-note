@@ -176,4 +176,50 @@ public class Student {
 ## 7、不同方法之间的调用
 
 1. 在同一个类里面静态方法能直接调用静态方法，**非**静态静态方法也能直接调用**非**静态方法，但是静态方法却不能调用非静态方法，非静态方法却能调用静态方法
+   
    > 原因是：静态方法是和类一起加载的，存在的时间较早，而非静态方法则需要实例化对象后才能调用，实例化对象需要时间更长，所以静态方法不能调用非静态方法，非静态方法可以调用静态方法
+
+## 8、值传递和引用传递
+
+1. 普通数据类型在传递给函数就是值传递，修改后不会影响原数据
+
+   ```java
+    public static void main(String[] args) {
+        int a = 1;
+        System.out.println(a);
+   
+        change(a);
+        System.out.println(a);
+    }
+   
+   public static void change(int a) {
+       a = 2;
+   }
+   ```
+
+   
+
+2. 对象给函数传递就是引用传递，修改后会改变原数据
+
+   ```java
+   public class Demo05 {
+       public static void main(String[] args) {
+           Person person = new Person();
+           System.out.println(person.name); // null
+           
+           change(person);
+           System.out.println(person.name); // 张三
+       }
+   
+       public static void change(Person person) {
+           person.name = "张三";
+       }
+   }
+   
+   class Person {
+       String name;
+   };
+   ```
+
+   
+
