@@ -112,3 +112,151 @@ sidebar: auto
 
 ### 2、继承
 
+1. 什么是继承
+
+    * 能够继承父类的所有属性和方法，除了私有的属性及方法；
+
+    * 使用`extends`关键字；
+
+    * `java`只有单继承，也就是一个子类只能继承一个父类，但是一个父类能被多个子类继承；
+
+    * 所有的类都直接或间接的继承了`Object`；
+
+    * 一般属性都是私有的；
+
+    * 属性关键字
+
+      > public 公共的，能够被继承，new完后也能直接使用
+      >
+      > protected 受保护的，能够被继承，new完后也能直接使用
+      >
+      > default 默认的，不写就是default，能够被继承，new完后也能直接使用
+      >
+      > private 私有的，不能被继承，只能在当前类里面使用
+
+      例：
+
+      ```java
+      // 父类
+      public class Pet {
+          String cat = "猫";
+          private String dog = "狗";
+          protected String pig = "猪";
+          public String horse = "马";
+
+          public String getHorse() {
+              return this.horse;
+          }
+
+          public void setHorse(String horse) {
+              this.horse = horse;
+          }
+      }
+
+      // 子类 继承了 Pet这个父类
+      public class Animal extends Pet {
+      }
+
+      // Animal中除了父类的dog其他的都被其继承了
+      public class Application {
+          public static void main(String[] args) {
+              Animal animal = new Animal();
+              System.out.println(animal.cat);
+              System.out.println(animal.horse);
+              System.out.println(animal.pig);
+              System.out.println(animal.getHorse());
+          }
+      }
+      ```
+    
+2. super
+
+    * super只能在子类中出现，super中包含父类中所有的属性和方法，除了私有的；
+
+    * super调用父类的构造方法，必须在构造方法的第一行；
+
+    * super和this不能同时调用构造方法；
+
+    * super当方法使用的时候，如果传参，那就是调用父类的有参构造器；
+
+      > super如果当方法使用那就是调用父类的构造器，如果当对象使用那就能调用父类中的除了私有的所有的方法和属性，this也是一样，只是this代表的是当前这个类。
+
+    例：
+
+    ```java
+    public class Animal extends Pet {
+        // 在构造器中使用
+        public Animal(){
+            super(); // 直接调用父类的构造器
+            System.out.println(super.getHorse()); // 调用父类的方法
+            System.out.println(super.horse); // 调用父类的属性
+        }
+    
+        public void sayPig() {
+            super.pig = "Res"; // 修改父类中的属性
+            System.out.println(super.pig);
+        }
+    }
+    ```
+
+3. 方法重写
+
+    * 需要有继承关系才能有方法的重写，子类重写父类的方法；
+
+    * 方法名必须相同；
+
+    * 方法的参数列表页必须相同；
+
+    * 修饰符范围可以扩大但不能缩小； 
+
+      > public > protected > default > private
+
+    * 抛出的异常：范围可以被缩小，但不能扩大
+
+    * 方法体可以不同
+
+    ```java
+    // A类
+    public class A {
+        public static void say(){
+            System.out.println("A");
+        }
+    
+        public void say1(){
+            System.out.println("A");
+        }
+    }
+    
+    // B类
+    public class B extends A {
+        public static void say() {
+            System.out.println("B");
+        }
+    
+        @Override // 重写注解
+        public void say1(){
+            System.out.println("B");
+        }
+    }
+    
+    // 使用
+    public class Application {
+        public static void main(String[] args) {
+            B b = new B();
+            b.say(); // B
+            b.say1(); // B
+    
+            A a = new B();
+            // 虽然是 new 的 B 但是 say 在 A中是一个静态方法，new出来的类型如果是A那么调到的就是A类中的方法
+            a.say(); // A
+            a.say1(); // B
+        }
+    }
+    ```
+
+### 3、多态
+
+
+
+
+
