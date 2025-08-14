@@ -274,6 +274,7 @@ System.out.println(num4); // b
 | 数字     | 0 或 0.0 |
 | 布尔值   | false    |
 | 引用类型 | null     |
+| char     | u0000    |
 
 ### 6.2、常量（final）
 
@@ -409,3 +410,4 @@ byte,short -> int -> long -> float -> double
  * @since 指明最早使用的jdk版本
  */
 ```
+
