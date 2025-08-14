@@ -89,4 +89,26 @@ sidebar: auto
 
 ## 3、java 的三大特性
 
-### 1、封装
+### 1、封装（数据的隐藏）
+
+* 通常，应禁止直接访问一个对象中数据的实际表示，而应通过操作接口来访问，这称为信息隐藏。
+
+  > 通过private关键字定义的属性只能在类里面进行访问，如果外部要使用就要使用get/set方法
+
+  ```java
+  public class PriStudent {
+      private String name;
+      private int age;
+  
+      public String getName() {
+          return this.name;
+      }
+  
+      public void setName(String name) {
+          this.name = name;
+      }
+  }
+  ```
+
+### 2、继承
+
