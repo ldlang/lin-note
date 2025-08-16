@@ -256,7 +256,209 @@ sidebar: auto
 
 ### 3、多态
 
+什么是多态：一个对象的实际类型是确定的，但可以指向对象的引用的类型有很多。
+
+1. 多态存在的条件
+
+   * 有继承关系；
+   * 子类重写了父类的方法
+   * 父类引用指向子类对象
+
+2. 注意事项
+
+   * 多态是方法的多态，属性没有多态
+   * 父类和子类直接有联系才能转换，不然就会类型转换异常
+
+3. 总结
+
+   * 一个new出来的对象里面有那些方法主要看看左边的类型，和右边的关系不大。
+
+   * 如果子类重写了父类的方法，无论类型指向哪里，都只能调到子类的方法。
+
+   * 父类型，可以指向子类但是不能调用子类独有的方法
+
+   * 子类型，可以调到父类和自己的方法
+
+     > 不能被重写的方法
+     >
+     > 1. static 他属于类不属于实例
+     > 2. final 常量方法
+     > 3. private 私有方法
+   
+   例：
+   
+   ```java
+   public class A {
+       public void say1(){
+           System.out.println("A");
+       }
+   }
+   
+   public class B extends A {}
+   
+   B b = new B();
+   A a = new B();
+   
+   b.say1(); // A
+   a.say1(); // A
+   
+   // B 重写了say1方法
+   public class B extends A {
+       @Override
+       public void say1() {
+           System.out.println("son");
+       }
+   }
+   // b 能调用的方法都是自己的或者继承来的
+   B b = new B();
+   // A 父类型，可以指向子类但是不能调用子类独有的方法
+   A a = new B();
+   
+   // 对象能执行那些方法主要看左边的类型，和右边的关系不大
+   b.say1(); // 如果子类重写了父类的方法，那么就只能调到子类的方法
+   a.say1();
+   ```
+   
+## 4、instanceof
 
 
+看一个对象某个类型
 
+   ```java
+   public class A {}
+   
+   public class B extends A {}
+   ```
+
+   * 子类new出来的对象是当前对象的类型，也是其父类的类型
+   
+     ```java
+     B b = new B();
+     System.out.println(b instanceof A); // true
+     System.out.println(b instanceof B); // true
+     System.out.println(b instanceof Object); //true
+     ```
+   
+   * 子类new出来的对象，类型指向父类，那么这个对象既是当前对象的类型，也是其父类的类型
+   
+     ```java
+     A a = new B();
+     System.out.println(a instanceof B); // true
+     System.out.println(a instanceof A); // true
+     ```
+   
+   * 父类new出来的对象，类型只能指向父类，这个对象也只能是父类的类型
+   
+     ```java
+     A a = new A();
+     System.out.println(a instanceof A); // true
+     System.out.println(a instanceof B); // false
+     ```
+
+## 5、类型转换
+
+```java
+public class A {
+    public void say(){
+        System.out.println("A");
+    }
+}
+
+public class B extends A {
+    public void say1() {
+        System.out.println("B");
+    }
+}
+```
+
+1. 高类型转低类型只能强制转换
+
+   ```java
+   A a = new B();
+   ((B) a).say1(); // 类型转换后才能调用B类的方法
+   ```
+
+2. 低类型转高类型可以直接转换
+
+   ```java
+   B b = new B();
+   A a = b;
+   a.say();
+   ```
+
+##  6、static
+
+1. 静态属性能够直接通过类调用，非静态属性只能实例化后再调用
+
+   ```java
+   public class StaticTest {
+       private static String name = "张三";
+       private int age = 15;
+   
+       public static void main(String[] args) {
+           System.out.println(StaticTest.name);
+   
+           StaticTest sta = new StaticTest();
+           System.out.println(sta.age);
+       }
+   }
+   ```
+
+2. 静态方法也能直接调用，而非静态方法需要实例化后才能调用
+
+   ```java
+   public class StaticTest {
+       public void run(){
+           System.out.println("run");
+       }
+   
+       public static void go(){
+           System.out.println("go");
+       }
+   
+       public static void main(String[] args) {
+           StaticTest.go();
+   
+           StaticTest sta = new StaticTest();
+           sta.run();
+       }
+   }
+   ```
+
+3. 类中执行的顺序
+
+   ```java
+   public class StaticTest {
+   
+       // 初始化一些值
+       {
+           System.out.println("匿名代码块");
+       }
+   
+       // 只有在第一次实例化的时候才会执行
+       static {
+           System.out.println("静态代码块");
+       }
+   
+       public StaticTest(){
+           System.out.println("构造器");
+       }
+   
+       public static void main(String[] args) {
+           StaticTest sta = new StaticTest();
+           // 静态代码块
+           // 匿名代码块
+           // 构造器
+           StaticTest st = new StaticTest();
+           // 匿名代码块
+           // 构造器
+       }
+   }
+   ```
+
+## 7、abstract 抽象类 
+
+   
+
+   
 
