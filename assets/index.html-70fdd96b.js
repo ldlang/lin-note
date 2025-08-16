@@ -1,0 +1,1 @@
+import{_ as r,o as t,c as n,b as a,d}from"./app-ec5282f1.js";const o={};function s(c,e){return t(),n("div",null,e[0]||(e[0]=[a("h1",{id:"java",tabindex:"-1"},[a("a",{class:"header-anchor",href:"#java","aria-hidden":"true"},"#"),d(" Java")],-1)]))}const l=r(o,[["render",s],["__file","index.html.vue"]]);export{l as default};
