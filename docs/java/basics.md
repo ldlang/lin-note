@@ -377,26 +377,25 @@ byte,short -> int -> long -> float -> double
 
 4. 同一个包下面的所有类是不用引入就可以直接调用的
 
-    ```java
-    // Student.java 文件 /methods/ldlang/Student.java
-    package methods.ldlang;
+   ```java
+   // Student.java 文件 /methods/ldlang/Student.java
+   package methods.ldlang;
 
-    public class Student {
+   public class Student {
 
-      public static void say (){
-          System.out.println("我是学生说话");
-      }
-    }
+     public static void say (){
+         System.out.println("我是学生说话");
+     }
+   }
 
-    // Main.java 文件 /methods/ldlang/Main.java
-    public class Main {
-      public static void main(String[] args) {
-        // 可以直接调用静态的say方法，不用导入包
-        Student.say();
-      }
-    }
-    ```
-
+   // Main.java 文件 /methods/ldlang/Main.java
+   public class Main {
+     public static void main(String[] args) {
+       // 可以直接调用静态的say方法，不用导入包
+       Student.say();
+     }
+   }
+   ```
 
 ## 9、javaDoc
 
@@ -410,4 +409,3 @@ byte,short -> int -> long -> float -> double
  * @since 指明最早使用的jdk版本
  */
 ```
-
