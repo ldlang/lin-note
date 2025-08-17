@@ -456,3 +456,178 @@ public class B extends A {
    ```
 
 ## 7、abstract 抽象类
+
+加入 abstract 的类就是抽象类，其实他就是一个子类的约束，约束子类的行为；
+
+```java
+public abstract class Aciton {
+    // 抽象方法不能有方法体
+    public abstract void doSomeThing();
+}
+```
+
+1. 抽象类不能被实例化
+2. 抽象类中可以有抽象方法，也可以有普通方法，但是抽象方法只能在抽象类里面，并且不能有函数体
+3. 如果有抽象方法，那么在子类中，抽象方法必须被实现，否则该子类要是一个抽象类
+
+## 8、interface 接口
+
+接口也一种约束，约束类的行为，但是一个类，能够同时被多个接口约束，被约束的类必须实现接口的中的方法；
+
+```java
+public interface IPeople {
+    // 接口中的所有变量都是 public static final , 几乎不会在接口中声明常量
+    int age = 15;
+
+    // 接口中所有定义的方法都是 public abstract
+    void drink(String name);
+}
+
+public interface IPerson {
+    void run(String name);
+}
+
+public class UseInterface implements IPeople, IPerson{
+    @Override
+    public void drink(String name) {}
+
+    @Override
+    public void run(String name) {}
+}
+```
+
+1. 接口就是约束类的，类通过 implements 来使用接口
+2. 在接口中定义一些方法，这些方法必须被类实现
+3. 接口中所有的方法都是接口中所有定义的方法都是 `public abstract`
+4. 接口中所有的变量都是 `public static final`，几乎不会在接口中声明常量
+5. 接口不能被实例化，也没有构造方法
+
+## 9、内部类
+
+1. 普通内部类
+
+   - 内部类能调用外部类的所有方法和属性
+
+   ```java
+   public class Outer {
+       private int age = 12;
+       public void say(){
+           System.out.println("外部类 say");
+       }
+
+       public class Inner {
+           public void in(){
+               say();
+               System.out.println(age);
+           }
+       }
+   }
+
+   // 实例化
+   public class Application {
+       public static void main(String[] args) {
+           Outer outer = new Outer();
+           outer.say();
+
+           // 实例化内部类
+           Outer.Inner inner = outer.new Inner();
+           inner.in();
+       }
+   }
+   ```
+
+2. 静态内部类
+
+   - 静态内部类只能调用静态的属性和方法，因为静态类加载的较早
+
+   ```java
+   public class Outer {
+       private int age = 12;
+       public static void say(){
+           System.out.println("外部类 say");
+       }
+
+       public static class Inner {
+           public static void in(){
+               say();
+           }
+       }
+   }
+
+   Outer outer = new Outer();
+   Outer.Inner.in();
+   ```
+
+3. 局部内部类
+
+   - 方法里面实现类
+
+   ```java
+   public class Outer {
+       public void fun() {
+           class Fun {
+
+           }
+       }
+   }
+   ```
+
+4. 匿名内部类
+
+   - 一个 java 文件中可以有多个类，但是只有一个类能写 public
+
+   ```java
+   public class Outer {
+       public static void main(String[] args) {
+           new Apple().eat();
+       }
+   }
+
+   class Apple {
+       public void eat(){
+           System.out.println("eat");
+       }
+   }
+   ```
+
+## 10、异常机制
+
+1. java 的异常分类
+
+   ![image](/java/java-err.png)
+
+   [异常的具体分类](https://www.runoob.com/java/java-exceptions.html)
+
+2. 异常的捕获
+
+   ```java
+   // 可以同时捕获不用类型的异常，但是最顶级的异常要在后面，不然永远只会走最顶级的异常
+   try {
+       int a = new ErrTest().err(1,0);
+   } catch (ArithmeticException e) {
+       System.out.println(e);
+   } catch (Throwable c){
+       System.out.println(c);
+   } finally {
+       System.out.println("上面走完了");
+   }
+
+   class ErrTest {
+       public int err(int a, int b) throws  ArithmeticException{
+           if (b== 0) {
+               // 抛出异常
+               throw new ArithmeticException();
+           }
+           return a / b;
+       }
+   }
+   ```
+
+3. 自定义异常
+
+   ```java
+   // 先继承最顶级的异常
+   class MyErr extends Throwable {
+
+   }
+   ```
