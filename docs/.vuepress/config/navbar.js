@@ -110,8 +110,13 @@ export const navbar = [
   },
   {
     text: "Java",
-    link: "/java/",
     activeMatch: "^/java/",
+    children:[
+      {
+        text: "javaSE",
+        link: "/java/javaSE-catalog.md",
+      },
+    ]
   },
   {
     text: "linux",
