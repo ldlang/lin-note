@@ -114,7 +114,11 @@ export const navbar = [
     children:[
       {
         text: "javaSE",
-        link: "/java/javaSE-catalog.md",
+        link: "/java/javaSE/",
+      },
+            {
+        text: "常用类",
+        link: "/java/commonClass/",
       },
     ]
   },
