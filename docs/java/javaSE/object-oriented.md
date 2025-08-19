@@ -504,9 +504,10 @@ public class UseInterface implements IPeople, IPerson{
 
 ## 9、内部类
 
-1. 普通内部类
+1. 成员内部类
 
    - 内部类能调用外部类的所有方法和属性
+   - 当内部类和外部类存在重名时，会优先访问内部类属性
 
    ```java
    public class Outer {
@@ -514,21 +515,25 @@ public class UseInterface implements IPeople, IPerson{
        public void say(){
            System.out.println("外部类 say");
        }
-
+   
        public class Inner {
+           private int age = 1;
            public void in(){
                say();
+               // 访问内部类的age
                System.out.println(age);
+               // 访问外部类的age
+               System.out.println(Outer.this.age);
            }
        }
    }
-
+   
    // 实例化
    public class Application {
        public static void main(String[] args) {
            Outer outer = new Outer();
            outer.say();
-
+   
            // 实例化内部类
            Outer.Inner inner = outer.new Inner();
            inner.in();
@@ -546,21 +551,27 @@ public class UseInterface implements IPeople, IPerson{
        public static void say(){
            System.out.println("外部类 say");
        }
-
+   
        public static class Inner {
            public static void in(){
                say();
            }
+           
+           public void show(){
+               // 访问外部类的非静态属性
+               Outer outer = new Outer();
+               System.out.println(outer.age);
+           }
        }
    }
-
+   
    Outer outer = new Outer();
    Outer.Inner.in();
    ```
 
 3. 局部内部类
 
-   - 方法里面实现类
+   - 方法里面实现类，类前面不能加任何修饰符
 
    ```java
    public class Outer {
@@ -577,15 +588,20 @@ public class UseInterface implements IPeople, IPerson{
    - 一个 java 文件中可以有多个类，但是只有一个类能写 public
 
    ```java
-   public class Outer {
-       public static void main(String[] args) {
-           new Apple().eat();
-       }
+   public interface Usb {
+       public void servive();
    }
-
-   class Apple {
-       public void eat(){
-           System.out.println("eat");
+   
+   public class Application {
+    public static void main(String[] args) {
+           // 接口不能实例化，但使用匿名内部类，就相当于创建了一个局部内部类
+           Usb usb = new Usb() {
+               @Override
+               public void servive() {
+                   System.out.println("使用了usb");
+               }
+           };
+           usb.servive();
        }
    }
    ```

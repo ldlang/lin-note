@@ -117,7 +117,7 @@ export const navbar = [
         link: "/java/javaSE/",
       },
             {
-        text: "常用类",
+        text: "常用类、集合、IO",
         link: "/java/commonClass/",
       },
     ]
