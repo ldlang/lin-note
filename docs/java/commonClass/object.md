@@ -162,3 +162,110 @@ public class Application {
       }
   }
   ```
+
+### 5、finalize 方法
+
+- 当对象被判断为垃圾对象时，由 jvm 自动调用此方法，用以标记垃圾对象，进入回收队列
+- 没有有效引用指向此对象时，为垃圾对象
+- 垃圾回收有 GC 摧毁垃圾对象，释放数据存储空间
+- 自动回收机制。JVM 的内存耗尽，一次性回收所有垃圾对象
+- 手动回收机制，使用`System.gc()`，通知 JVM 进行回收，但也只能是通知
+
+## 2、包装类
+
+基本数据类型所对应的应用数据类型，`Object`可统一所有数据，包装类的默认值是`null`，变为引用类型之后就能使用`Object`上的方法。
+
+| 基本数据类型 | 包装类      | 所属包      | 默认值     | 占用字节               |
+| ------------ | ----------- | ----------- | ---------- | ---------------------- |
+| `byte`       | `Byte`      | `java.lang` | `0`        | 1                      |
+| `short`      | `Short`     | `java.lang` | `0`        | 2                      |
+| `int`        | `Integer`   | `java.lang` | `0`        | 4                      |
+| `long`       | `Long`      | `java.lang` | `0L`       | 8                      |
+| `float`      | `Float`     | `java.lang` | `0.0f`     | 4                      |
+| `double`     | `Double`    | `java.lang` | `0.0d`     | 8                      |
+| `char`       | `Character` | `java.lang` | `'\u0000'` | 2                      |
+| `boolean`    | `Boolean`   | `java.lang` | `false`    | 1 (JVM 规范未严格限定) |
+
+### 1、装箱与拆箱（类型转换）
+
+1. 装箱：将基本类型装换为**引用类型**
+
+2. 拆箱：将引用类型装换为**基本类型**
+
+   > valueOf 基本类型转为引用类型
+   >
+   > Integer integer12 = Integer.valueOf(sex);
+
+例：
+
+```java
+public class Encasement {
+    public static void main(String[] args) {
+        int age = 30;
+        // jdk1.5之后，自动装箱，拆箱
+        // 装箱 => 转为引用类型
+        Integer integer = age;
+        Integer integer12 = Integer.valueOf(sex);
+        // 拆箱 => 转为基本类型
+        int age2 = integer;
+
+        // jdk1.5之前，已弃用
+        int sex = 1;
+        // 装箱
+        Integer integer1 = new Integer(sex);
+        Integer integer12 = Integer.valueOf(sex);
+        // 拆箱
+        int sex1 = integer1.intValue();
+    }
+}
+```
+
+### 2、基本类型和字符串之间的转换
+
+使用`parseXX()`方法能实现转为基本类型；
+
+> int a = 10;
+>
+> int b = Integer.parseInt(a);
+>
+> String a = "ture";
+> boolean b = Boolean.parseBoolean(a);
+
+1. `int` 转 `字符串`
+
+   ```java
+   public class Encasement {
+       public static void main(String[] args) {
+           int age = 30;
+           String a = age + "";
+           String b = Integer.toString(age);
+           // 转为 16 进制的字符串
+           String c = Integer.toString(age, 16);
+       }
+   }
+   ```
+
+2. 字符串转基本类型
+
+   ```java
+   public class Encasement {
+       public static void main(String[] args) {
+           String a = "15";
+           int b = Integer.parseInt(a);
+       }
+   }
+   ```
+
+3. 字符串转`boolean`
+
+   **除了字符串的 true 能转为 boolean 的 true，其他的都是 false**
+
+   ```java
+   public class Encasement {
+       public static void main(String[] args) {
+           String a = "ture";
+           boolean b = Boolean.parseBoolean(a);
+           System.out.println(b);
+       }
+   }
+   ```
