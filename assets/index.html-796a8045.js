@@ -1,0 +1,1 @@
+const a=JSON.parse('{"key":"v-2ddb0c76","path":"/java/commonClass/","title":"常用类、集合、IO","lang":"zh-CN","frontmatter":{"sidebar":"auto"},"headers":[{"level":2,"title":"常用类","slug":"常用类","link":"#常用类","children":[]}],"git":{"updatedTime":1755610529000},"filePathRelative":"java/commonClass/README.md"}');export{a as data};
