@@ -46,7 +46,7 @@ public class Getcom {
 }
 ```
 
-### 1、getClass 方法
+### 1、getClass
 
 返回引用中存储的实际对象类型，通常用于判断两个引用中实际对象类型是否一致。
 
@@ -66,7 +66,7 @@ public class Application {
 }
 ```
 
-### 2、hashCode 方法
+### 2、hashCode
 
 获取对象的哈希码值，哈希值是根据对象的地址或字符串或数字使用哈希算法计算出来的 int 类型的数值，一般情况下相同对象返回相同的哈希码。
 
@@ -84,7 +84,7 @@ public class Application {
 }
 ```
 
-### 3、toString 方法
+### 3、toString
 
 返回该对象的字符串表示，一般会被重写为展示对象各个属性值
 
@@ -116,7 +116,7 @@ public class Application {
   System.out.println(getCom1.toString()); // GetCom{name='张三'}
   ```
 
-### 4、equals 方法
+### 4、equals
 
 比较两个对象地址是否相同，可进行重写，比较两个对象的内容是否相同
 
@@ -163,7 +163,7 @@ public class Application {
   }
   ```
 
-### 5、finalize 方法
+### 5、finalize
 
 - 当对象被判断为垃圾对象时，由 jvm 自动调用此方法，用以标记垃圾对象，进入回收队列
 - 没有有效引用指向此对象时，为垃圾对象
@@ -269,3 +269,345 @@ public class Encasement {
        }
    }
    ```
+
+### 3、Integer 缓冲区
+
+`Integer`设置了一个`-128`到`127`的自动装箱缓冲区，只要是自动装箱的在这个区间的值相同，虽然是引用类型，但是也是比较的值，值相等就是`true`
+
+```java
+public class Encasement {
+    public static void main(String[] args) {
+        // 手动装箱，比较的是引用地址
+        Integer a = new Integer(1);
+        Integer b = new Integer(1);
+        System.out.println(a == b); // false
+
+        // 自动装箱且在 -128到127之间，能直接比较值
+        Integer integer1 = 127;
+        Integer integer2 = 127;
+        System.out.println(integer1 == integer2); // true
+
+        // 自动装箱，但是值不在缓冲区，比较的是引用地址
+        Integer integer3 = 200;
+        Integer integer4 = 200;
+        System.out.println(integer3 == integer4); // false
+    }
+}
+```
+
+## 3、String 常用方法
+
+### 1、length
+
+获取字符串的长度
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        String str = "abcdefghijklmnop";
+        System.out.println( str.length() ); // 16
+    }
+}
+```
+
+### 2、charAt
+
+获取字符串指定下标的字符
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        String str = "abcdefghijklmnop";
+        System.out.println(str.charAt(5)); // f
+    }
+}
+```
+
+### 3、contains
+
+查看字符串中是否包含某个字符
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        String str = "abcdefghijklmnop";
+        System.out.println(str.contains("bc")); // true
+        System.out.println(str.contains("cb")); // false
+    }
+}
+```
+
+### 4、toCharArray
+
+转为数组
+
+```java
+import java.util.Arrays;
+
+public class StringClass {
+    public static void main(String[] args) {
+        String str = "abcdef";
+
+        // [a, b, c, d, e, f]
+        System.out.println(Arrays.toString(str.toCharArray()));
+
+        for (char c : str.toCharArray()) {
+            // 依次打出每个字符
+            System.out.println(c);
+        }
+    }
+}
+```
+
+### 5、indexOf 和 lastIndexOf
+
+* indexOf **从左往右**查找字符首次出现的位置
+
+* lastIndexOf **从右往左**查找字符首次出现的位置
+
+  > 找不到则返回 -1
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        String str = "abcdbef";
+
+        System.out.println(str.indexOf("b")); // 1
+        System.out.println(str.lastIndexOf("b")); // 4
+    }
+}
+```
+
+### 6、trim
+
+去除字符串两端的空格
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        String str = " ab cdbef ";
+
+        System.out.println(str.trim()); // ab cdbef
+    }
+}
+```
+
+### 7、toUpperCase 和 toLowerCase
+
+* toUpperCase 将字符串中所有的字母转为**大写**
+
+* toLowerCase 将字符串中所有的字母转为**小写**
+
+  > 遇到中文会跳过
+
+  ```java
+  public class StringClass {
+      public static void main(String[] args) {
+          String str = "abcdbef中文b";
+  
+          System.out.println(str.toUpperCase()); // ABCDBEF中文B
+          System.out.println(str.toUpperCase().toLowerCase()); // abcdbef中文b
+      }
+  }
+  ```
+
+### 8、startWith 和 endWith
+
+* startWith 判断字符串是否以某个字符串**开始**
+
+* endWith 判断字符串是否以某个字符串**结束**
+
+  ```java
+  public class StringClass {
+      public static void main(String[] args) {
+          String str = "abcdbef中文b";
+  
+          System.out.println(str.startsWith("ab")); // true
+          System.out.println(str.endsWith("文b")); // true
+      }
+  }
+  ```
+
+### 9、replace
+
+替换字符串中指定的字符
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        String str = "我在学习java语言";
+
+        System.out.println(str.replace("java", "php"));
+    }
+}
+```
+
+### 10、split
+
+以指定的字符分割字符串，变成一个数组
+
+```java
+import java.util.Arrays;
+
+public class StringClass {
+    public static void main(String[] args) {
+        String str = "java is best language";
+        // 得到的是转换后的引用地址
+        System.out.println(str.split(" ")); // [Ljava.lang.String;@10f87f48
+        System.out.println(Arrays.toString(str.split(" "))); // [java, is, best, language]
+        
+        for (String s : str.split(" ")) {
+            System.out.println(s);
+            // java
+            // is
+			// best
+            // language
+        }
+    }
+}
+```
+
+### 11、euqals 和 equalsIgnoreCase
+
+* euqals  比较两个字符串的值是否相同
+* equalsIgnoreCase 忽略大小写的比较两个字符串的值是否相同
+
+> 为什么自动装箱的String对象没有进行比较地址
+>
+> * Java为了优化内存使用，维护了一个特殊的存储区域叫 字符串常量池（位于堆内存中）。
+> * 当通过 字面量（literal） 方式创建字符串（如 String str = "hello";）时，JVM会先检查常量池中是否已存在该字符串：
+>   * 如果存在，直接返回池中已有字符串的引用。
+>   * 如果不存在，则在常量池中创建该字符串，并返回其引用。
+>
+> 因此下面的 str1 == str2 是 true
+>
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        String str1 = "hello";
+        String str2 = "hello";
+        // 不建议使用
+        System.out.println(str1 == str2); // true
+        System.out.println(str1.equals(str2)); // true
+        
+        String str3 = "hello";
+        String str4 = "Hello";
+        System.out.println(str3.equalsIgnoreCase(str4));  // true
+    }
+}
+```
+
+### 12、substring
+
+截取字符串中指定区间的字符
+
+> 一个参数：从指定开始位置截取到末尾（包含开始位置的字符）
+>
+> 两个参数：从制定开始位置（包含）截取到指定结束为止（不包含）
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        String str = "这是一个字符串";
+        System.out.println(str.substring(2));
+        System.out.println(str.substring(2, 4));
+    }
+}
+```
+
+## 4、StringBuffer 和 StringBuilder
+
+相同点：
+
+* 可变长字符串
+
+不同点
+
+* StringBuffer
+  * JDK1.0提供的
+  * 运行效率比`String`快，但是比`StringBuilder`要慢，线程安全
+* StringBuilder
+  * JDK5.0提供，运行效率最快，但是线程不安全
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+        /**
+        * StringBuffer
+        */
+        StringBuffer sb = new StringBuffer();
+        // 增
+        sb.append("abc");
+        System.out.println(sb.toString()); // abc
+        // 插入
+        sb.insert(1, "s");
+        System.out.println(sb.toString()); // asbc
+        // 替换
+        sb.replace(2, sb.length(), "哈哈");
+        System.out.println(sb.toString()); // as哈哈
+        // 删除
+        sb.delete(2, sb.length());
+        System.out.println(sb.toString()); // as
+        
+        /**
+        * StringBuilder
+        */
+        StringBuilder sb = new StringBuilder();
+        // 增
+        sb.append("abc");
+        System.out.println(sb.toString()); // abc
+        // 插入
+        sb.insert(1, "s");
+        System.out.println(sb.toString()); // asbc
+        // 替换
+        sb.replace(2, sb.length(), "哈哈");
+        System.out.println(sb.toString()); // as哈哈
+        // 删除
+        sb.delete(2, sb.length());
+        System.out.println(sb.toString()); // as
+    }
+}
+```
+
+运行效率比较
+
+```java
+public class StringClass {
+    public static void main(String[] args) {
+		// String
+        long start = System.currentTimeMillis();
+        String str = "";
+        for (int i = 0; i < 99999; i++) {
+            str += i;
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(end - start); // 2712
+
+        // StringBuffer
+        long start1 = System.currentTimeMillis();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < 99999; i++) {
+            sb.append(i);
+        }
+        long end1 = System.currentTimeMillis();
+        System.out.println(end1 - start1); // 3
+
+        // StringBuilder
+        long start2 = System.currentTimeMillis();
+        StringBuilder sb2 = new StringBuilder();
+        for (int i = 0; i < 99999; i++) {
+            sb2.append(i);
+        }
+        long end2 = System.currentTimeMillis();
+        System.out.println(end2 - start2); // 2
+    }
+}
+```
+
+### 5、BigDecimal
+
+用于计算精确的加减乘除，防止出现精度问题
+
+
+
