@@ -1,7 +1,3 @@
----
-sidebar: auto
----
-
 # JavaSE
 
 ## 1、[基础知识](/java/javaSE/basics.md)
