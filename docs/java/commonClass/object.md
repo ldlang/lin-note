@@ -46,7 +46,7 @@ public class Getcom {
 }
 ```
 
-### 1、getClass
+### getClass
 
 返回引用中存储的实际对象类型，通常用于判断两个引用中实际对象类型是否一致。
 
@@ -66,7 +66,7 @@ public class Application {
 }
 ```
 
-### 2、hashCode
+### hashCode
 
 获取对象的哈希码值，哈希值是根据对象的地址或字符串或数字使用哈希算法计算出来的 int 类型的数值，一般情况下相同对象返回相同的哈希码。
 
@@ -84,7 +84,7 @@ public class Application {
 }
 ```
 
-### 3、toString
+### toString
 
 返回该对象的字符串表示，一般会被重写为展示对象各个属性值
 
@@ -116,7 +116,7 @@ public class Application {
   System.out.println(getCom1.toString()); // GetCom{name='张三'}
   ```
 
-### 4、equals
+### equals
 
 比较两个对象地址是否相同，可进行重写，比较两个对象的内容是否相同
 
@@ -163,7 +163,7 @@ public class Application {
   }
   ```
 
-### 5、finalize
+### finalize
 
 - 当对象被判断为垃圾对象时，由 jvm 自动调用此方法，用以标记垃圾对象，进入回收队列
 - 没有有效引用指向此对象时，为垃圾对象
@@ -186,7 +186,7 @@ public class Application {
 | `char`       | `Character` | `java.lang` | `'\u0000'` | 2                      |
 | `boolean`    | `Boolean`   | `java.lang` | `false`    | 1 (JVM 规范未严格限定) |
 
-### 1、装箱与拆箱（类型转换）
+### 装箱与拆箱（类型转换）
 
 1. 装箱：将基本类型装换为**引用类型**
 
@@ -220,7 +220,7 @@ public class Encasement {
 }
 ```
 
-### 2、基本类型和字符串之间的转换
+### 基本类型和字符串之间的转换
 
 使用`parseXX()`方法能实现转为基本类型；
 
@@ -270,7 +270,7 @@ public class Encasement {
    }
    ```
 
-### 3、Integer 缓冲区
+### Integer 缓冲区
 
 `Integer`设置了一个`-128`到`127`的自动装箱缓冲区，只要是自动装箱的在这个区间的值相同，虽然是引用类型，但是也是比较的值，值相等就是`true`
 
@@ -297,7 +297,7 @@ public class Encasement {
 
 ## 3、String 常用方法
 
-### 1、length
+### length
 
 获取字符串的长度
 
@@ -310,7 +310,7 @@ public class StringClass {
 }
 ```
 
-### 2、charAt
+### charAt
 
 获取字符串指定下标的字符
 
@@ -323,7 +323,7 @@ public class StringClass {
 }
 ```
 
-### 3、contains
+### contains
 
 查看字符串中是否包含某个字符
 
@@ -337,7 +337,7 @@ public class StringClass {
 }
 ```
 
-### 4、toCharArray
+### toCharArray
 
 转为数组
 
@@ -359,11 +359,11 @@ public class StringClass {
 }
 ```
 
-### 5、indexOf 和 lastIndexOf
+### indexOf 和 lastIndexOf
 
-* indexOf **从左往右**查找字符首次出现的位置
+- indexOf **从左往右**查找字符首次出现的位置
 
-* lastIndexOf **从右往左**查找字符首次出现的位置
+- lastIndexOf **从右往左**查找字符首次出现的位置
 
   > 找不到则返回 -1
 
@@ -378,7 +378,7 @@ public class StringClass {
 }
 ```
 
-### 6、trim
+### trim
 
 去除字符串两端的空格
 
@@ -392,11 +392,11 @@ public class StringClass {
 }
 ```
 
-### 7、toUpperCase 和 toLowerCase
+### toUpperCase 和 toLowerCase
 
-* toUpperCase 将字符串中所有的字母转为**大写**
+- toUpperCase 将字符串中所有的字母转为**大写**
 
-* toLowerCase 将字符串中所有的字母转为**小写**
+- toLowerCase 将字符串中所有的字母转为**小写**
 
   > 遇到中文会跳过
 
@@ -404,31 +404,31 @@ public class StringClass {
   public class StringClass {
       public static void main(String[] args) {
           String str = "abcdbef中文b";
-  
+
           System.out.println(str.toUpperCase()); // ABCDBEF中文B
           System.out.println(str.toUpperCase().toLowerCase()); // abcdbef中文b
       }
   }
   ```
 
-### 8、startWith 和 endWith
+### startWith 和 endWith
 
-* startWith 判断字符串是否以某个字符串**开始**
+- startWith 判断字符串是否以某个字符串**开始**
 
-* endWith 判断字符串是否以某个字符串**结束**
+- endWith 判断字符串是否以某个字符串**结束**
 
   ```java
   public class StringClass {
       public static void main(String[] args) {
           String str = "abcdbef中文b";
-  
+
           System.out.println(str.startsWith("ab")); // true
           System.out.println(str.endsWith("文b")); // true
       }
   }
   ```
 
-### 9、replace
+### replace
 
 替换字符串中指定的字符
 
@@ -442,7 +442,7 @@ public class StringClass {
 }
 ```
 
-### 10、split
+### split
 
 以指定的字符分割字符串，变成一个数组
 
@@ -455,7 +455,7 @@ public class StringClass {
         // 得到的是转换后的引用地址
         System.out.println(str.split(" ")); // [Ljava.lang.String;@10f87f48
         System.out.println(Arrays.toString(str.split(" "))); // [java, is, best, language]
-        
+
         for (String s : str.split(" ")) {
             System.out.println(s);
             // java
@@ -467,20 +467,19 @@ public class StringClass {
 }
 ```
 
-### 11、euqals 和 equalsIgnoreCase
+### euqals 和 equalsIgnoreCase
 
-* euqals  比较两个字符串的值是否相同
-* equalsIgnoreCase 忽略大小写的比较两个字符串的值是否相同
+- euqals 比较两个字符串的值是否相同
+- equalsIgnoreCase 忽略大小写的比较两个字符串的值是否相同
 
-> 为什么自动装箱的String对象没有进行比较地址
+> 为什么自动装箱的 String 对象没有进行比较地址
 >
-> * Java为了优化内存使用，维护了一个特殊的存储区域叫 字符串常量池（位于堆内存中）。
-> * 当通过 字面量（literal） 方式创建字符串（如 String str = "hello";）时，JVM会先检查常量池中是否已存在该字符串：
->   * 如果存在，直接返回池中已有字符串的引用。
->   * 如果不存在，则在常量池中创建该字符串，并返回其引用。
+> - Java 为了优化内存使用，维护了一个特殊的存储区域叫 字符串常量池（位于堆内存中）。
+> - 当通过 字面量（literal） 方式创建字符串（如 String str = "hello";）时，JVM 会先检查常量池中是否已存在该字符串：
+>   - 如果存在，直接返回池中已有字符串的引用。
+>   - 如果不存在，则在常量池中创建该字符串，并返回其引用。
 >
 > 因此下面的 str1 == str2 是 true
->
 
 ```java
 public class StringClass {
@@ -490,7 +489,7 @@ public class StringClass {
         // 不建议使用
         System.out.println(str1 == str2); // true
         System.out.println(str1.equals(str2)); // true
-        
+
         String str3 = "hello";
         String str4 = "Hello";
         System.out.println(str3.equalsIgnoreCase(str4));  // true
@@ -498,7 +497,7 @@ public class StringClass {
 }
 ```
 
-### 12、substring
+### substring
 
 截取字符串中指定区间的字符
 
@@ -520,15 +519,57 @@ public class StringClass {
 
 相同点：
 
-* 可变长字符串
+- 可变长字符串
 
 不同点
 
-* StringBuffer
-  * JDK1.0提供的
-  * 运行效率比`String`快，但是比`StringBuilder`要慢，线程安全
-* StringBuilder
-  * JDK5.0提供，运行效率最快，但是线程不安全
+- StringBuffer
+  - JDK1.0 提供的
+  - 运行效率比`String`快，但是比`StringBuilder`要慢，线程安全
+- StringBuilder
+  - JDK5.0 提供，运行效率最快，但是线程不安全
+
+### append
+
+追加
+
+```java
+// 增
+sb.append("abc");
+System.out.println(sb.toString()); // abc
+```
+
+### insert
+
+插入
+
+```java
+// 插入
+sb.insert(1, "s");
+System.out.println(sb.toString()); // asbc
+```
+
+### replace
+
+替换
+
+```java
+// 替换
+sb.replace(2, sb.length(), "哈哈");
+System.out.println(sb.toString()); // as哈哈
+```
+
+### delete
+
+删除
+
+```java
+// 删除
+sb.delete(2, sb.length());
+System.out.println(sb.toString()); // as
+```
+
+完整实例
 
 ```java
 public class StringClass {
@@ -549,7 +590,7 @@ public class StringClass {
         // 删除
         sb.delete(2, sb.length());
         System.out.println(sb.toString()); // as
-        
+
         /**
         * StringBuilder
         */
@@ -605,9 +646,388 @@ public class StringClass {
 }
 ```
 
-### 5、BigDecimal
+## 5、BigDecimal
 
 用于计算精确的加减乘除，防止出现精度问题
 
+```java
+BigDecimal a1 = new BigDecimal("0.1");
+BigDecimal b1 = new BigDecimal("0.2");
+```
 
+### add
 
+加法
+
+```java
+BigDecimal addNum = a1.add(b1);
+System.out.println(addNum); // 0.3
+```
+
+### subtract
+
+减法
+
+```java
+BigDecimal subNum = a1.subtract(b1);
+System.out.println(subNum); // -0.1
+```
+
+### multiply
+
+乘法
+
+```java
+BigDecimal multiNum = a1.multiply(b1);
+System.out.println(multiNum); // 0.02
+```
+
+### divide
+
+除法
+
+> 除不尽会报错，所以最好加上保留位数和取整方式
+
+```java
+BigDecimal divideNum = a1.divide(b1);
+System.out.println(divideNum); // 0.5
+
+System.out.println(new BigDecimal("10").divide(new BigDecimal("3"), 2, BigDecimal.ROUND_HALF_UP)); // 3.33
+```
+
+## 6、Date
+
+Date 表示特定的瞬间，精确到毫秒，`Date`类中的大多数方法都已经被`Calendar`类中的方法所取代。因为不易于做国际化
+
+### getTime
+
+获取时间戳
+
+```java
+Date date = new Date();
+// getTime 获取时间戳
+System.out.println(date.getTime()); // 1756346340292
+```
+
+### before
+
+测试此日期是否在指定日期之后
+
+```java
+Date date = new Date();
+
+Date date1 = new Date(date.getTime() - (1000 * 60 * 60 * 24));
+System.out.println(date1.toLocaleString()); // 2025年8月27日 09:59:00
+
+// before 测试此日期是否在指定日期之后
+boolean b1 = date1.before(date);
+System.out.println(b1); // true
+```
+
+### after
+
+测试此日期是否在指定日期之前
+
+```java
+Date date = new Date();
+
+Date date1 = new Date(date.getTime() - (1000 * 60 * 60 * 24));
+System.out.println(date1.toLocaleString()); // 2025年8月27日 09:59:00
+
+// after 测试此日期是否在指定日期之前
+boolean b2 = date1.after(date);
+System.out.println(b2); // false
+```
+
+### equals
+
+比较两个时间是否相同
+
+```java
+Date date = new Date();
+
+Date date1 = new Date(date.getTime() - (1000 * 60 * 60 * 24));
+System.out.println(date1.toLocaleString()); // 2025年8月27日 09:59:00
+
+//equals 比较两个时间是否相同
+boolean b3 = date1.equals(date);
+System.out.println(b3); // false
+```
+
+完整实例
+
+```java
+import java.util.Date;
+
+public class DateStu {
+    public static void main(String[] args) {
+        Date date = new Date();
+        System.out.println(date); // Thu Aug 28 09:59:00 CST 2025
+        System.out.println(date.toString()); // Thu Aug 28 09:59:00 CST 2025
+        System.out.println(date.toLocaleString()); // 2025年8月28日 09:59:00
+        // getTime 获取时间戳
+        System.out.println(date.getTime()); // 1756346340292
+
+        Date date1 = new Date(date.getTime() - (1000 * 60 * 60 * 24));
+        System.out.println(date1.toLocaleString()); // 2025年8月27日 09:59:00
+
+        // before 测试此日期是否在指定日期之后
+        boolean b1 = date1.before(date);
+        System.out.println(b1); // true
+
+        // after 测试此日期是否在指定日期之前
+        boolean b2 = date1.after(date);
+        System.out.println(b2); // false
+
+        //equals 比较两个时间是否相同
+        boolean b3 = date1.equals(date);
+        System.out.println(b3); // false
+
+        int i1 = date1.compareTo(date);
+        System.out.println(i1);
+    }
+}
+```
+
+## 7、Calendar
+
+获取时间，是`Date`的替代，`Calendar`是受保护的所以不能直接`new`
+
+### get
+
+获取时间
+
+> 读取的时间都是 Calendar.getInstance()，方法调用那一刻的时间。
+
+```java
+import java.util.Calendar;
+
+public class CalendarStu {
+    public static void main(String[] args) {
+        // 获取当前时间
+        Calendar calendar = Calendar.getInstance();
+        System.out.println(calendar.getTime().toLocaleString());
+
+        // 年
+        int year = calendar.get(Calendar.YEAR);
+        System.out.println(year);
+
+        // 月 特别的是月份要+1才是当前月
+        int month = calendar.get(Calendar.MONTH) + 1;
+        System.out.println(month);
+
+        // 日
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        System.out.println(day);
+
+        // 时
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        System.out.println(hour);
+
+        // 分
+        int minute = calendar.get(Calendar.MINUTE);
+        System.out.println(minute);
+
+        // 秒
+        int second = calendar.get(Calendar.SECOND);
+        System.out.println(second);
+
+        // 毫秒
+        int millisecond = calendar.get(Calendar.MILLISECOND);
+        System.out.println(millisecond);
+    }
+}
+```
+
+### set
+
+设置时间
+
+> 设置的时间都是 Calendar.getInstance()，方法调用那一刻的时间。
+
+```java
+import java.util.Calendar;
+
+public class CalendarStu {
+    public static void main(String[] args) {
+        Calendar calendar1 = Calendar.getInstance();
+        // 设置年
+        calendar1.set(Calendar.YEAR, 2027);
+        System.out.println(calendar1.get(Calendar.YEAR)); // 2027
+
+        // 设置月
+        calendar1.set(Calendar.MONTH, 2);
+        System.out.println(calendar1.get(Calendar.MONTH)); // 2
+    }
+}
+```
+
+### add
+
+增加时间，也可以增加负数，变成减
+
+```java
+import java.util.Calendar;
+
+public class CalendarStu {
+    public static void main(String[] args) {
+        Calendar calendar2 = Calendar.getInstance();
+        // 增加两个月
+        calendar2.add(Calendar.MONTH, 2);
+        System.out.println(calendar2.get(Calendar.MONTH));
+    }
+}
+
+```
+
+### getActualMaximum 和 getActualMinimum
+
+- getActualMaximum：获取当前时间类型的**最大值**
+
+- getActualMinimum：获取当前时间类型的**最小值**
+
+  ```java
+  import java.util.Calendar;
+
+  public class CalendarStu {
+      public static void main(String[] args) {
+  		Calendar calendar2 = Calendar.getInstance();
+
+          // 获取当前月的最后一天
+          int maxMonthDay = calendar2.getActualMaximum(Calendar.DAY_OF_MONTH);
+          // 获取当前月的第一天
+          int minMonthDay = calendar2.getActualMinimum(Calendar.DAY_OF_MONTH);
+
+          // 获取每天的第一个小时
+          int maxHour = calendar2.getActualMaximum(Calendar.HOUR_OF_DAY);
+          // 获取每天的最后一个小时
+          int minHour = calendar2.getActualMinimum(Calendar.HOUR_OF_DAY);
+      }
+  }
+  ```
+
+## 8、SimpleDateFormat
+
+是一个以与语言环境有关的方式来格式化和解析日期的具体类
+
+| 符号   | 含义                | 示例        |
+| ------ | ------------------- | ----------- |
+| `yyyy` | 年（4 位）          | 2023        |
+| `MM`   | 月（01-12）         | 10（10 月） |
+| `dd`   | 日（01-31）         | 25          |
+| `HH`   | 小时（00-23）       | 14          |
+| `mm`   | 分钟（00-59）       | 30          |
+| `ss`   | 秒（00-59）         | 45          |
+| `SSS`  | 毫秒（000-999）     | 789         |
+| `E`    | 星期几（如 "周一"） | 星期三      |
+| `a`    | 上午/下午（AM/PM）  | 下午        |
+
+### format
+
+格式化日期
+
+> 按照固定好的格式来格式化日期
+
+```java
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+public class SimpleDateFormatStu {
+    public static void main(String[] args) throws ParseException, ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+
+        String date = sdf.format(calendar.getTime());
+        System.out.println(date); // 2025-08-28
+
+        String date1 = sdf1.format(calendar.getTime());
+        System.out.println(date1); // 2025年08月28日 11:18:48
+    }
+}
+```
+
+### parse
+
+解析字符串的时间
+
+> 字符串的格式也必须是规定的格式，不然会解析报错
+
+```java
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class SimpleDateFormatStu {
+    public static void main(String[] args) throws ParseException, ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateStr = "2023-10-25 14:30:45";
+        Date date = sdf.parse(dateStr);
+        System.out.println(date.getTime());
+    }
+}
+```
+
+## 9、System
+
+### arraycopy
+
+复制数组，支持 5 个参数
+
+```java
+import java.util.Arrays;
+
+public class SystemStu {
+    public static void main(String[] args) {
+        /**
+         *  arraycopy
+         *  Object src,      // 源数组（必须非 null）
+         *  int srcPos,      // 源数组的起始索引（从 0 开始）
+         *  Object dest,     // 目标数组（必须非 null）
+         *  int destPos,     // 目标数组的起始索引（从 0 开始）
+         *  int length       // 要复制的元素数量
+         */
+        int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int[] arr2 = new int[10];
+        System.arraycopy(arr, 0, arr2, 6, 4);
+        System.out.println(Arrays.toString(arr2)); // [0, 0, 0, 0, 0, 0, 1, 2, 3, 4]
+    }
+}
+```
+
+### currentTimeMillis
+
+获取当前系统时间（毫秒级），可以用来计算一段代码的运行时长
+
+```java
+public class SystemStu {
+    public static void main(String[] args) {
+
+        long start = System.currentTimeMillis();
+        String str = "";
+        for (int i = 0; i < 99999; i++) {
+            str += i;
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(end - start); // 2751
+    }
+}
+```
+
+### gc
+
+通知 JVM 进行垃圾回收，但也只能通知
+
+### exit
+
+退出 JVM 程序，0 表示正常退出，其他值表示异常退出，退出之后就不会再执行后面的代码
+
+```java
+public class SystemStu {
+    public static void main(String[] args) {
+        System.exit(0);
+        // 这里的代码不会执行
+        System.out.println("程序退出了");
+    }
+}
+```
