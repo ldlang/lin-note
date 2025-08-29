@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-67205e01","path":"/pack/npm/","title":"npm","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1721007976000},"filePathRelative":"pack/npm/README.md"}');export{e as data};
