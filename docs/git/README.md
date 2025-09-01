@@ -164,6 +164,12 @@ sidebar: auto
        doc/**/*.pdf
    ```
 
+6. 忽略已经提交的文件
+
+   ```bash
+   git rm -r --cached 文件名/目录
+   ```
+
 ### 分支
 
 1. 分支操作

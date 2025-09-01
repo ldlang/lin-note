@@ -632,7 +632,388 @@ public class GenericArray {
 }
 ```
 
-### 5、set 集合
+## 5、set 集合
 
 - 无须、无下标，元素不可重复
 - 方法：全部继承自 Collection 中的方法，没有自己独有的方法
+
+```java
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+public class SetStu {
+    public static void main(String[] args) {
+        Set<String> set = new HashSet<String>();
+        set.add("a");
+        set.add("b");
+        set.add("c");
+        set.add("a"); // 无法添加，因为set不能用重复的项
+
+        // 删除
+        set.remove("c");
+        System.out.println(set.size()); // 2
+
+        // 遍历
+        for (String s : set) {
+            System.out.println(s);
+        }
+
+        Iterator<String> it = set.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+
+        // 判断
+        Boolean b = set.contains("a"); // true
+        System.out.println(b);
+        System.out.println(set.isEmpty()); // false
+    }
+}
+```
+
+### HashSet
+
+- 基于 `HashCode`计算元素存放位置
+
+- 当存入元素的哈希码相同时，会调用`equals`进行确认，若结果为`true`，则拒绝后者存入
+
+- 存储结构：哈希表（数组+链表+红黑树）
+
+  ```java
+  import java.util.HashSet;
+  import java.util.Iterator;
+
+  public class HashSetStu {
+      public static void main(String[] args) {
+          HashSet<Student> hashSet = new HashSet<>();
+
+          Student s1 = new Student(50, "张三");
+          Student s2 = new Student(21, "李四");
+          Student s3 = new Student(23, "王五");
+
+          // 新增
+          hashSet.add(s1);
+          hashSet.add(s2);
+          hashSet.add(s3);
+          hashSet.add(s2);
+          System.out.println(hashSet.toString());
+
+          // 删除
+          hashSet.remove(s1);
+          System.out.println(hashSet.toString());
+
+          // 遍历
+          for (Student student : hashSet) {
+              System.out.println(student);
+          }
+
+          Iterator<Student> it = hashSet.iterator();
+          while (it.hasNext()) {
+              Student student = it.next();
+              System.out.println(student);
+          }
+
+          // 判断
+          Boolean b = hashSet.contains(s2);
+          System.out.println(b); // true
+          System.out.println(hashSet.isEmpty()); // false
+      }
+  }
+  ```
+
+### TreeSet
+
+- 基于排列顺序实现元素不重复
+
+- 实现了`SortedSet`接口，对集合元素自动排序
+
+- 元素对象的类型必须实现`Comparable`接口，指定排序规则
+
+- 通过`CompareTo`方法确定是否为重复元素
+
+- 存储结构红黑树
+
+  方式一
+
+  ```java
+  // 要继承Comparable接口
+  public class Student implements Comparable<Student> {
+      String name;
+      int age;
+
+      public Student(int age, String name) {
+          this.age = age;
+          this.name = name;
+      }
+
+      @Override
+      public String toString() {
+          return "Student{" +
+                  "name='" + name + '\'' +
+                  ", age=" + age +
+                  '}';
+      }
+
+      // 必须重写compareTo方法，否则无法实现对象的添加，会报错
+      @Override
+      public int compareTo(Student o) {
+          int n1 = this.name.compareTo(o.name);
+          int n2 = this.age - o.age;
+          return n1 != 0 ? n1 : n2;
+      }
+  }
+
+  // TreeSet的使用
+  import java.util.Iterator;
+  import java.util.TreeSet;
+
+  public class TreeSetStu {
+      public static void main(String[] args) {
+          TreeSet<Student> treeSet = new TreeSet<>();
+
+          Student s1 = new Student(50, "张三");
+          Student s2 = new Student(21, "李四");
+          Student s3 = new Student(23, "王五");
+
+          // 添加
+          treeSet.add(s1);
+          treeSet.add(s2);
+          treeSet.add(s3);
+          System.out.println(treeSet.toString());
+
+          // 删除
+          treeSet.remove(s1);
+          System.out.println(treeSet.toString());
+
+          // 遍历
+          for (Student student : treeSet) {
+              System.out.println(student);
+          }
+
+          Iterator<Student> iterator = treeSet.iterator();
+          while (iterator.hasNext()) {
+              Student student = iterator.next();
+              System.out.println(student);
+          }
+
+          // 判断
+          System.out.println(treeSet.isEmpty()); // false
+          System.out.println(treeSet.contains(s2)); // true
+      }
+  }
+
+  ```
+
+  方式二
+
+  ```java
+  // 在使用集合的时候使用匿名内部类去实现
+  TreeSet<Student> treeSet = new TreeSet<>(new Comparator<Student>() {
+      @Override
+      public int compare(Student o1, Student o2) {
+          int n1 = o1.name.compareTo(o2.name);
+          int n2 = o1.age - o2.age;
+          return n2 == 0 ? n1 : n2;
+      }
+  });
+  ```
+
+## 6、map 集合
+
+存储一对数据，无序、无下标、键不可重复，值可重复
+
+- 如果 key 重复，那么后面的 key 的 Value 会替换掉前面 key 的 Value，只保存一对键值对
+
+![map集合](/java/Map.png)
+
+```java
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+public class MapStu {
+    public static void main(String[] args) {
+        Map<String, String> map = new HashMap<>();
+
+        // 增加
+        map.put("张三", "男");
+        map.put("小红", "女");
+        map.put("小明", "男");
+        map.put("小明", "未知"); // 由于 小明 重复了，所以会替换掉原有的小明键值对
+        System.out.println(map); // {张三=男, 小明=未知, 小红=女}
+
+        // 删除
+        map.remove("小明");
+        System.out.println(map); // {张三=男, 小红=女}
+
+        // 读取
+        String sex = map.get("张三");
+        System.out.println(sex);
+
+        // 遍历
+       	// 方式一：Set
+        Set<String> keys = map.keySet();
+        for (String key : keys) {
+            System.out.println(key + ":" + map.get(key));
+        }
+
+        // 方式二：Entry
+        Set<Map.Entry<String, String>> entries = map.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+        // 方式三：forEach 基于JDK8
+        map.forEach((key, value) -> {
+            System.out.println(key + ":" + value);
+        });
+        // 判断
+        Boolean b1 = map.containsKey("小明");
+        Boolean b2 = map.containsValue("男");
+        System.out.println(b1);
+        System.out.println(b2);
+    }
+}
+```
+
+### HashMap
+
+- `JDK1.2`版本，线程不安全，运行效率快，允许`null`作为`key`或者`value`
+
+- 存储结构：哈希表（数组+链表+红黑树）
+
+  ```java
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.Set;
+
+  public class HashMapStu {
+    public static void main(String[] args) {
+          HashMap<MapStudet, Integer> map = new HashMap<>();
+
+          MapStudet s1 = new MapStudet(12, "张三");
+        MapStudet s2 = new MapStudet(23, "李四");
+          MapStudet s3 = new MapStudet(32, "王五");
+
+          // 增加
+        map.put(s1, 1);
+          map.put(s2, 2);
+          map.put(s3, 3);
+          // {MapStudet{age=23, name='李四'}=2, MapStudet{age=12, name='张三'}=1, MapStudet{age=32, name='王五'}=3}
+          System.out.println(map);
+
+          // 获取
+        int i = map.get(s1);
+          System.out.println(i); // 1
+
+          // 遍历
+        Set<MapStudet> keys = map.keySet();
+          for (MapStudet key : keys) {
+              System.out.println(key + ":" + map.get(key)); // MapStudet{age=23, name='李四'}:2
+          }
+
+          Set<Map.Entry<MapStudet, Integer>> ebtries = map.entrySet();
+        for (Map.Entry<MapStudet, Integer> entry : ebtries) {
+              // MapStudet{age=23, name='李四'}:2
+              System.out.println(entry.getKey() + ":" + entry.getValue());
+          }
+
+          // 判断
+        Boolean b1 = map.containsKey(s1);
+          Boolean b2 = map.containsValue(2);
+          System.out.println(b1); // true
+          System.out.println(b2); // true
+      }
+  }
+  ```
+
+### Hashtable（已弃用）
+
+- `JDK1.0`版本，线程安全，运行效率慢，不允许`null`作为`key`或者`value`
+
+### Properties
+
+- `Hashtable`的子类，要求`key`和`value`都是`String`。通常用于配置文件的读取
+
+### TreeMap
+
+- 实现了`SortedMap`接口（是 Map 的子接口），可以对`key`自动排序
+
+* 元素对象的类型必须实现`Comparable`接口，指定排序规则
+
+  ```java
+  import java.util.Comparator;
+  import java.util.Map;
+  import java.util.Set;
+  import java.util.TreeMap;
+
+  public class TreeMapStu {
+      public static void main(String[] args) {
+          // 在这里写定制比较，或者类里面重写compareTo
+          TreeMap<Student, Integer> treeMap = new TreeMap(new Comparator<Student>() {
+              @Override
+              public int compare(Student o1, Student o2) {
+                  int n1 = o1.name.compareTo(o2.name);
+                  int n2 = o1.age - o2.age;
+                  return n2 == 0 ? n1 : n2;
+              }
+          });
+
+          Student s1 = new Student(50, "张三");
+          Student s2 = new Student(21, "李四");
+          Student s3 = new Student(23, "王五");
+
+          // 添加
+          treeMap.put(s1, 2);
+          treeMap.put(s2, 5);
+          treeMap.put(s3, 9);
+          System.out.println(treeMap.toString());
+
+          // 删除
+          treeMap.remove(s1);
+          System.out.println(treeMap.toString());
+
+          // 遍历
+          Set<Student> keys = treeMap.keySet();
+          for (Student key : keys) {
+              System.out.println(key + ":" + treeMap.get(key));
+          }
+
+          Set<Map.Entry<Student, Integer>> entries = treeMap.entrySet();
+          for (Map.Entry<Student, Integer> entry : entries) {
+              System.out.println(entry.getKey() + ":" + entry.getValue());
+          }
+
+          // 判断
+          Boolean b1 = treeMap.containsKey(s2);
+          Boolean b2 = treeMap.containsValue(2);
+          System.out.println(b1); // true
+          System.out.println(b2); // false
+      }
+  }
+  ```
+
+## 7、Collections 工具类
+
+* 集合工具类，定义了除了存取以外的集合常用方法
+
+### reverse
+
+* 反转元素的顺序
+
+### shuffle
+
+* 随机重置集合元素的顺序
+
+### sort
+
+* 升序排列（元素类型必须实现`Compaeable`接口）
+
+### binarySearch
+
+* 查找对应的索引
+
+### copy
+
+* 复制数组
+
