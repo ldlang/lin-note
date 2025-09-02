@@ -668,38 +668,3 @@ sidebar: auto
    git cherry-pick --abort
       取消操作并返回到预排序状态。
    ```
-
-### 同时推送两个远程仓库
-
-1.  在原有的仓库上再添加一个远程地址
-
-    ```bash
-    git remote set-url --add origin 远端地址
-    ```
-
-2.  查看远端地址，要有两个 push 地址
-    ![push地址](/git/git-push.png)]
-
-3.  推送代码，正常使用 push 就可以同时推送两个远端了
-    ```bash
-    git push
-    ```
-
-### git 无法推送
-
-1.  打开代理软件
-2.  在电脑上看代理的地址
-3.  配置 git 的代理地址，保持和电脑上的代理地址和端口号一致
-
-```bash
-git config --global http.proxy http://127.0.0.1:7890
-git config --global https.proxy http://127.0.0.1:7890
-```
-
-4.  重新推送代码
-5.  取消代理
-
-```bash
-git config --global --unset http.proxy
-git config --global --unset https.proxy
-```

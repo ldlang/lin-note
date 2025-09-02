@@ -46,8 +46,17 @@ export const navbar = [
   },
   {
     text: "git",
-    link: "/git/",
     activeMatch: "^/git/",
+    children: [
+      {
+        text: "git",
+        link: "/git/",
+      },
+      {
+        text: "git技巧",
+        link: "/git/git-skill.md",
+      },
+    ],
   },
   {
     text: "包管理",
@@ -111,16 +120,16 @@ export const navbar = [
   {
     text: "Java",
     activeMatch: "^/java/",
-    children:[
+    children: [
       {
         text: "javaSE",
         link: "/java/javaSE/",
       },
-            {
+      {
         text: "常用类、集合、IO",
         link: "/java/commonClass/",
       },
-    ]
+    ],
   },
   {
     text: "linux",
