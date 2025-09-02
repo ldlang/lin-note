@@ -995,25 +995,85 @@ public class MapStu {
 
 ## 7、Collections 工具类
 
-* 集合工具类，定义了除了存取以外的集合常用方法
+- 集合工具类，定义了除了存取以外的集合常用方法
+
+```java
+// 基本的list，后续的操作都是基于这个list
+List<Integer> list = new ArrayList<>();
+list.add(1);
+list.add(2);
+list.add(90);
+list.add(23);
+list.add(31);
+```
 
 ### reverse
 
-* 反转元素的顺序
+- 反转元素的顺序
+
+  ```java
+  Collections.reverse(list);
+  System.out.println(list); // [90, 31, 23, 2, 1]
+  ```
 
 ### shuffle
 
-* 随机重置集合元素的顺序
+- 随机重置集合元素的顺序（每次返回的顺序都不一样）
+
+  ```java
+  Collections.shuffle(list);
+  System.out.println(list); // [90, 31, 1, 23, 2]
+  ```
 
 ### sort
 
-* 升序排列（元素类型必须实现`Compaeable`接口）
+- 升序排列（元素类型必须实现`Compaeable`接口）
+
+  ```java
+  System.out.println("排序之前：" + list); // [1, 2, 90, 23, 31]
+  Collections.sort(list);
+  System.out.println("排序之后：" + list); // [1, 2, 23, 31, 90]
+  ```
 
 ### binarySearch
 
-* 查找对应的索引
+- 查找对应的索引
+
+- 如果返回负数则代表没有查找到，若返回 `-3`，表示元素应插入到索引 `2` 处（因为 `-(-3 + 1) = 2`）
+
+  ```java
+  int i = Collections.binarySearch(list, 23);
+  System.out.println(i); // 2
+  ```
 
 ### copy
 
-* 复制数组
+- 复制数组
 
+  ```java
+  ArrayList<Integer> list2 = new ArrayList<>();
+  // 应为数组的长度是固定的，直接复制会报错
+  for (int j = 0; j < list.size(); j++) {
+      list2.add(0);
+  }
+  Collections.copy(list2, list);
+  System.out.println(list2); // [1, 2, 23, 31, 90]
+  ```
+
+### 集合转数组
+
+```java
+// Integer中的数字，如果大于list的长度，那么超出部分都是null，如果小于，那么长度就是list的长度
+Integer[] arr = list.toArray(new Integer[0]);
+System.out.println(Arrays.toString(arr)); // [90, 31, 23, 2, 1]
+System.out.println(arr.length); // 5
+```
+
+### 数组转集合
+
+```java
+String[] arrs = {"张三", "李四"};
+// 转换后的集合是一个受限集合，不能增加或删除
+List<String> list3 = Arrays.asList(arrs);
+System.out.println(list3); // [张三, 李四]
+```
