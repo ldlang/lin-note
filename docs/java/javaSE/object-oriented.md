@@ -515,7 +515,7 @@ public class UseInterface implements IPeople, IPerson{
        public void say(){
            System.out.println("外部类 say");
        }
-   
+
        public class Inner {
            private int age = 1;
            public void in(){
@@ -527,13 +527,13 @@ public class UseInterface implements IPeople, IPerson{
            }
        }
    }
-   
+
    // 实例化
    public class Application {
        public static void main(String[] args) {
            Outer outer = new Outer();
            outer.say();
-   
+
            // 实例化内部类
            Outer.Inner inner = outer.new Inner();
            inner.in();
@@ -551,12 +551,12 @@ public class UseInterface implements IPeople, IPerson{
        public static void say(){
            System.out.println("外部类 say");
        }
-   
+
        public static class Inner {
            public static void in(){
                say();
            }
-           
+
            public void show(){
                // 访问外部类的非静态属性
                Outer outer = new Outer();
@@ -564,7 +564,7 @@ public class UseInterface implements IPeople, IPerson{
            }
        }
    }
-   
+
    Outer outer = new Outer();
    Outer.Inner.in();
    ```
@@ -591,7 +591,7 @@ public class UseInterface implements IPeople, IPerson{
    public interface Usb {
        public void servive();
    }
-   
+
    public class Application {
     public static void main(String[] args) {
            // 接口不能实例化，但使用匿名内部类，就相当于创建了一个局部内部类
@@ -603,47 +603,5 @@ public class UseInterface implements IPeople, IPerson{
            };
            usb.servive();
        }
-   }
-   ```
-
-## 10、异常机制
-
-1. java 的异常分类
-
-   ![image](/java/java-err.png)
-
-   [异常的具体分类](https://www.runoob.com/java/java-exceptions.html)
-
-2. 异常的捕获
-
-   ```java
-   // 可以同时捕获不用类型的异常，但是最顶级的异常要在后面，不然永远只会走最顶级的异常
-   try {
-       int a = new ErrTest().err(1,0);
-   } catch (ArithmeticException e) {
-       System.out.println(e);
-   } catch (Throwable c){
-       System.out.println(c);
-   } finally {
-       System.out.println("上面走完了");
-   }
-
-   class ErrTest {
-       public int err(int a, int b) throws  ArithmeticException{
-           if (b== 0) {
-               // 抛出异常
-               throw new ArithmeticException();
-           }
-           return a / b;
-       }
-   }
-   ```
-
-3. 自定义异常
-
-   ```java
-   // 先继承最顶级的异常
-   class MyErr extends Throwable {
-
    }
    ```
