@@ -129,6 +129,10 @@ export const navbar = [
         text: "常用类、集合、IO",
         link: "/java/commonClass/",
       },
+      {
+        text: "多线程",
+        link: "/java/multithreading/",
+      },
     ],
   },
   {
