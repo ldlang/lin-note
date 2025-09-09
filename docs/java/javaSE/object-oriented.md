@@ -639,7 +639,6 @@ public class EnumStu {
         printDay(DayEnum.MONDAY);
     }
 }
-
 ```
 
 2.枚举带参数
@@ -688,6 +687,5 @@ public class EnumStu {
         }
     }
 }
-
 
 ```
