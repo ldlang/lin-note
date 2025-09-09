@@ -605,3 +605,89 @@ public class UseInterface implements IPeople, IPerson{
        }
    }
    ```
+
+## 10、enum
+
+`jdk1.5`出现，表示一种特殊的类，用于表示一组固定的常量
+
+1. 基础使用
+
+```java
+// 枚举类
+public enum DayEnum {
+    MONDAY,
+    TUESDAY;
+}
+
+// 使用枚举类
+public class EnumStu {
+    public static void printDay(DayEnum day) {
+        switch (day) {
+            case MONDAY:
+                System.out.println("周一");
+                break;
+            case TUESDAY:
+                System.out.println("周二");
+                break;
+            default:
+                System.out.println("未匹配");
+        }
+    }
+
+    public static void main(String[] args) {
+        // 这里只能传递枚举值
+        printDay(DayEnum.MONDAY);
+    }
+}
+
+```
+
+2.枚举带参数
+
+```java
+public enum DayEnum {
+    MONDAY("星期一"),
+    TUESDAY("星期二");
+
+    private final String desc;
+
+    DayEnum(String s) {
+        this.desc = s;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+}
+
+// 使用
+public class EnumStu {
+    public static void printDay(DayEnum day) {
+        switch (day) {
+            case MONDAY:
+                System.out.println(DayEnum.MONDAY.getDesc());
+                break;
+            case TUESDAY:
+                System.out.println(DayEnum.TUESDAY.getDesc());
+                break;
+            default:
+                System.out.println("未匹配");
+        }
+    }
+
+    public static void main(String[] args) {
+        printDay(DayEnum.MONDAY);
+
+        // 直接打印值
+        System.out.println(DayEnum.MONDAY.getDesc());
+
+        // 去到值的数组
+        DayEnum[] dayEnums = DayEnum.values();
+        for (DayEnum day : dayEnums) {
+            System.out.println(day + "：" + day.getDesc());
+        }
+    }
+}
+
+
+```
