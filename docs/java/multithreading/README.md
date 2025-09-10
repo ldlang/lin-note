@@ -725,5 +725,204 @@ public class ThreadJoin implements Runnable {
             System.out.println(list.size());
         }
     }
-
     ```
+
+````
+
+* 同步块：`synchronized(obj)`
+
+  obj称之位**同步监视器**
+
+  * obj可以使任何对象，但是推荐使用共享资源作为同步监视器
+  * 同步方法中无需制定同步监视器，因为同步方法就是同步监视器的this，就是这个对象本身，或者是class
+
+* 同步监视器的执行过程
+
+  1. 第一个线程访问，锁定同步监视器，执行其中代码
+  2. 第二个线程访问，发现同步监视器被锁定，无法访问
+  3. 第一个线程访问完毕，解锁同步监视器
+  4. 第二个线程访问，返现同步监视器没有锁，然后锁定并访问
+
+### CopyOnWriteArrayList
+
+线程安全的list
+
+```java
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class safeList {
+    public static void main(String[] args) {
+        CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
+        for (int i = 0; i < 1000; i++) {
+            new Thread(()->{
+                list.add(Thread.currentThread().getName());
+            }).start();
+        }
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(list.size());
+    }
+}
+````
+
+### 死锁
+
+多个线程各自占有一些共享资源，并且互相等待其他线程占有的资源才能运行，而导致两个或者多个线程都在等待对方释放资源，都停止执行的情形。某一个同步块同时拥有“两个以上对象的锁”时，就可能会发生“死锁”的问题。
+
+> 多个线程互相抱着对方需要的资源，然后形成僵持
+
+产生死锁的四个必要条件
+
+1. 互斥条件:一个资源每次只能被一个进程使用。
+2. 请求与保持条件:一个进程因请求资源而阻塞时，对已获得的资源保持不放。
+3. 不剥夺条件:进程已获得的资源，在未使用完之前，不能强行剥夺
+4. 循环等待条件:若干进程之间形成一种头尾相接的循环等待资源关系。
+
+```java
+package com.ldlang.thread;
+
+public class Lock {
+    public static void main(String[] args) {
+        UseAB use1 = new UseAB(0, "张三");
+        UseAB use2 = new UseAB(1, "李四");
+
+        use1.start();
+        use2.start();
+
+    }
+}
+
+class A {}
+
+class B {}
+
+class UseAB extends Thread {
+    static A a = new A();
+    static B b = new B();
+
+    int select;
+    String name;
+
+    UseAB(int select, String name){
+        this.name = name;
+        this.select = select;
+    }
+
+    @Override
+    public void run() {
+        try {
+            make();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // 相互取对方的资源导致死锁
+    public void make() throws InterruptedException {
+        if (select ==0){
+            synchronized (a){
+                System.out.println(this.name + "a的锁");
+                Thread.sleep(1000);
+                synchronized (b){
+                    System.out.println(this.name+"b的锁");
+                }
+            }
+        }else {
+            synchronized (b){
+                System.out.println(this.name + "b的锁");
+                Thread.sleep(1000);
+                synchronized (a){
+                    System.out.println(this.name+"a的锁");
+                }
+            }
+        }
+    }
+}
+
+// 解决方式
+public void make() throws InterruptedException {
+    if (select ==0){
+        synchronized (a){
+            System.out.println(this.name + "a的锁");
+            Thread.sleep(1000);
+        }
+        synchronized (b){
+            System.out.println(this.name+"b的锁");
+        }
+    }else {
+        synchronized (b){
+            System.out.println(this.name + "b的锁");
+            Thread.sleep(1000);
+        }
+        synchronized (a){
+            System.out.println(this.name+"a的锁");
+        }
+    }
+}
+```
+
+## 5、Lock
+
+- 从 JDK 5.0 开始，Java 提供了更强大的线程同步机制--通过显式定义同步锁对象来实现同步。同步锁使用 Lock 对象充当
+
+- `java.util.concurrent.locks.Lock`接囗是控制多个线程对共享资源进行访问的工具。锁提供了对共享资源的独占访问，每次只能有一个线程对`Lock`对象加锁，线程开始访问共享资源之前应先获得`Lock`对象
+
+- `ReentrantLock `类实现了 `Lock` ，它拥有与 `synchronized` 相同的并发性和内存语在实现线程安全的控制中，比较常用的是`ReentrantLock`，可以显式加锁、释义放锁。
+
+  ```java
+  import java.util.concurrent.locks.ReentrantLock;
+
+  public class LockStu {
+      public static void main(String[] args) {
+          Ticket t1 = new Ticket();
+
+          new Thread(t1).start();
+          new Thread(t1).start();
+          new Thread(t1).start();
+      }
+  }
+
+  class Ticket implements Runnable {
+      int ticketNum = 10;
+
+      private final ReentrantLock lock = new ReentrantLock();
+
+      @Override
+      public void run() {
+          while (true){
+              try {
+                  // 加锁
+                  lock.lock();
+                  if (ticketNum > 0){
+                      try {
+                          Thread.sleep(1000);
+                      } catch (InterruptedException e) {
+                          throw new RuntimeException(e);
+                      }
+                      System.out.println(ticketNum--);
+                  }else {
+                      break;
+                  }
+              }finally {
+                  // 解锁
+                  lock.unlock();
+              }
+          }
+      }
+  }
+  ```
+
+### synchronized 和 Lock 对比
+
+- Lock 是显式锁(手动开启和关闭锁，别忘记关闭锁)synchronized 是隐式锁，出了作用域自动释放
+- Lock 只有代码块锁，synchronized 有代码块锁和方法锁
+- 使用 Lock 锁，JVM 将花费较少的时间来调度线程，性能更好。并且具有更好的扩展
+  性(提供更多的子类)
+- 优先使用顺序:
+  - Lock >同步代码块(已经进入了方法体，分配了相应资源)>同步方法(在方法体之外)
+
+## 6、线程协作
