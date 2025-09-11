@@ -131,7 +131,11 @@ export const navbar = [
       },
       {
         text: "多线程",
-        link: "/java/multithreading/",
+        link: "/java/multithreading/multithreading.md",
+      },
+      {
+        text: "网络编程",
+        link: "/java/network/network.md",
       },
     ],
   },
