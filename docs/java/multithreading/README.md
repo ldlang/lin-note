@@ -747,7 +747,7 @@ public class ThreadJoin implements Runnable {
 
 线程安全的list
 
-```java
+​```java
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class safeList {
@@ -926,3 +926,132 @@ public void make() throws InterruptedException {
   - Lock >同步代码块(已经进入了方法体，分配了相应资源)>同步方法(在方法体之外)
 
 ## 6、线程协作
+
+线程通信
+
+都是 Object 类的方法，都只能在同步方法或者同步代码块中使用，否则会抛出异常
+
+| 方法名             | 作用                                                              |
+| ------------------ | ----------------------------------------------------------------- |
+| wait()             | 表示线程一直等待，知道其他线程通知，与 sleep 不同，会释放锁       |
+| wait(long timeout) | 指定等待的毫秒数                                                  |
+| notify()           | 唤醒一个处于等待的线程                                            |
+| notifyAll()        | 唤醒同一个对象是所有调用 wait()方法的线程，优先级高的线程优先调度 |
+
+```java
+// 信号灯法，通过一个标志位实现
+// 执行结果就是演员表演了一个节目，必须等观众观看了，演员才能表演下一个节目
+public class SignalLight {
+    public static void main(String[] args) {
+        Tv tv = new Tv();
+
+        new Player(tv).start();
+        new Watcher(tv).start();
+    }
+}
+
+class Player extends Thread {
+    Tv tv;
+
+    public Player(Tv tv) {
+        this.tv = tv;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 20; i++) {
+            if (i % 2 == 0) {
+                this.tv.play("喜剧");
+            } else {
+                this.tv.play("广告");
+            }
+        }
+    }
+}
+
+class Watcher extends Thread {
+    Tv tv;
+
+    public Watcher(Tv tv) {
+        this.tv = tv;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 20; i++) {
+            this.tv.watch();
+        }
+    }
+}
+
+class Tv {
+    String voice; // 表演的节目
+    boolean flag = true; // true 演员表演，观众等待，false 反之
+
+    public synchronized void play(String voice) {
+        if (!this.flag) {
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println("演员表演了：" + voice);
+        this.notifyAll(); // 通知唤醒
+        this.voice = voice;
+        this.flag = !this.flag;
+    }
+
+    public synchronized void watch() {
+        if (this.flag) {
+            try {
+                this.wait(); // 通知等待
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println("观众观看了=>>>>>>>>" + this.voice);
+        this.notifyAll();
+        this.flag = !this.flag;
+    }
+}
+```
+
+### 7、线程池
+
+- 背景:经常创建和销毁、使用量特别大的资源，比如并发情况下的线程，对性能影响很大。
+- 思路:提前创建好多个线程，放入线程池中，使用时直接获取，使用完放回池中可以避免频繁创建销毁、实现重复利用。类似生活中的公共交通工具。
+- 好处:
+  - 提高响应速度(减少了创建新线程的时间)
+  - 降低资源消耗(重复利用线程池中线程，不需要每次都创建)
+  - 便于线程管理(..)
+    - corePoolSize:核心池的大小
+    - maximumPoolSize:最大线程数
+    - keepAliveTime:线程没有任务时最多保持多长时间后会终止
+
+```java
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ThreadPool {
+    public static void main(String[] args) {
+        // 1.创建线程池，参数是最大线程池数量
+        ExecutorService service = Executors.newFixedThreadPool(5);
+
+        // 3.执行
+        service.execute(new MyThreadStu());
+        service.execute(new MyThreadStu());
+        service.execute(new MyThreadStu());
+
+        // 关闭
+        service.shutdown();
+    }
+}
+
+class MyThreadStu implements Runnable {
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName());
+    }
+}
+```
