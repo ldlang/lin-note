@@ -4,6 +4,8 @@ sidebar: auto
 
 # 网络编程
 
+## 1、基础知识
+
 ### ip：InetAddress
 
 - 唯一定位一台网络上的计算机
@@ -64,6 +66,8 @@ TCP/IP 协议簇
   - 不管对方有没有准备好，只管发
   - DDOS 攻击
 - IP：网络互连协议
+
+## 2、TCP
 
 ### 发送接收消息
 
@@ -225,3 +229,63 @@ public class ServerTcp {
       }
   }
   ```
+
+## 3、UDP
+
+### 发送消息
+
+任意一方都可以是发送方，也可以是接受方
+
+```java
+// 发送方
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+
+public class UdpSender {
+    public static void main(String[] args) throws Exception {
+        DatagramSocket socket = new DatagramSocket(8888);
+        // 从控制台读取数据
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            String data = reader.readLine();
+            byte[] data1 = data.getBytes();
+            DatagramPacket packet = new DatagramPacket(data1,0,data1.length,new InetSocketAddress("127.0.0.1",6666));
+            // 发送消息
+            socket.send(packet);
+            if (data.equals("bye")) break;
+        }
+        socket.close();
+    }
+}
+
+// 接收方
+package com.ldlang.network;
+
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.util.Arrays;
+
+public class UpdReceive {
+    public static void main(String[] args) throws Exception {
+        DatagramSocket socket = new DatagramSocket(6666);
+        while (true){
+            byte[] container = new byte[1024];
+            DatagramPacket packet = new DatagramPacket(container,0,container.length);
+            socket.receive(packet); // 阻塞式的接受包
+
+            // 断开连接
+            byte[] data = packet.getData();
+            String str = new String(data);
+            System.out.println(Arrays.toString(packet.getData()));
+
+            System.out.println(str);
+            if (str.equals("bye")) break;
+        }
+        socket.close();
+    }
+}
+
+```
