@@ -287,5 +287,37 @@ public class UpdReceive {
         socket.close();
     }
 }
+```
 
+## 4、URL
+
+下载文件
+
+```java
+package com.ldlang.network;
+
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class URLStu {
+    public static void main(String[] args) throws Exception {
+        URL url = new URL("https://ldlang.github.io/lin-note/avatar.jpg");
+
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+        InputStream is = urlConnection.getInputStream();
+        FileOutputStream fos = new FileOutputStream("avatar.jpg");
+
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = is.read(buf)) != -1) {
+            fos.write(buf, 0, len);
+        }
+        fos.close();
+        is.close();
+        urlConnection.disconnect();
+    }
+}
 ```

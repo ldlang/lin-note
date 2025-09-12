@@ -137,6 +137,10 @@ export const navbar = [
         text: "网络编程",
         link: "/java/network/network.md",
       },
+      {
+        text: "注解和反射",
+        link: "/java/annotation/annotation.md",
+      },
     ],
   },
   {
