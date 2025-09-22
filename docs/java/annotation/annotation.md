@@ -578,3 +578,63 @@ public class ReflectionStu7 {
     }
 }
 ```
+
+### 通过反射获取注解信息
+
+```java
+import java.lang.annotation.*;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+
+public class ReflectionStu8 {
+    public static void main(String[] args) throws NoSuchFieldException {
+        Class<Inner> c = Inner.class;
+
+        // 通过反射获取类的注解
+        Annotation[] annotations = c.getAnnotations();
+        // [@com.ldlang.annotation.InnerClassAnn("db_table")]
+        System.out.println(Arrays.toString(annotations));
+
+        // 通过反射获取类的注解的值
+        InnerClassAnn innerClassAnn = c.getAnnotation(InnerClassAnn.class);
+        String value = innerClassAnn.value();
+        // db_table
+        System.out.println(value);
+
+        // 获取字段上的注解
+        Field field = c.getDeclaredField("name");
+        // public java.lang.String com.ldlang.annotation.Inner.name
+        System.out.println(field);
+        InnerFiledAnn annotation = field.getAnnotation(InnerFiledAnn.class);
+        System.out.println(annotation.columnName()); // db_id
+        System.out.println(annotation.type()); // varchar
+        System.out.println(annotation.length()); // 10
+    }
+}
+
+@InnerClassAnn("db_table")
+class Inner {
+    @InnerFiledAnn(columnName ="db_id",type = "varchar", length = 10)
+    public String name;
+
+    public Inner(String name) {
+        this.name = name;
+    }
+}
+
+// 定义一个类注解
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@interface InnerClassAnn{
+    String value();
+}
+
+// 定义字段注解
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface InnerFiledAnn{
+    String columnName();
+    String type();
+    int length();
+}
+```
