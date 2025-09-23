@@ -126,20 +126,28 @@ export const navbar = [
         link: "/java/javaSE/",
       },
       {
-        text: "常用类、集合、IO",
-        link: "/java/commonClass/",
+        text: "常用类",
+        link: "/java/object.md",
+      },
+      {
+        text: "集合",
+        link: "/java/collection.md",
+      },
+      {
+        text: "IO",
+        link: "/java/IO-stream.md",
       },
       {
         text: "多线程",
-        link: "/java/multithreading/multithreading.md",
+        link: "/java/multithreading.md",
       },
       {
         text: "网络编程",
-        link: "/java/network/network.md",
+        link: "/java/network.md",
       },
       {
         text: "注解和反射",
-        link: "/java/annotation/annotation.md",
+        link: "/java/annotation.md",
       },
     ],
   },
