@@ -82,6 +82,10 @@ export const sidebar = {
           text: "js技巧积累",
           link: "/javaScript/js-note/js-skill.md",
         },
+        {
+          text: "js误区（细节）",
+          link: "/javaScript/js-note/misunderstanding.md",
+        },
       ],
     },
   ],
