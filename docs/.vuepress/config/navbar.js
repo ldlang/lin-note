@@ -149,6 +149,10 @@ export const navbar = [
         text: "注解和反射",
         link: "/java/annotation.md",
       },
+      {
+        text: "javaWeb",
+        link: "/java/javaWeb.md",
+      },
     ],
   },
   {
