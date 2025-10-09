@@ -86,6 +86,10 @@ export const sidebar = {
           text: "js误区（细节）",
           link: "/javaScript/js-note/misunderstanding.md",
         },
+        {
+          text: "方法速查",
+          link: "/javaScript/js-note/zoom-table.md",
+        },
       ],
     },
   ],
