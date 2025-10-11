@@ -153,6 +153,10 @@ export const navbar = [
         text: "javaWeb",
         link: "/java/javaWeb.md",
       },
+      {
+        text: "Mybatis",
+        link: "/java/Mybatis.md",
+      },
     ],
   },
   {
