@@ -161,7 +161,7 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
            "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
    <mapper namespace="com.ldlang.dao.GradeDao">
        <select id="getGradeList" resultType="com.ldlang.pojo.Grade">
-           select * from school.grade
+           select * from grade
        </select>
    </mapper>
    ```
@@ -239,7 +239,7 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
    ```xml
    <!--参数可以直接拿，因为在调用的时候会传递-->
    <select id="getGradeById" resultType="com.ldlang.pojo.Grade" parameterType="int">
-       select * from school.grade where gradeid = #{gradeid}
+       select * from grade where gradeid = #{gradeid}
    </select>
    ```
 
@@ -275,7 +275,7 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
 
    ```xml
    <insert id="insertGrade" parameterType="com.ldlang.pojo.Grade">
-       insert into school.grade (gradeid, gradename) values (#{gradeid}, #{gradename})
+       insert into grade (gradeid, gradename) values (#{gradeid}, #{gradename})
    </insert>
    ```
 
@@ -313,7 +313,7 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
 
    ```xml
    <update id="upGrade" parameterType="com.ldlang.pojo.Grade">
-       update school.grade set gradename=#{gradename} where gradeid = #{gradeid}
+       update grade set gradename=#{gradename} where gradeid = #{gradeid}
    </update>
    ```
 
@@ -350,7 +350,7 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
 
    ```xml
    <delete id="delGrade" parameterType="int">
-       delete from school.grade where gradeid = #{gradeid}
+       delete from grade where gradeid = #{gradeid}
    </delete>
    ```
 
