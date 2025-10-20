@@ -80,3 +80,19 @@ axios
     URL.revokeObjectURL(url);
   });
 ```
+
+## toFixed() 精度问题导致四舍五入错误
+
+```js
+consle.log((28.215).toFixed(2)); // 28.21
+
+// 修正
+const _toFixed = Number.prototype.toFixed;
+
+Number.prototype.toFixed = function (decimals) {
+  const factor = Math.pow(10, decimals);
+  // 修正浮点误差后再进行四舍五入
+  const corrected = Math.round((this + Number.EPSILON) * factor) / factor;
+  return _toFixed.call(corrected, decimals);
+};
+```
