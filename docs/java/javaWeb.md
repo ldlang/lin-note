@@ -32,7 +32,7 @@ sidebar: auto
 
 ## 2、Maven
 
-### 配置maven
+### 配置 maven
 
 maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.apache.org/)
 
@@ -42,11 +42,15 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
 
    - 配置环境变量
 
+     `MAVEN_HOME`和`M2_HOME`
+
      ![image](/java/maven-sys.png)
+
+     `%MAVEN_HOME%\bin`
 
      ![image](/java/maven-user.png)
 
-   - maven --version 查看是否配置成功
+   - **mvn -version** 查看是否配置成功
 
 2. 设置阿里镜像
 
@@ -65,13 +69,13 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
 
 3. 设置本地仓库的存储地址
 
-   同上的`settings.xml`文件中，并建立对应文件夹maven-repo
+   同上的`settings.xml`文件中，并建立对应文件夹 maven-repo
 
    ```java
    <localRepository>D:\maven\apache-maven-3.9.11\maven-repo</localRepository>
    ```
 
-### 在idea中如何使用maven
+### 在 idea 中如何使用 maven
 
 ## 3、Servlet
 
@@ -79,7 +83,7 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
 
 1. 共享数据
 
-   * HelloServlet中在servletContext存入数据（必须先调这个请求才能有数据）
+   - HelloServlet 中在 servletContext 存入数据（必须先调这个请求才能有数据）
 
      ```java
      import javax.servlet.ServletContext;
@@ -89,22 +93,22 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
      import javax.servlet.http.HttpServletResponse;
      import java.io.IOException;
      import java.io.PrintWriter;
-     
+
      public class HelloServlet extends HttpServlet {
          @Override
          protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
              System.out.println("进入了get方法");
-     
+
              // 存入数据
              ServletContext servletContext = this.getServletContext();
              servletContext.setAttribute("name", "张三");
-     
+
              resp.setContentType("text/html");
              resp.setCharacterEncoding("utf-8");
              PrintWriter writer = resp.getWriter();
              writer.print("nihao");
          }
-     
+
          @Override
          protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
              doGet(req,resp);
@@ -112,7 +116,7 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
      }
      ```
 
-   * nameSevlet读取servletContext之前存储的数据
+   - nameSevlet 读取 servletContext 之前存储的数据
 
      ```java
      import javax.servlet.ServletContext;
@@ -120,7 +124,7 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
      import javax.servlet.http.HttpServletRequest;
      import javax.servlet.http.HttpServletResponse;
      import java.io.IOException;
-     
+
      public class NameServlet extends HelloServlet{
          @Override
          protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -129,25 +133,24 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
              String name = (String) servletContext.getAttribute("name");
              resp.setContentType("text/html");
              resp.setCharacterEncoding("utf-8");
-     
+
              resp.getWriter().print("上下文中的name："+name);
          }
      }
      ```
-     
 
-## 4、cookie和session
+## 4、cookie 和 session
 
 ### cookie
 
-* 保存在浏览器中的
+- 保存在浏览器中的
 
 ### session
 
-* 保存在服务端，由session对象创建
-* session把用户的数据写到用户独占的session中，服务端保存
+- 保存在服务端，由 session 对象创建
+- session 把用户的数据写到用户独占的 session 中，服务端保存
 
-1. 创建session
+1. 创建 session
 
    ```java
    import javax.servlet.ServletException;
@@ -156,14 +159,14 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
    import javax.servlet.http.HttpServletResponse;
    import javax.servlet.http.HttpSession;
    import java.io.IOException;
-   
+
    public class SessionDemo extends HttpServlet {
        @Override
        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
            resp.setCharacterEncoding("utf-8");
            resp.setContentType("text/html;charset=utf-8");
            req.setCharacterEncoding("utf-8");
-   
+
            // 获取session
            HttpSession session = req.getSession();
            // 存入值
@@ -180,7 +183,7 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
    }
    ```
 
-2. 读取session
+2. 读取 session
 
    ```java
    import javax.servlet.ServletException;
@@ -189,23 +192,23 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
    import javax.servlet.http.HttpServletResponse;
    import javax.servlet.http.HttpSession;
    import java.io.IOException;
-   
+
    public class getSession extends HttpServlet {
        @Override
        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
            resp.setCharacterEncoding("utf-8");
            resp.setContentType("text/html;charset=utf-8");
            req.setCharacterEncoding("utf-8");
-   
+
            HttpSession session = req.getSession();
-   
+
            String name = (String) session.getAttribute("name");
            System.out.println("获取到了值：" + name);
        }
    }
    ```
 
-3. 删除session
+3. 删除 session
 
    ```java
    import javax.servlet.ServletException;
@@ -214,7 +217,7 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
    import javax.servlet.http.HttpServletResponse;
    import javax.servlet.http.HttpSession;
    import java.io.IOException;
-   
+
    public class removeSession extends HttpServlet {
        @Override
        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -227,14 +230,13 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
    }
    ```
 
-4. 设置session过期时间
+4. 设置 session 过期时间
 
    ```xml
    <session-config>
        <session-timeout>1</session-timeout>
    </session-config>
    ```
-
 
 ## 5、过滤器和监听器
 
@@ -247,26 +249,26 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
    ```java
    import javax.servlet.*;
    import java.io.IOException;
-   
+
    public class FilterDemo implements Filter {
-   
+
        @Override
        public void init(FilterConfig filterConfig) throws ServletException {
            System.out.println("init---------");
        }
-   
+
        @Override
        public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
            servletRequest.setCharacterEncoding("utf-8");
            servletResponse.setCharacterEncoding("utf-8");
            servletResponse.setContentType("text/html;charset=utf-8");
-   
+
            System.out.println("doFilter 之前");
            // 放行，被过滤的接口才能继续走
            filterChain.doFilter(servletRequest,servletResponse);
            System.out.println("doFilter 之后");
        }
-   
+
        @Override
        public void destroy() {
            System.out.println("destroy---------");
@@ -286,6 +288,3 @@ maven 就是帮助我们管理 jar 包的工具，[下载地址](https://maven.a
        <url-pattern>/filter/*</url-pattern>
    </filter-mapping>
    ```
-
-   
-
