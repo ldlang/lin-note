@@ -373,3 +373,87 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
        sqlSession.close();
    }
    ```
+
+## 3、万能 map
+
+### 模糊查询
+
+1. 在 mapper 接口中增加方法
+
+   ```java
+   List<Grade> getGradeListMap(Map<String, Object> map);
+   ```
+
+2. 在 xml 文件中书写 sql 语句
+
+   ```xml
+   <!--使用map进行like查询-->
+   <select id="getGradeListMap" resultType="com.ldlang.pojo.Grade" parameterType="map">
+       <!--传递的参数不需要和数据库中的键名一直，数据库中是gradename，这里可以是任何值，例name-->
+       select * from grade where gradename like #{name}
+   </select>
+   ```
+
+3. 调试
+
+   ```java
+   @Test
+   public void getGradeListMap(){
+       // 获取sqlSession对象
+       SqlSession sqlSession = MybatisUtils.getSqlSession();
+
+       // 执行sql语句
+       GradeMapper mapper = sqlSession.getMapper(GradeMapper.class);
+       HashMap<String, Object> map = new HashMap<String, Object>();
+       // 这里的name就是对应的上面的name
+       map.put("name", "%一%");
+
+       List<Grade> gradeList = mapper.getGradeListMap(map);
+
+       System.out.println("模糊查询Grade："+gradeList);
+
+       // 关闭连接
+       sqlSession.close();
+   }
+   ```
+
+### 新增
+
+1. 在 mapper 接口中增加方法
+
+   ```java
+   int insertGradeMap(Map<String,Object> map);
+   ```
+
+2. 在 xml 文件中书写 sql 语句
+
+   ```xml
+   <!--使用map新增-->
+   <insert id="insertGradeMap" parameterType="map">
+       insert into grade (gradeid, gradename) values (#{id}, #{name})
+   </insert>
+   ```
+
+3. 调试
+
+   ```java
+   @Test
+   public void insertGradeMap(){
+       SqlSession sqlSession = MybatisUtils.getSqlSession();
+
+       GradeMapper mapper = sqlSession.getMapper(GradeMapper.class);
+
+       HashMap<String,Object> map = new HashMap<String,Object>();
+       map.put("id", 10);
+       map.put("name","六年级");
+
+       int res = mapper.insertGradeMap(map);
+
+       if (res > 0) {
+           System.out.println("插入成功了");
+       }
+       // 提交事务
+       sqlSession.commit();
+       sqlSession.close();
+   }
+   ```
