@@ -625,3 +625,73 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
 | argNameBasedConstructorAutoMapping | 当应用构造器自动映射时，参数名称被用来搜索要映射的列，而不再依赖列的顺序。（新增于 3.5.10）                                                                                                                                                                                                                                        | true \| false                                                                                              | false                                                 |
 
 ### 5、其他配置
+
+- plugins
+
+- environments
+
+### 6、mappers
+
+用于映射 sql 语句，每个 mapper 文件都必须要有映射
+
+- 方式一：使用相对于类路径的资源引用
+
+  ```xml
+  <mappers>
+      <mapper resource="com/ldlang/dao/GradeMapper.xml"/>
+  </mappers>
+  ```
+
+- 方式二：使用映射器接口实现类的完全限定类名
+
+  ```xml
+  <mappers>
+      <mapper class="com.ldlang.dao.GradeMapper" />
+  </mappers>
+  ```
+
+- 方式三：将包内的映射器接口全部注册为映射器
+
+  ```xml
+  <mappers>
+      <package name="com.ldlang.dao"/>
+  </mappers>
+  ```
+
+> 以上所有方式注意点：
+>
+> 1. 接口和他的 mapper 文件必须同名
+> 2. 接口和他的 mapper 文件必须在同一包下
+
+## resultMap 结果集映射
+
+用于解决实体类字段和属性名不一直的问题，当实体类的字段名和数据库中的字段名不一致时就是导致相应的字段查出来为 null
+
+**解决方式：**
+
+> ```java
+> // 实体类的映射
+> private int gradeid;
+> private String name; // 数据库中是 gradename
+> ```
+
+1. 别名（不推荐）
+
+   ```xml
+   <select id="getGradeById" resultType="Grade" parameterType="int">
+       select gradeid, gradename as name from grade where gradeid = #{gradeid}
+   </select>
+   ```
+
+2. resultMap（推荐）
+
+   ```xml
+   <--id对应下面的resultMap，Type就是返回值的类型-->
+   <resultMap id="GradeResultMap" type="Grade">
+       <result column="gradename" property="name" />
+   </resultMap>
+
+   <select id="getGradeById" resultMap="GradeResultMap">
+       select * from grade where gradeid = #{gradeid}
+   </select>
+   ```
