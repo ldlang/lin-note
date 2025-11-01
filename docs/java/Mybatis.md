@@ -531,7 +531,7 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
    </environments>
    ```
 
-## 3、类型别名
+### 3、类型别名
 
 1. 方式一
 
@@ -663,7 +663,7 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
 > 1. 接口和他的 mapper 文件必须同名
 > 2. 接口和他的 mapper 文件必须在同一包下
 
-## resultMap 结果集映射
+## 5、resultMap 结果集映射
 
 用于解决实体类字段和属性名不一直的问题，当实体类的字段名和数据库中的字段名不一致时就是导致相应的字段查出来为 null
 
@@ -695,3 +695,44 @@ MyBatis 是一款优秀的持久层框架，它支持自定义 SQL、存储过�
        select * from grade where gradeid = #{gradeid}
    </select>
    ```
+
+## 6、注解查询
+
+### 设置自动提交事务
+
+```java
+public static SqlSession getSqlSession() {
+    return sqlSessionFactory.openSession(true);
+}
+```
+
+### crud
+
+```java
+import com.ldlang.pojo.Grade;
+import org.apache.ibatis.annotations.*;
+import java.util.List;
+
+public interface GradeMapper {
+    @Select("select * from grade")
+    List<Grade> getGrades();
+
+    @Select("select * from grade where gradeid = #{id}")
+    Grade getGradeByid(@Param("id") int id);
+
+    @Insert("insert into grade(gradeid, gradename) values (#{gradeid}, #{gradename})")
+    int addGrade(Grade grade);
+
+    @Update("update grade set gradename=#{gradename} where gradeid = #{gradeid}")
+    int upgGrade(Grade grade);
+
+    @Delete("delete from grade where gradeid = #{id}")
+    int delGrade(@Param("id") int id);
+}
+```
+
+### @Param
+
+- **基本数据类型**和**`String`**需要加上这个注解
+- 如果只有一个基本数据类型可以省略，但是建议都加上
+- 在 Sql 注解中使用的参数就是`@Param`中传递的属性名
