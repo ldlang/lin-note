@@ -736,3 +736,63 @@ public interface GradeMapper {
 - **基本数据类型**和**`String`**需要加上这个注解
 - 如果只有一个基本数据类型可以省略，但是建议都加上
 - 在 Sql 注解中使用的参数就是`@Param`中传递的属性名
+
+## 7、Lombok
+
+使用注解自动生成 getter、setter、toString 等
+
+1. 项目安装插件
+
+   ```xml
+   <dependency>
+       <groupId>org.projectlombok</groupId>
+       <artifactId>lombok</artifactId>
+       <version>1.18.4</version>
+   </dependency>
+   ```
+
+2. idea 安装 Lombok 插件
+
+3. 使用，直接在实体类上加注解就行
+
+   ```java
+   import lombok.Data;
+
+   @Data
+   public class Teacher {
+       private int id;
+       private String name;
+   }
+   ```
+
+支持的注解
+
+```java
+@Getter and @Setter
+@FieldNameConstants
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor, @RequiredArgsConstructor and @NoArgsConstructor
+@Log, @Log4j, @Log4j2, @Slf4j, @XSlf4j, @CommonsLog, @JBossLog, @Flogger, @CustomLog
+@Data
+@Builder
+@SuperBuilder
+@Singular
+@Jacksonized
+@Delegate
+@Value
+@Accessors
+@Tolerate
+@Wither
+@With
+@SneakyThrows
+@StandardException
+@val
+@var
+experimental @var
+@UtilityClass
+```
+
+## 8、复杂查询
+
+### 多对一处理
