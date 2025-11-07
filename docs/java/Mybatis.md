@@ -795,4 +795,312 @@ experimental @var
 
 ## 8、复杂查询
 
-### 多对一处理
+### 多对一（association）
+
+学生实体类
+
+```java
+import lombok.Data;
+
+@Data
+public class Student {
+    private int id;
+    private String name;
+    private Teacher teacher;
+}
+```
+
+老师实体类
+
+```java
+import lombok.Data;
+
+@Data
+public class Teacher {
+    private int id;
+    private String name;
+}
+```
+
+连表查询
+
+1. 方式一
+
+   ```xml
+   <!--连表查询-->
+   <select id="getStudents" resultMap="StudentTeacher">
+       select * from student;
+   </select>
+
+   <resultMap id="StudentTeacher" type="Student">
+       <result property="id" column="id"/>
+       <result property="name" column="name"/>
+       <!--property 映射到列结果的字段或属性-->
+       <!--column 在student表中映射的字段-->
+       <!--javaType 下面select语句的返回值类型-->
+       <!--select 指定是那个select语句-->
+       <association property="teacher" column="tid" javaType="Teacher" select="getTeacher"/>
+   </resultMap>
+
+   <select id="getTeacher" resultType="Teacher">
+       select * from teacher where id = #{id}
+   </select>
+
+   <!-- 结果
+   [Student(id=1, name=小明, teacher=Teacher(id=0, name=秦老师)), Student(id=2, name=小红, teacher=Teacher(id=0, name=秦老师)), Student(id=3, name=小张, teacher=Teacher(id=0, name=秦老师)), Student(id=4, name=小李, teacher=Teacher(id=0, name=秦老师)), Student(id=5, name=小王, teacher=Teacher(id=0, name=秦老师))]
+   -->
+   ```
+
+2. 方式二
+
+   ```xml
+   <select id="getStudents1" resultMap="StudentTeacher1" >
+       select s.id sId, s.name sName, t.name tName from student s, teacher t
+       where s.tid = t.id
+   </select>
+
+   <resultMap id="StudentTeacher1" type="Student">
+       <result property="id" column="sId"/>
+       <result property="name" column="sName"/>
+       <association property="teacher" javaType="Teacher">
+           <result property="name" column="tName"/>
+       </association>
+   </resultMap>
+
+   <!-- 结果
+   [Student(id=1, name=小明, teacher=Teacher(id=0, name=秦老师)), Student(id=2, name=小红, teacher=Teacher(id=0, name=秦老师)), Student(id=3, name=小张, teacher=Teacher(id=0, name=秦老师)), Student(id=4, name=小李, teacher=Teacher(id=0, name=秦老师)), Student(id=5, name=小王, teacher=Teacher(id=0, name=秦老师))]
+   -->
+   ```
+
+### 一对多（collection）
+
+学生实体类
+
+```java
+import lombok.Data;
+
+@Data
+public class Student {
+    private int id;
+    private String name;
+    private int tid;
+}
+```
+
+老师实体类
+
+```java
+import lombok.Data;
+import java.util.List;
+
+@Data
+public class Teacher {
+    private int id;
+    private String name;
+    private List<Student> student;
+}
+```
+
+通过老师 id 去查询这个老师的所有学生
+
+```xml
+<select id="getTeacherById" resultMap="teachers">
+    select t.name tName, s.id sId, s.name sName
+    from teacher t, student s
+    where t.id = s.tid and t.id = #{id}
+</select>
+
+<resultMap id="teachers" type="Teacher">
+    <result property="name" column="tName"/>
+    <collection property="student" ofType="student">
+        <result property="id" column="sId"/>
+        <result property="name" column="sName"/>
+    </collection>
+</resultMap>
+```
+
+## 9、动态 sql
+
+开启下划线转驼峰
+
+```xml
+<settings>
+    <setting name="mapUnderscoreToCamelCase" value="true"/>
+</settings>
+```
+
+### if
+
+```xml
+<select id="queryBlogIf" resultType="Blog">
+    select * from school.blog
+    <where>
+        <--!title有值的时候就会进去这个查询条件-->
+        <if test="title != null">
+            and title = #{title}
+        </if>
+        <if test="views > 100">
+            and views > #{views}
+        </if>
+    </where>
+</select>
+```
+
+测试
+
+```java
+SqlSession sqlSession = MybatisUtils.getSqlSession();
+BlogMapper mapper = sqlSession.getMapper(BlogMapper.class);
+HashMap<String, Object> map = new HashMap<>();
+map.put("views", "101");
+List<Blog> blogs = mapper.queryBlogIf(map);
+System.out.println(blogs);
+// 关闭连接
+sqlSession.close();
+```
+
+### choose、when、otherwise
+
+相当于`switch`语句，只能满足其中一个`when`，如果一个也不满足，那么将去到`otherwise`。
+
+```xml
+<select id="queryBlogIf" resultType="Blog">
+    select * from school.blog
+    <where>
+        <choose>
+            <when test="title != null">
+                title = #{title}
+            </when>
+            <when test="author != null">
+                author = #{author}
+            </when>
+            <otherwise>
+                views > #{views}
+            </otherwise>
+        </choose>
+    </where>
+</select>
+```
+
+测试
+
+```java
+SqlSession sqlSession = MybatisUtils.getSqlSession();
+BlogMapper mapper = sqlSession.getMapper(BlogMapper.class);
+HashMap<String, Object> map = new HashMap<>();
+// 虽然都满足条件，但是只会走第一个满足条件的
+map.put("title", "数据库优化技巧");
+map.put("author", "张三");
+List<Blog> blogs = mapper.queryBlogIf(map);
+System.out.println(blogs);
+// 关闭连接
+sqlSession.close();
+```
+
+### trim、where、set
+
+- 自动去除指定的前缀或者后缀
+
+  ```xml
+  <--!自动去除,后缀-->
+  <trim prefix="SET" suffixOverrides=",">
+    ...
+  </trim>
+  ```
+
+- `where`语句后面没有满足条件的就会自动去掉`where`，并且能够正确处理`and`
+
+  ```xml
+  <select id="queryBlogIf" resultType="Blog">
+      select * from school.blog
+      <where>
+          <--!title有值的时候就会进去这个查询条件-->
+          <if test="title != null">
+              title = #{title}
+          </if>
+          <if test="views > 100">
+              and views > #{views}
+          </if>
+      </where>
+  </select>
+  ```
+
+- `set`素会动态地在行首插入 SET 关键字
+
+  ```xml
+  <update id="upBlog" >
+      update school.blog
+      <set>
+          <if test="title != null">
+              title = #{title},
+          </if>
+          <if test="author != null">
+              author = #{author},
+          </if>
+      </set>
+      where id = #{id}
+  </update>
+  ```
+
+### foreach
+
+循环拼接 sql 语句，
+
+- open：开始位置拼接的字符
+- close：结束位置拼接的字符
+- collection：需要遍历 List 的字段名
+- item：每一项值
+- index：每一项的索引
+
+```xml
+<select id="queryBlogForEach" resultType="blog">
+    select * from school.blog
+    <where>
+        <foreach collection="ids" open="id in (" close=")" item="id" index="index" separator=",">
+            #{id}
+        </foreach>
+    </where>
+</select>
+```
+
+测试
+
+```java
+SqlSession sqlSession = MybatisUtils.getSqlSession();
+BlogMapper mapper = sqlSession.getMapper(BlogMapper.class);
+HashMap<String, Object> map = new HashMap<>();
+
+ArrayList<Integer> arr = new ArrayList<Integer>();
+arr.add(1);
+arr.add(2);
+
+map.put("ids", arr);
+
+List<Blog> blogs = mapper.queryBlogForEach(map);
+System.out.println(blogs);
+// 关闭连接
+sqlSession.close();
+```
+
+### sql 片段
+
+定义片段
+
+```xml
+<sql id="sql-fro">
+    <foreach collection="ids" open="id in (" close=")" item="id" index="index" separator=",">
+        #{id}
+    </foreach>
+</sql>
+```
+
+使用片段
+
+```xml
+<select id="queryBlogForEach" resultType="blog">
+    select * from school.blog
+    <where>
+        <include refid="sql-fro"/>
+    </where>
+</select>
+```
