@@ -157,6 +157,10 @@ export const navbar = [
         text: "Mybatis",
         link: "/java/Mybatis.md",
       },
+      {
+        text: "Spring",
+        link: "/java/Spring.md",
+      },
     ],
   },
   {
