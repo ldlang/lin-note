@@ -430,3 +430,134 @@ sidebar: auto
     ```
 
 ## 7、注解开发
+
+1. bean 指定要扫描的包
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <beans xmlns="http://www.springframework.org/schema/beans"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:context="http://www.springframework.org/schema/context"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+           https://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           https://www.springframework.org/schema/context/spring-context.xsd">
+
+       <context:annotation-config/>
+       <!--只要要扫描的包，只有被扫描的包里面的注解才能生效-->
+       <context:component-scan base-package="com.ldlang"/>
+   </beans>
+   ```
+
+2. 属性如何注入
+
+   ```java
+   import org.springframework.beans.factory.annotation.Value;
+   import org.springframework.stereotype.Component;
+
+   // @Component 相当于 <bean id="user" class="com.ldlang.pojo.User" />
+   @Component
+   public class User {
+       // @Value("张三") 相当于 <property name="name" value="张三" />
+       @Value("张三")
+       private String name;
+
+       public String getName() {
+           return name;
+       }
+
+       public void setName(String name) {
+           this.name = name;
+       }
+   }
+   ```
+
+3. 衍生注解
+
+   @Component
+
+   - dao：@Repository
+   - service：@Service
+   - controller：@Controller
+
+   以上 4 个注解功能是一样的
+
+4. 作用域
+
+   ```java
+   import org.springframework.context.annotation.Scope;
+   import org.springframework.stereotype.Component;
+
+   @Component
+   @Scope("singleton")
+   public class User {
+   }
+   ```
+
+## 8、javaConfig
+
+可以替代`beans.xml`文件，所有的配置都使用 java 代码开发
+
+1. 实体类
+
+   ```java
+   import org.springframework.beans.factory.annotation.Value;
+   import org.springframework.stereotype.Component;
+
+   @Component
+   public class User {
+       @Value("张三")
+       private String name;
+
+       public String getName() {
+           return name;
+       }
+   }
+   ```
+
+2. 配置文件
+
+   ```java
+   import com.ldlang.pojo.User;
+   import org.springframework.context.annotation.Bean;
+   import org.springframework.context.annotation.ComponentScan;
+   import org.springframework.context.annotation.Configuration;
+   import org.springframework.context.annotation.Import;
+
+   // @Configuration就代表这是一个配置类，相当于是一个beans.xml
+   @Configuration
+
+   // @ComponentScan 可以手动指定要扫描的包，也可以不指定
+   @ComponentScan("com.ldlang.pojo")
+
+   // 还可以引入其他的config
+   //@Import()
+   public class Myconfig {
+
+       // 注册一个bean，方法名就是相当于bean标签的id，返回值就相当于是class
+       @Bean
+       public User user(){
+           return new User();
+       }
+   }
+   ```
+
+3. 使用方式
+
+   ```java
+   import com.ldlang.config.Myconfig;
+   import com.ldlang.pojo.User;
+   import org.springframework.context.ApplicationContext;
+   import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+   public class test05 {
+       public static void main(String[] args) {
+           // 使用javaConfig方式去取代配置的话，就要使用这种方式获取上下文
+           ApplicationContext context = new AnnotationConfigApplicationContext(Myconfig.class);
+
+           User user = context.getBean("user", User.class);
+           System.out.println(user.getName());
+
+       }
+   }
+   ```
