@@ -561,3 +561,224 @@ sidebar: auto
        }
    }
    ```
+
+## 9、AOP切面编程
+
+就是在一个方法之前，或者之后等做一些操作。
+
+1. 导入包
+
+   ```xml
+   <dependency>
+       <groupId>org.aspectj</groupId>
+       <artifactId>aspectjweaver</artifactId>
+       <version>1.9.4</version>
+   </dependency>
+   ```
+
+2. beans文件中加入配置
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <beans xmlns="http://www.springframework.org/schema/beans"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:aop="http://www.springframework.org/schema/aop"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd">
+   </beans>
+   ```
+
+### 使用Spring的方式执行
+
+* 接口
+
+  ```java
+  public interface UserService {
+      public void add();
+      public void delete();
+      public void update();
+      public void select();
+  }
+  ```
+
+* 实现类
+
+  ```java
+  package com.ldlang.service;
+  
+  public class UserServiceImpl implements UserService {
+      @Override
+      public void add() {
+          System.out.println("增加");
+      }
+  
+      @Override
+      public void delete() {
+          System.out.println("删除");
+      }
+  
+      @Override
+      public void update() {
+          System.out.println("修改");
+      }
+  
+      @Override
+      public void select() {
+          System.out.println("查询");
+      }
+  }
+  ```
+
+* 之前切面
+
+  ```java
+  import org.springframework.aop.MethodBeforeAdvice;
+  import java.lang.reflect.Method;
+  
+  public class Log implements MethodBeforeAdvice {
+  
+      // method 要实现的方法
+      // objects 传入的参数
+      // target 目标对象
+      @Override
+      public void before(Method method, Object[] objects, Object target) throws Throwable {
+          System.out.println("我是之前执行--------" + target.getClass().getName() + "的" + method.getName() + "被执行了");
+      }
+  }
+  ```
+
+* 之后切面
+
+  ```java
+  import org.springframework.aop.AfterReturningAdvice;
+  import java.lang.reflect.Method;
+  
+  public class AfterLog implements AfterReturningAdvice {
+  
+      @Override
+      public void afterReturning(Object returnValue, Method method, Object[] objects, Object target) throws Throwable {
+          System.out.println("我是之后执行-----------，执行了" + method.getName() + "方法，返回结果为" + returnValue);
+      }
+  }
+  ```
+
+* 配置文件
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:aop="http://www.springframework.org/schema/aop"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop.xsd">
+  
+      <bean id="userService" class="com.ldlang.service.UserServiceImpl"/>
+      <bean id="afterLog" class="com.ldlang.log.AfterLog"/>
+      <bean id="log" class="com.ldlang.log.Log"/>
+  
+      <!--使用原生的Spring API接口-->
+      <aop:config>
+          <!--切入点：pointcut，表达式：expression-->
+          <aop:pointcut id="pointcut" expression="execution(* com.ldlang.service.UserServiceImpl.*(..))"/>
+          
+          <!-- 执行环绕增强-->
+          <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
+          <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>
+      </aop:config>
+  </beans>
+  ```
+
+* 测试
+
+  ```java
+  import com.ldlang.service.UserService;
+  import org.springframework.context.ApplicationContext;
+  import org.springframework.context.support.ClassPathXmlApplicationContext;
+  
+  public class test07 {
+      public static void main(String[] args) {
+          ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+          // 动态代理 代理的是接口
+          UserService userService = (UserService) context.getBean("userService");
+  
+          userService.add();
+          // 我是之前执行--------com.ldlang.service.UserServiceImpl的add被执行了
+  		// 增加
+          // 我是之后执行-----------，执行了add方法，返回结果为null
+      }
+  }
+  ```
+
+### 自定义类方式
+
+接口和实现类同上
+
+* 自定义类
+
+  ```java
+  package com.ldlang.coustom;
+  
+  public class Custom {
+      public void customBefore() {
+          System.out.println("方法调用之前----------");
+      }
+  
+      public void customAfter() {
+          System.out.println("方法调用之后--------------------");
+      }
+  }
+  ```
+
+* 配置文件
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:aop="http://www.springframework.org/schema/aop"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop.xsd">
+  
+      <bean id="userService" class="com.ldlang.service.UserServiceImpl"/>
+      <bean id="custom" class="com.ldlang.coustom.Custom" />
+  
+      <aop:config>
+          <aop:aspect ref="custom">
+              <!--切入点-->
+              <aop:pointcut id="point" expression="execution(* com.ldlang.service.UserServiceImpl.*(..))"/>
+              <!--通知-->
+              <aop:before method="customBefore" pointcut-ref="point" />
+              <aop:after method="customBefore" pointcut-ref="point" />
+          </aop:aspect>
+      </aop:config>
+  </beans>
+  ```
+
+* 测试
+
+  ```java
+  import com.ldlang.service.UserService;
+  import org.springframework.context.ApplicationContext;
+  import org.springframework.context.support.ClassPathXmlApplicationContext;
+  
+  public class test07 {
+      public static void main(String[] args) {
+          ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+          // 动态代理 代理的是接口
+          UserService userService = (UserService) context.getBean("userService");
+  
+          userService.add();
+          // 方法调用之前----------
+  		// 增加
+  		// 方法调用之前----------
+      }
+  }
+  ```
+
+  
