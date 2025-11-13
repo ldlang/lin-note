@@ -4,6 +4,8 @@ sidebar: auto
 
 # Spring
 
+是一个轻量级的控制翻转（IOC）和面向切面编程的（AOP）框架
+
 ## 1、IOC
 
 对象由 Spring 来创建，管理，装配
@@ -444,7 +446,7 @@ sidebar: auto
            https://www.springframework.org/schema/context/spring-context.xsd">
 
        <context:annotation-config/>
-       <!--只要要扫描的包，只有被扫描的包里面的注解才能生效-->
+       <!--配置要扫描的包，只有被扫描的包里面的注解才能生效-->
        <context:component-scan base-package="com.ldlang"/>
    </beans>
    ```
@@ -562,7 +564,7 @@ sidebar: auto
    }
    ```
 
-## 9、AOP切面编程
+## 9、AOP 切面编程
 
 就是在一个方法之前，或者之后等做一些操作。
 
@@ -576,7 +578,7 @@ sidebar: auto
    </dependency>
    ```
 
-2. beans文件中加入配置
+2. beans 文件中加入配置
 
    ```xml
    <?xml version="1.0" encoding="UTF-8"?>
@@ -590,9 +592,9 @@ sidebar: auto
    </beans>
    ```
 
-### 使用Spring的方式执行
+### 使用 Spring 的方式执行
 
-* 接口
+- 接口
 
   ```java
   public interface UserService {
@@ -603,27 +605,27 @@ sidebar: auto
   }
   ```
 
-* 实现类
+- 实现类
 
   ```java
   package com.ldlang.service;
-  
+
   public class UserServiceImpl implements UserService {
       @Override
       public void add() {
           System.out.println("增加");
       }
-  
+
       @Override
       public void delete() {
           System.out.println("删除");
       }
-  
+
       @Override
       public void update() {
           System.out.println("修改");
       }
-  
+
       @Override
       public void select() {
           System.out.println("查询");
@@ -631,14 +633,14 @@ sidebar: auto
   }
   ```
 
-* 之前切面
+- 之前切面
 
   ```java
   import org.springframework.aop.MethodBeforeAdvice;
   import java.lang.reflect.Method;
-  
+
   public class Log implements MethodBeforeAdvice {
-  
+
       // method 要实现的方法
       // objects 传入的参数
       // target 目标对象
@@ -649,14 +651,14 @@ sidebar: auto
   }
   ```
 
-* 之后切面
+- 之后切面
 
   ```java
   import org.springframework.aop.AfterReturningAdvice;
   import java.lang.reflect.Method;
-  
+
   public class AfterLog implements AfterReturningAdvice {
-  
+
       @Override
       public void afterReturning(Object returnValue, Method method, Object[] objects, Object target) throws Throwable {
           System.out.println("我是之后执行-----------，执行了" + method.getName() + "方法，返回结果为" + returnValue);
@@ -664,7 +666,7 @@ sidebar: auto
   }
   ```
 
-* 配置文件
+- 配置文件
 
   ```xml
   <?xml version="1.0" encoding="UTF-8"?>
@@ -675,16 +677,16 @@ sidebar: auto
           http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/aop
           http://www.springframework.org/schema/aop/spring-aop.xsd">
-  
+
       <bean id="userService" class="com.ldlang.service.UserServiceImpl"/>
       <bean id="afterLog" class="com.ldlang.log.AfterLog"/>
       <bean id="log" class="com.ldlang.log.Log"/>
-  
+
       <!--使用原生的Spring API接口-->
       <aop:config>
           <!--切入点：pointcut，表达式：expression-->
           <aop:pointcut id="pointcut" expression="execution(* com.ldlang.service.UserServiceImpl.*(..))"/>
-          
+
           <!-- 执行环绕增强-->
           <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
           <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>
@@ -692,19 +694,19 @@ sidebar: auto
   </beans>
   ```
 
-* 测试
+- 测试
 
   ```java
   import com.ldlang.service.UserService;
   import org.springframework.context.ApplicationContext;
   import org.springframework.context.support.ClassPathXmlApplicationContext;
-  
+
   public class test07 {
       public static void main(String[] args) {
           ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
           // 动态代理 代理的是接口
           UserService userService = (UserService) context.getBean("userService");
-  
+
           userService.add();
           // 我是之前执行--------com.ldlang.service.UserServiceImpl的add被执行了
   		// 增加
@@ -717,23 +719,23 @@ sidebar: auto
 
 接口和实现类同上
 
-* 自定义类
+- 自定义类
 
   ```java
   package com.ldlang.coustom;
-  
+
   public class Custom {
       public void customBefore() {
           System.out.println("方法调用之前----------");
       }
-  
+
       public void customAfter() {
           System.out.println("方法调用之后--------------------");
       }
   }
   ```
 
-* 配置文件
+- 配置文件
 
   ```xml
   <?xml version="1.0" encoding="UTF-8"?>
@@ -744,10 +746,10 @@ sidebar: auto
           http://www.springframework.org/schema/beans/spring-beans.xsd
           http://www.springframework.org/schema/aop
           http://www.springframework.org/schema/aop/spring-aop.xsd">
-  
+
       <bean id="userService" class="com.ldlang.service.UserServiceImpl"/>
       <bean id="custom" class="com.ldlang.coustom.Custom" />
-  
+
       <aop:config>
           <aop:aspect ref="custom">
               <!--切入点-->
@@ -760,19 +762,19 @@ sidebar: auto
   </beans>
   ```
 
-* 测试
+- 测试
 
   ```java
   import com.ldlang.service.UserService;
   import org.springframework.context.ApplicationContext;
   import org.springframework.context.support.ClassPathXmlApplicationContext;
-  
+
   public class test07 {
       public static void main(String[] args) {
           ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
           // 动态代理 代理的是接口
           UserService userService = (UserService) context.getBean("userService");
-  
+
           userService.add();
           // 方法调用之前----------
   		// 增加
@@ -781,4 +783,88 @@ sidebar: auto
   }
   ```
 
-  
+### 注解方式
+
+接口和实现类同上
+
+- 注解类
+
+  ```java
+  package com.ldlang.coustom;
+
+  import org.aspectj.lang.ProceedingJoinPoint;
+  import org.aspectj.lang.annotation.After;
+  import org.aspectj.lang.annotation.Around;
+  import org.aspectj.lang.annotation.Aspect;
+  import org.aspectj.lang.annotation.Before;
+  import org.springframework.stereotype.Component;
+
+  // 标记为是一个切面类
+  @Aspect
+  @Component
+  public class AnnotationPoint {
+
+      @Before("execution(* com.ldlang.service.UserServiceImpl.*(..))")
+      public void bofore(){
+          System.out.println("-----------------执行之前");
+      }
+
+      @After("execution(* com.ldlang.service.UserServiceImpl.*(..))")
+      public void after(){
+          System.out.println("-----------------执行之后");
+      }
+
+      @Around("execution(* com.ldlang.service.UserServiceImpl.*(..))")
+      public void around(ProceedingJoinPoint pj) throws Throwable {
+          System.out.println("环绕前，在before之前执行");
+          pj.proceed(); // 调用方法，如果不掉用真实的方法就不会执行
+          System.out.println("环绕后，在after之后执行");
+
+      }
+  }
+  ```
+
+- 配置文件
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:aop="http://www.springframework.org/schema/aop"
+         xmlns:context="http://www.springframework.org/schema/context"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop.xsd 						http://www.springframework.org/schema/context 						    		https://www.springframework.org/schema/context/spring-context.xsd">
+
+  	<!--开启注解支持配置-->
+      <context:annotation-config/>
+      <!--配置要扫描的包，只有被扫描的包里面的注解才能生效-->
+      <context:component-scan base-package="com.ldlang"/>
+      <!--开启aop注解支持-->
+      <aop:aspectj-autoproxy />
+  </beans>
+  ```
+
+- 测试
+
+  ```java
+  import com.ldlang.service.UserService;
+  import org.springframework.context.ApplicationContext;
+  import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+  public class test07 {
+      public static void main(String[] args) {
+          ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+          // 动态代理 代理的是接口
+          UserService userService = (UserService) context.getBean("userService");
+
+          userService.add();
+  		// 环绕前，在before之前执行
+  		// -----------------执行之前
+  		// 增加
+  		// -----------------执行之后
+  		// 环绕后，在after之后执行
+      }
+  }
+  ```

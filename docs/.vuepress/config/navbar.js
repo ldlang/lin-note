@@ -161,6 +161,10 @@ export const navbar = [
         text: "Spring",
         link: "/java/Spring.md",
       },
+      {
+        text: "SpringMVC",
+        link: "/java/SpringMVC.md",
+      },
     ],
   },
   {
