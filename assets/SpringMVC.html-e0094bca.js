@@ -1,0 +1,1 @@
+import{_ as n,o as a,c as t,b as r,d as s}from"./app-b35d979a.js";const c={};function i(o,e){return a(),t("div",null,[...e[0]||(e[0]=[r("h1",{id:"springmvc",tabindex:"-1"},[r("a",{class:"header-anchor",href:"#springmvc","aria-hidden":"true"},"#"),s(" SpringMVC")],-1)])])}const l=n(c,[["render",i],["__file","SpringMVC.html.vue"]]);export{l as default};
