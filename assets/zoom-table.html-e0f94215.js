@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-77648043","path":"/JavaScript/js-note/zoom-table.html","title":"方法速查","lang":"zh-CN","frontmatter":{},"headers":[{"level":2,"title":"数组","slug":"数组","link":"#数组","children":[]}],"git":{"updatedTime":1759996502000},"filePathRelative":"JavaScript/js-note/zoom-table.md"}');export{t as data};
