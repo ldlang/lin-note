@@ -183,3 +183,113 @@ MVC：模型（dao，service）、视图（jsp）、控制器（Servlet）
   - 被这个注解的类中所有的方法，如果返回值是 String，并且有相应 jsp 文件，那么就会被视图解析器解析
 - `@RequestMapping`
   - @RequestMapping 注解用于映射 url 到控制器类或一个特定的处理程序方法。可用于类或方法上。用于类上，表示类中的所有响应请求的方法都是以该地址作为父路径。
+
+### 不同请求方式
+
+- 方式一：通过注解参数
+
+  ```java
+  @Controller
+  public class RestFul {
+
+      // value是请求地址 method是请求方法
+      @RequestMapping(value = "/get", method = RequestMethod.POST)
+      public String test(int a, int b, Model model) {
+          model.addAttribute("msg", a + b);
+          return "hello";
+      }
+  }
+  ```
+
+  支持的请求方法：
+
+  ```java
+  GET,
+  HEAD,
+  POST,
+  PUT,
+  PATCH,
+  DELETE,
+  OPTIONS,
+  TRACE;
+  ```
+
+- 通过衍生注解
+
+  ```java
+  @Controller
+  public class RestFul {
+
+      // 请求方式是post路径是get
+      @PostMapping("/get")
+      public String test1(int a, int b, Model model){
+          model.addAttribute("msg", a + b);
+          return "hello";
+      }
+  }
+  ```
+
+  支持的注解同上
+
+  ```java
+  @PostMapping
+  @GetMapping
+  ...
+  ```
+
+### 路径参数注解
+
+`@PathVariable`将路径参数直接变成路径
+
+```java
+@Controller
+public class RestFul {
+
+    // 原本的请求 http://localhost:8080/add?a=1&b=2
+    // 通过@PathVariable 修改的请求 http://localhost:8080/add/1/3
+    @GetMapping("/add/{a}/{b}")
+    public String test2(@PathVariable int a, @PathVariable int b, Model model){
+        model.addAttribute("msg", a + b);
+        return "hello";
+    }
+}
+```
+
+## 3、请求参数
+
+1. 直接书写
+
+   ```java
+   // 请求 http://localhost:8080/get?name=张三
+
+   @GetMapping("/get")
+   public String test(String name, Model model){
+       model.addAttribute("msg", name);
+       return "he";
+   }
+   ```
+
+2. 通过注解重命名 `@RequestParam`
+
+   ```java
+   // // 请求 http://localhost:8080/get1?userName=张三
+
+   @GetMapping("get1")
+   public String test1(@RequestParam("userName") String name, Model model){
+       model.addAttribute("msg", name);
+       return "he";
+   }
+   ```
+
+3. 通过对象接收
+
+   ```java
+   // http://localhost:8080/get2?id=2&name=张三&age=10
+
+   @GetMapping("get2")
+   public String test2(User user, Model model){
+       System.out.println("user" + user);
+       model.addAttribute("msg", user);
+       return "he";
+   }
+   ```
