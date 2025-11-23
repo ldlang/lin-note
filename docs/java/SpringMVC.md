@@ -293,3 +293,109 @@ public class RestFul {
        return "he";
    }
    ```
+
+## 4、返回json
+
+1. 安装插件
+
+   ```xml
+   <dependency>
+       <groupId>com.fasterxml.jackson.core</groupId>
+       <artifactId>jackson-databind</artifactId>
+       <version>2.10.0</version>
+   </dependency>
+   ```
+
+2. 解决中文乱码问题
+
+   ```xml
+   <!-- springmvc-servlet.xml 解决中文乱码问题-->
+   <mvc:annotation-driven>
+       <mvc:message-converters register-defaults="true">
+           <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+               <constructor-arg value="UTF-8"/>
+           </bean>
+       </mvc:message-converters>
+   </mvc:annotation-driven>
+   ```
+
+3. user对象
+
+   ```java
+   package com.ldlang.pojo;
+   
+   import lombok.AllArgsConstructor;
+   import lombok.Data;
+   import lombok.NoArgsConstructor;
+   
+   @Data
+   @AllArgsConstructor // 添加有参构造
+   @NoArgsConstructor // 添加无参构造
+   public class User {
+       private int id;
+       private String name;
+       private int age;
+   }
+   ```
+
+4. 封装接口，调用`json`工具，返回对象
+
+   ```java
+   import com.fasterxml.jackson.core.JsonProcessingException;
+   import com.fasterxml.jackson.databind.ObjectMapper;
+   import com.ldlang.pojo.User;
+   import org.springframework.stereotype.Controller;
+   import org.springframework.web.bind.annotation.RequestMapping;
+   import org.springframework.web.bind.annotation.ResponseBody;
+   
+   @Controller
+   public class UserController {
+   
+       @RequestMapping("/json")
+       @ResponseBody // 不会走视图解析器
+       public String test() throws JsonProcessingException {
+           ObjectMapper mapper = new ObjectMapper();
+           User user = new User(1,"张三",3);
+           
+   		// 将java对象转为json
+           return mapper.writeValueAsString(user);
+       }
+   }
+   ```
+
+5. 返回list
+
+   ```java
+   package com.ldlang.controller;
+   
+   import com.fasterxml.jackson.core.JsonProcessingException;
+   import com.fasterxml.jackson.databind.ObjectMapper;
+   import com.ldlang.pojo.User;
+   import org.springframework.stereotype.Controller;
+   import org.springframework.web.bind.annotation.RequestMapping;
+   import org.springframework.web.bind.annotation.ResponseBody;
+   
+   import java.util.ArrayList;
+   import java.util.List;
+   
+   @Controller
+   public class UserController {
+   
+       @RequestMapping("/json")
+       @ResponseBody
+       public String test() throws JsonProcessingException {
+           ObjectMapper mapper = new ObjectMapper();
+           
+           // 创建list
+           User user = new User(1,"张三",3);
+           User user1 = new User(1,"张三",3);
+           List<User> users =new ArrayList<>();
+           users.add(user);
+           users.add(user1);
+           // 转为json
+           return mapper.writeValueAsString(users);
+       }
+   }
+   ```
+
+   
