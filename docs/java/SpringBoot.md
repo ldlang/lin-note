@@ -39,19 +39,19 @@ sidebar: auto
 
 ## 2、给实体类注入属性
 
-### 通过yaml文件进行注入
+### 通过 yaml 文件进行注入
 
 1. 实体
 
    ```java
    package com.ldlang.pojo;
-   
+
    import org.springframework.boot.context.properties.ConfigurationProperties;
    import org.springframework.stereotype.Component;
-   
+
    import java.util.List;
    import java.util.Map;
-   
+
    // 注册为一个组件
    @Component
    // 指定要使用application.yaml中的那个对象
@@ -94,46 +94,45 @@ sidebar: auto
    import org.junit.jupiter.api.Test;
    import org.springframework.beans.factory.annotation.Autowired;
    import org.springframework.boot.test.context.SpringBootTest;
-   
+
    @SpringBootTest
    class BootApplicationTests {
        @Autowired
        private User user;
-       
+
        @Test
        void contextLoads() {
            System.out.println(user.toString());
            // User{age=-1407422968, names='ecab8521-af3b-4775-947f-1d8f7a9f3f49', isHave=true, hobby=[抽烟, 喝酒, 烫头], kvs={k=v, a=v}, dog=null}
        }
-   
+
    }
    ```
 
-
-### 通过普通的properties文件注入
+### 通过普通的 properties 文件注入
 
 1.  实体类
 
-   ```java
-   import org.springframework.beans.factory.annotation.Value;
-   import org.springframework.context.annotation.PropertySource;
-   import org.springframework.stereotype.Component;
-   
-   @Component
-   // 指定使用那个properties文件
-   @PropertySource(value = "classpath:ldlang.properties")
-   public class Dog {
-       // 必须明确指定属性名
-       @Value("${name}")
-       private String name;
-       
-       @Value("${age}")
-       private int age;
-       // getter和setter必须要有，但这里省略
-   }
-   ```
+```java
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
-2. properties文件
+@Component
+// 指定使用那个properties文件
+@PropertySource(value = "classpath:ldlang.properties")
+public class Dog {
+    // 必须明确指定属性名
+    @Value("${name}")
+    private String name;
+
+    @Value("${age}")
+    private int age;
+    // getter和setter必须要有，但这里省略
+}
+```
+
+2. properties 文件
 
    ```properties
    name=wan
@@ -147,13 +146,13 @@ sidebar: auto
    import org.junit.jupiter.api.Test;
    import org.springframework.beans.factory.annotation.Autowired;
    import org.springframework.boot.test.context.SpringBootTest;
-   
+
    @SpringBootTest
    class BootApplicationTests {
-   
+
        @Autowired
        private Dog dog;
-   
+
        @Test
        void contextLoads() {
            System.out.println(user.toString());
@@ -162,7 +161,7 @@ sidebar: auto
    }
    ```
 
-## 3、jsr303验证
+## 3、jsr303 验证
 
 1. 导入支持包
 
@@ -178,7 +177,7 @@ sidebar: auto
    ```java
    import jakarta.validation.constraints.Max;
    import org.springframework.validation.annotation.Validated;
-   
+
    @Validated
    public class User {
        // 自定义最大值和错误提示信息
@@ -193,15 +192,15 @@ sidebar: auto
 
 按优先级排序
 
-> 说明：classpath就是resources目录
+> 说明：classpath 就是 resources 目录
 
-1. jar包同级目录的config目录下
+1. jar 包同级目录的 config 目录下
 
-2. jar包同级目录的application.property
+2. jar 包同级目录的 application.property
 
-3. classpath下的/config目录
+3. classpath 下的/config 目录
 
-4. classpath下根目录的配置文件
+4. classpath 下根目录的配置文件
 
 ### 多环境配置
 
@@ -229,10 +228,11 @@ spring:
   config:
     activate:
       on-profile: pro
-
 ```
 
+## 5、注册 Bean
 
+将第三方或者`jar`包中的`class`注册到`ioc`容器中
 
-
-
+- @Bean
+- @Import
