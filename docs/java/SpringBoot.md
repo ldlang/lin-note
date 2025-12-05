@@ -161,7 +161,7 @@ public class Dog {
    }
    ```
 
-## 3、jsr303 验证
+## 3、jsr303 验证（validation）
 
 1. 导入支持包
 
@@ -211,6 +211,57 @@ public class Dog {
          return Result.success("注册成功");
      }
      ```
+
+### 自定义校验
+
+1. 定义注解
+
+   ```java
+   import com.ldlang.validation.StateValidation;
+   import jakarta.validation.Constraint;
+   import jakarta.validation.Payload;
+   
+   import java.lang.annotation.*;
+   
+   @Documented // 元注解
+   @Target({ElementType.FIELD}) // 能用在哪里的元注解
+   @Retention(RetentionPolicy.RUNTIME) // 元注解
+   @Constraint(validatedBy = {StateValidation.class}) // 通过那个类实现注解功能
+   public @interface State {
+   
+       // 错误提示信息
+       String message() default "state的参数值只能是已发布或者草稿";
+   
+       // 分组
+       Class<?>[] groups() default {};
+   
+       // 负载，获取到State注解的附加信息
+       Class<? extends Payload>[] payload() default {};
+   }
+   ```
+
+2. 注解功能实现类
+
+   ```java
+   import com.ldlang.anno.State;
+   import jakarta.validation.ConstraintValidator;
+   import jakarta.validation.ConstraintValidatorContext;
+   
+   // ConstraintValidator<给那个注解提供校验规则, 校验规则的数据类型>
+   public class StateValidation implements ConstraintValidator<State, String> {
+       /**
+        * @param value 校验数据的值
+        * @return 返回false则校验不通过，反之则通过
+        */
+       @Override
+       public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+           if (value == null) return false;
+           return value.equals("草稿") || value.equals("已发布");
+       }
+   }
+   ```
+
+   
 
 ## 4、配置文件说明
 
