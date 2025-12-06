@@ -235,4 +235,10 @@ spring:
 将第三方或者`jar`包中的`class`注册到`ioc`容器中
 
 - @Bean
+
+  要注册的`bean`对象来自于第三方（不是自定义的），是无法使用`@Component`及衍生注解注册`bean`的，需要使用`@Bean`将其注册到`IOC`容器中
+
 - @Import
+
+  一般用于将整个文件的进行`bean`注入
+
