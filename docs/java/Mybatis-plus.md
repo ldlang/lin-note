@@ -307,3 +307,29 @@ LambdaUpdateWrapper（Lambda 版，避免硬编码字段名）
        </update>
    </mapper>
    ```
+
+## 6、IService
+
+继承`mybatis-puls`给我们提前实现好的 service 类，一些简单的`service`层代码也可以避免，此时比如 save 一条数据就能直接调用
+
+1. 实现类接口，直接继承`IService`并传入实体类的类型即可
+
+   ```java
+   import com.baomidou.mybatisplus.extension.service.IService;
+   import com.itheima.mp.domain.po.User;
+
+   public interface UserService extends IService<User> {
+   }
+   ```
+
+2. service 层的实现类，继承`ServiceImpl`类并传出对应的`mapper`和实体类的类型
+
+   ```java
+   import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+   import com.ldlang.pojo.User;
+   import com.ldlang.mapper.UserMapper;
+
+   // 这里的ServiceImpl 必须传入对应的mapper和实体类
+   public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+   }
+   ```
