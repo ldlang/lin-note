@@ -220,21 +220,21 @@ public class Dog {
    import com.ldlang.validation.StateValidation;
    import jakarta.validation.Constraint;
    import jakarta.validation.Payload;
-   
+
    import java.lang.annotation.*;
-   
+
    @Documented // 元注解
    @Target({ElementType.FIELD}) // 能用在哪里的元注解
    @Retention(RetentionPolicy.RUNTIME) // 元注解
    @Constraint(validatedBy = {StateValidation.class}) // 通过那个类实现注解功能
    public @interface State {
-   
+
        // 错误提示信息
        String message() default "state的参数值只能是已发布或者草稿";
-   
+
        // 分组
        Class<?>[] groups() default {};
-   
+
        // 负载，获取到State注解的附加信息
        Class<? extends Payload>[] payload() default {};
    }
@@ -246,7 +246,7 @@ public class Dog {
    import com.ldlang.anno.State;
    import jakarta.validation.ConstraintValidator;
    import jakarta.validation.ConstraintValidatorContext;
-   
+
    // ConstraintValidator<给那个注解提供校验规则, 校验规则的数据类型>
    public class StateValidation implements ConstraintValidator<State, String> {
        /**
@@ -260,8 +260,6 @@ public class Dog {
        }
    }
    ```
-
-   
 
 ## 4、配置文件说明
 
@@ -312,6 +310,9 @@ spring:
 将第三方或者`jar`包中的`class`注册到`ioc`容器中
 
 - @Bean
+
+  要注册的`bean`对象来自于第三方（不是自定义的），是无法使用`@Component`及衍生注解注册`bean`的，需要使用`@Bean`将其注册到`IOC`容器中
+
 - @Import
 
 ## 6、全局异常处理
@@ -498,3 +499,5 @@ public class GlobalExceptionHandler {
        ThreadLocalUtil.remove();
    }
    ```
+
+一般用于将整个文件的进行`bean`注入
