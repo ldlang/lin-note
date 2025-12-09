@@ -316,7 +316,7 @@ LambdaUpdateWrapper（Lambda 版，避免硬编码字段名）
 
    ```java
    import com.baomidou.mybatisplus.extension.service.IService;
-   import com.itheima.mp.domain.po.User;
+   import com.ldlang.pojo.User;
 
    public interface UserService extends IService<User> {
    }
@@ -333,3 +333,222 @@ LambdaUpdateWrapper（Lambda 版，避免硬编码字段名）
    public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
    }
    ```
+
+### lambdaQuery方法(Service)
+
+例1： 
+
+* 功能：like查询用户姓名，等于查询用户状态，大于等于最小金额，小于等于最大金额，以上条件都是非必传的
+
+* 实现：
+    ```java
+    // serviceImpl
+    public List<User> queryUsers(UserQuery userQuery) {
+        return this.lambdaQuery()
+            // 只有在个体
+            .like(userQuery.getName() != null, User::getUsername, userQuery.getName()) 
+            .eq(userQuery.getStatus() != null, User::getStatus, userQuery.getStatus())
+            .ge(userQuery.getMinBalance() != null, User::getBalance, userQuery.getMinBalance()) // 大于等于
+            .le(userQuery.getMaxBalance() != null, User::getBalance, userQuery.getMaxBalance()) // 小于等于
+            .list();
+    }
+    ```
+
+### lambdaUpdate方法
+
+* 功能：更具用户id扣减金额，金额不能扣减为负数，如果金额刚好为0，则将状态改为2
+
+* 实现：
+
+  ```java
+  public void deductBalance(Long id, Integer money) {
+      // 查询用户
+      User user = this.getById(id);
+      // 校验用户状态
+      if (user == null || user.getStatus() == 2) {
+          throw new RuntimeException("用户状态异常");
+      }
+      // 校验用户余额
+      if (user.getBalance() < money) {
+          throw new RuntimeException("用户金额不足");
+      }
+      int remainBalance = user.getBalance() - money;
+  
+      lambdaUpdate()
+          .eq(User::getId, id) // 通过id查询用户
+          .eq(User::getBalance, user.getBalance()) // 查询用户的金额是否匹配，乐观锁
+          .set(User::getBalance, remainBalance) // 金额进行扣减
+          .set(remainBalance == 0, User::getStatus, 2) // 金额为0，则将状态改为2
+          .update(); // 调用update才能更新库
+  }
+  ```
+
+## 7、代码生成
+
+## 8、静态方法（防止循环依赖）
+
+一旦使用service相互调用，使用静态方法代替，使用`Db`上的`lambdaQuery`和`lambdaUpdate`去替代`service`的注入
+
+例：在user的service层调用address层去查询用户对应的地址
+
+```java
+import com.baomidou.mybatisplus.extension.toolkit.Db; // Db要从这里引入
+
+public UserVO getUserAndAddress(Long id) {
+    User user = this.getById(id);
+    if (user == null || user.getStatus() == 2) {
+        throw new RuntimeException("用户状态异常");
+    }
+    // 查询用户的地址，调用Db的lambdaQuery必须要传入对应的class，才能知道调用的是那个表
+    List<Address> list = Db.lambdaQuery(Address.class).eq(Address::getUserId, id).list();
+
+    // 将 user 转为userVO
+    UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
+
+    if (!list.isEmpty()) {
+        userVO.setAddressVOList(BeanUtil.copyToList(list, AddressVO.class));
+    }
+
+    return userVO;
+}
+```
+
+## 9、逻辑删除
+
+加入配置即可，mybatis-plus会自动设置对应的字段，原有的增删改查正常使用即可
+
+```yaml
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted # 逻辑删除的字段
+      logic-delete-value: false # 逻辑已删除的值，默认为false，如果为false这个配置可以不要
+      logic-not-delete-value: true # 同上，逻辑未删除的值
+```
+
+## 10、枚举处理器
+
+1. 添加配置
+
+   ```yaml
+   mybatis-plus:
+     configuration:
+       default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+   ```
+
+2. 添加枚举
+
+   ```java
+   import com.baomidou.mybatisplus.annotation.EnumValue;
+   import com.fasterxml.jackson.annotation.JsonValue;
+   import lombok.Getter;
+   
+   @Getter
+   public enum UserStatus {
+       NORMAL(1, "正常"),
+       FROZEN(2, "冻结"),
+       ;
+   
+       @EnumValue // 让 mp 知道把 value 往数据库中写
+       @JsonValue // 告诉SpringMVC将value字段进行返回
+       private final int value;
+       private final String desc;
+   
+       UserStatus(int value, String desc) {
+           this.value = value;
+           this.desc = desc;
+       }
+   }
+   ```
+
+3. 将`po`和`vo`实体中的对应字段类型换成`UserStatus`类型
+
+## 11、json处理
+
+将数据库中的`json`字符串转为正常的java对象
+
+1. 创建json对象对应的实体
+
+   ```java
+   import lombok.AllArgsConstructor;
+   import lombok.Data;
+   import lombok.NoArgsConstructor;
+   
+   @Data
+   @NoArgsConstructor
+   @AllArgsConstructor(staticName = "of")
+   public class UserInfo {
+       private Integer age;
+       private String intro;
+       private String gender;
+   }
+   ```
+
+2. 将`po`实体中的对应字段类型换成`UserInfo`类型，并指定通过那个json转换方式
+
+   ```java
+   import com.baomidou.mybatisplus.annotation.TableField;
+   import com.baomidou.mybatisplus.annotation.TableName;
+   import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+   import com.itheima.mp.enums.UserStatus;
+   import lombok.Data;
+   
+   @Data
+   // 开启自动结果集映射
+   @TableName(value = "user", autoResultMap = true)
+   public class User {
+       /**
+        * 详细信息
+        */
+       // 指定通过那种json进行转换
+       @TableField(typeHandler = JacksonTypeHandler.class)
+       private UserInfo info;
+   }
+   ```
+
+3. `vo`实体只需要改数据类型即可
+
+## 12、分页插件
+
+1. 注册插件，在config文件夹中加入以下代码
+
+   ```java
+   package com.itheima.mp.config;
+   
+   import com.baomidou.mybatisplus.annotation.DbType;
+   import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+   import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+   import org.springframework.context.annotation.Bean;
+   import org.springframework.context.annotation.Configuration;
+   
+   @Configuration
+   public class MybatisPage {
+       @Bean
+       public MybatisPlusInterceptor mybatisPlusInterceptor() {
+           MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+           // 1. 创建分页插件
+           PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor(DbType.MYSQL);
+           paginationInnerInterceptor.setMaxLimit(1000L); // 设置最多分页数
+           // 2. 注册分页插件
+           interceptor.addInnerInterceptor(paginationInnerInterceptor);
+           return interceptor;
+       }
+   }
+   ```
+
+2. 使用
+
+   ```java
+   public List<UserVO> queryUsersPage(Integer current, Integer size) {
+       // 设置分页 页码和条数
+       Page<User> userPage = Page.of(current, size);
+       // 设置排序字段及方式
+       userPage.addOrder(new OrderItem("balance", true));
+       // 进行分页查询
+       Page<User> page = lambdaQuery().page(userPage);
+   
+       return BeanUtil.copyToList(page.getRecords(), UserVO.class);
+   }
+   ```
+
+   
