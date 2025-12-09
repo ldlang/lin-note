@@ -142,6 +142,10 @@ export const navbar = [
         link: "/java/multithreading.md",
       },
       {
+        text: "java新特性",
+        link: "/java/new-feature/",
+      },
+      {
         text: "网络编程",
         link: "/java/network.md",
       },
