@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-480d430c","path":"/java/new-feature/","title":"Java 新特性","lang":"zh-CN","frontmatter":{},"headers":[{"level":2,"title":"1、jdk8","slug":"_1、jdk8","link":"#_1、jdk8","children":[]}],"git":{"updatedTime":1765358972000},"filePathRelative":"java/new-feature/README.md"}');export{e as data};
