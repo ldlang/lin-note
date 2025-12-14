@@ -377,3 +377,190 @@ public class PredicateDemo {
 ```
 
 ## 5、方法引用
+
+通过 lambda 实现的逻辑，如果有其他相同的方案实现，那么就可以使用方法引用
+
+语法：`类名::方法名`
+
+### 常见的使用方式
+
+- `instanceName::methodName`：对象::方法名
+- `ClassName::staticMethodName`：类名::静态方法
+- `ClassName::methodName`：类名::普通方法
+- `ClassName::new`：类名::new 调用的构造器
+- `TypeName::new`：String[]::new 调用数组的构造器
+
+> 注意事项：
+>
+> 1. 被引用的方法，参数要和接口中抽象方法的参数一样
+> 2. 当抽象方法有返回值时，被引用的方法也必须有返回值
+
+```java
+import java.util.function.Consumer;
+
+public class Quote {
+    public static void main(String[] args) {
+        getSum((int[] arr)->{
+            int i = 0;
+            for (int k : arr) {
+                i += k;
+            }
+            System.out.println(i);  // 575
+        });
+
+       	// 通过方法引用，等价替换
+        // 让这个指定的方法去重写的抽象方法，到时候用接口的抽象方法就是调用传递过去的这个方法
+        getSum(Quote::sum); // 575
+    }
+
+    public static void sum(int[] arr){
+        int i = 0;
+        for (int k : arr) {
+            i += k;
+        }
+        System.out.println(i);
+    }
+
+    public static void getSum(Consumer<int[]> consumer){
+        int[] arr = {1,76,32,421,45};
+        consumer.accept(arr);
+    }
+}
+```
+
+### 对象名引用成员方法
+
+对象实例化后使用的方式
+
+```java
+import java.util.function.*;
+
+// 对象名引用成员方法
+public class Quote {
+    public static void main(String[] args) {
+
+        Date date = new Date();
+
+        // 1. 调用Supplier 无参获取时间
+        // lambda方式，获取事件
+        Supplier<Long> time = ()->date.getTime();
+
+        // 方法引用，获取时间
+        Supplier<Long> time = date::getTime;
+
+        System.out.println(time.get());
+
+        // 2. 调用Consumer 有参设置时间
+        // lambda设置时间
+        // Consumer<Long> consumer = s->{
+            // setTime需要一个long类型的参数，且无返回值
+            // date.setTime(s);
+        // };
+        // 方法引用设置时间
+        Consumer<Long> consumer = date::setTime;
+        consumer.accept(1765676266631L);
+        System.out.println("time" + date.getTime()); // 1765676266631L
+    }
+}
+```
+
+### 类名调用静态方法
+
+```java
+import java.util.function.*;
+
+// 类名调用静态方法
+public class Quote {
+    public static void main(String[] args) {
+        // 1.lombda方式
+        Supplier<Long> time1 = ()->{
+            // currentTimeMillis 是个静态方法
+            return System.currentTimeMillis();
+        };
+
+        // 2.方法引用
+        Supplier<Long> time1 = System::currentTimeMillis;
+
+        System.out.println("time1" + time1.get());
+    }
+}
+```
+
+### 类名调用实例方法
+
+类名调用实例方法，实际上是将第一个参数作为方法的调用者，再将其他参数传递给后面调用的方法
+
+```java
+import java.util.function.*;
+
+// 类名调用实例方法
+public class Quote {
+    public static void main(String[] args) {
+        // 1.lombda方式
+        Function<String, Integer> fun = (s)-> s.length();
+
+        // 2.方法引用
+        Function<String, Integer> fun = String::length;
+
+        Integer le = fun.apply("hello");
+        System.out.println("le = " + le);
+
+        // 示例2
+        Integer[] arr = {22, 11, 66};
+
+        // Comparator<String>：抽象方法 int compare(String a, String b)
+        // Integer 的 compareTo 方法：int compareTo(Integer anotherInteger)（实例方法）
+        // 此时 a 作为实例，b 作为 compareTo 的参数，签名匹配
+        // Arrays.sort(arr, (a, b) -> a.compareTo(b)); // Lambda
+		Arrays.sort(arr, String::compareTo); // 类名::实例方法名（简化）
+
+        System.out.println(Arrays.toString(arr)); // 输出：[11, 22, 66]
+    }
+}
+```
+
+### 引用类的构造器
+
+```java
+import java.util.function.*;
+
+// // 引用 类的构造器
+public class Quote {
+    public static void main(String[] args) {
+        // 1.调用无参构造
+        // lambda
+        Supplier<Person> supplier = ()-> new Person();
+        // 方法引用
+        Supplier<Person> supplier = Person::new;
+        System.out.println(supplier.get().toString()); // Person{name='null', age=0}
+
+        // 2.调用有参构造
+        // lambda
+        BiFunction<String, Integer, Person> personBiFunction = (s,i)-> new Person(s, i);
+        // 方法引用
+        BiFunction<String, Integer, Person> personBiFunction = Person::new;
+        System.out.println(personBiFunction.apply("张三", 1).toString()); // Person{name='张三', age=1}
+    }
+}
+```
+
+### 引用数组构造器
+
+```java
+import java.util.function.*;
+
+// // 引用 类的构造器
+public class Quote {
+    public static void main(String[] args) {
+        // 1.调用无参构造
+        // lambda
+        Function<Integer, int[]> intFun = (i)->new int[i];
+        // 方法引用
+        Function<Integer, int[]> intFun = int[]::new;
+        int[] apply = intFun.apply(10);
+        System.out.println(Arrays.toString(apply)); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    }
+}
+```
+
+## 6、Steam 流
