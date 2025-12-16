@@ -564,3 +564,127 @@ public class Quote {
 ```
 
 ## 6、Steam 流
+
+在 Java 中，**Stream（流）** 是 Java 8 引入的核心新特性之一，它是一种 **处理集合（或数组）数据的抽象概念**—— 本质上是一系列支持 **聚合操作** 的元素序列，专注于 “对数据做什么”，而非 “如何做”，能极大简化集合的遍历、过滤、转换、聚合等操作。
+
+### 使用步骤
+
+使用 `Stream` 通常分为 3 步，缺一不可：
+
+1. **创建 `Stream`**：从数据源（集合、数组等）获取 `Stream`。
+2. **中间操作**：对数据进行过滤、转换、排序等（可多个操作链式连接，惰性执行）。
+3. **终端操作**：触发 `Stream` 执行（之前的中间操作才会真正运行），返回最终结果（如集合、数值、布尔值等）。
+
+> 注意事项：
+>
+> 1. 每个 Stream 流只能被使用一次，不能被多次使用
+>
+>    ```java
+>    long count = stream.count();
+>    long count2 = stream.count(); // 这里将报错
+>    ```
+>
+> 2. 每次 Stream 调用方法返回的都是新的流
+
+### 常用方法
+
+- 中间操作方法，返回值是`stream流`，可以链式调用其他方法，直至调用了终端方法。
+
+  | 操作方法                  | 返回值类型  | 功能描述                                                                  | 核心说明                                                                     |
+  | ------------------------- | ----------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+  | `filter(Predicate<T> p)`  | `Stream<T>` | 过滤元素，仅保留满足 `Predicate` 条件的元素                               | 接收函数式接口 `Predicate<T>`（输入 T 类型，返回 boolean），惰性执行         |
+  | `map(Function<T, R> f)`   | `Stream<R>` | 映射转换，将流中 T 类型元素通过函数转换为 R 类型元素（如 Integer→String） | 接收 `Function<T, R>`（输入 T，输出 R），实现元素类型 / 值的转换             |
+  | `sorted()`                | `Stream<T>` | 自然排序，基于元素实现的 `Comparable` 接口进行排序                        | 仅支持实现 `Comparable` 的元素（如 Integer、String），惰性执行               |
+  | `sorted(Comparator<T> c)` | `Stream<T>` | 自定义排序，通过 `Comparator` 接口指定排序规则                            | 接收自定义比较器，灵活控制排序逻辑（升序 / 降序 / 多字段排序），惰性执行     |
+  | `distinct()`              | `Stream<T>` | 去重操作，基于元素的 `equals()` 方法判断重复并移除                        | 无参数，依赖元素重写 `equals()`（如基本类型包装类、String 已实现），惰性执行 |
+  | `limit(long n)`           | `Stream<T>` | 限制长度，仅保留流中前 n 个元素                                           | 参数为非负整数，若 n 大于流长度则保留全部，惰性执行                          |
+  | `skip(long n)`            | `Stream<T>` | 跳过元素，忽略流中前 n 个元素，返回剩余元素构成的流                       | 参数为非负整数，若 n 大于流长度则返回空流，惰性执行                          |
+
+- 终端操作（结束操作）,stream 调用这些方后不能再调用其他的方法
+
+  | 操作方法                                | 返回值类型          | 功能描述                                                               | 核心说明                                                                                          |
+  | --------------------------------------- | ------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+  | `collect(Collector<T, A, R>)`           | `R`（目标数据类型） | 收集结果，将流转换为集合（List/Set/Map）或其他数据结构                 | 需配合 `Collectors` 工具类（如 `toList()` 返回 `List<T>`、`toMap()` 返回 `Map<K,V>`），触发流执行 |
+  | `forEach(Consumer<T> c)`                | `void`              | 遍历元素，逐个对元素执行 `Consumer` 定义的逻辑（如打印、修改外部状态） | 接收 `Consumer<T>`（输入 T，无返回值），无返回结果，触发流执行                                    |
+  | `count()`                               | `long`              | 统计个数，返回流中元素的总数量                                         | 无参数，触发流执行                                                                                |
+  | `max(Comparator<T> c)`                  | `Optional<T>`       | 求最大值，基于比较器返回流中最大元素                                   | 接收 `Comparator`，返回 `Optional<T>`（避免空流返回 null），触发流执行                            |
+  | `min(Comparator<T> c)`                  | `Optional<T>`       | 求最小值，基于比较器返回流中最小元素                                   | 接收 `Comparator`，返回 `Optional<T>`，触发流执行                                                 |
+  | `anyMatch(Predicate<T> p)`              | `boolean`           | 任一匹配，判断流中是否**至少有一个**元素满足条件                       | 接收 `Predicate`，短路求值（找到匹配元素即停止遍历）                                              |
+  | `allMatch(Predicate<T> p)`              | `boolean`           | 全部匹配，判断流中是否**所有**元素都满足条件                           | 接收 `Predicate`，短路求值（找到不匹配元素即停止）                                                |
+  | `noneMatch(Predicate<T> p)`             | `boolean`           | 无匹配，判断流中是否**所有**元素都不满足条件                           | 接收 `Predicate`，短路求值（找到匹配元素即停止）                                                  |
+  | `reduce(T identity, BinaryOperator<T>)` | `T`                 | 聚合合并，将流中元素通过二元运算逐步合并为单个结果（如求和、求乘积）   | `identity` 为初始值，`BinaryOperator` 为合并规则，触发流执行                                      |
+  | `reduce(BinaryOperator<T>)`             | `Optional<T>`       | 无初始值的聚合合并，适用于流非空场景或需处理空流的情况                 | 无初始值，返回 `Optional<T>`（空流时返回空 `Optional`），触发流执行                               |
+
+### 获取方式
+
+1. `Collection`有个默认方法`stream`，也就是说所有`Collection`的子类都能通过`.stream()`直接获取`stream流`（常用）
+
+   ```java
+   import java.util.*;
+   import java.util.stream.Stream;
+
+   // 通过Collection获取
+   public class StreamStu {
+       public static void main(String[] args) {
+           // list
+           Stream<Object> stream = new ArrayList<>().stream();
+           // set
+           Stream<Object> stream1 = new HashSet<>().stream();;
+
+           // 将map转为Collection也能直接读取流
+           HashMap<Object, Object> hashMap = new HashMap<>();
+           Stream<Object> stream2 = hashMap.values().stream();
+           Stream<Object> stream3 = hashMap.keySet().stream();
+           Stream<Map.Entry<Object, Object>> streamed = hashMap.entrySet().stream();
+       }
+   }
+   ```
+
+2. 通过静态方法`Stream.of()`创建
+
+   ```java
+   import java.util.*;
+   import java.util.stream.Stream;
+
+   public class StreamStu {
+       public static void main(String[] args) {
+
+           // 通过静态方法Stream.of() 获取
+           Stream<String> stringStream = Stream.of("1", "2", "3");
+
+   		Integer[] arr = {1,3};
+           Stream<Integer> arr1 = Stream.of(arr);
+       }
+   }
+   ```
+
+3. 通过`Arrays.stream()`创建
+
+   ```java
+   import java.util.*;
+   import java.util.stream.Stream;
+
+   //获取流的方式
+   public class StreamStu {
+       public static void main(String[] args) {
+
+           Integer[] arr = {1, 2, 3};
+           Stream<Integer> stream1 = Arrays.stream(arr);
+           Stream<Integer> stream2 = Stream.of(1, 2, 3);
+       }
+   }
+   ```
+
+4. 空创建
+
+   - 单个值：`Stream.of(T t)`
+   - 空流：`Stream.empty()`（避免 null 指针）
+
+5. 无限流（动态生成元素）
+
+   ```java
+   // 生成 5 个随机数（无限流，必须用 limit 终止）
+   Stream<Double> randomStream = Stream.generate(Math::random).limit(5);
+   // 生成 1,2,3,4,5（迭代流：种子 1，每次 +1）
+   Stream<Integer> iterateStream = Stream.iterate(1, n -> n + 1).limit(5);
+   ```
