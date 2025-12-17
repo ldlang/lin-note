@@ -590,30 +590,48 @@ public class Quote {
 
 - 中间操作方法，返回值是`stream流`，可以链式调用其他方法，直至调用了终端方法。
 
-  | 操作方法                  | 返回值类型  | 功能描述                                                                  | 核心说明                                                                     |
-  | ------------------------- | ----------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-  | `filter(Predicate<T> p)`  | `Stream<T>` | 过滤元素，仅保留满足 `Predicate` 条件的元素                               | 接收函数式接口 `Predicate<T>`（输入 T 类型，返回 boolean），惰性执行         |
-  | `map(Function<T, R> f)`   | `Stream<R>` | 映射转换，将流中 T 类型元素通过函数转换为 R 类型元素（如 Integer→String） | 接收 `Function<T, R>`（输入 T，输出 R），实现元素类型 / 值的转换             |
-  | `sorted()`                | `Stream<T>` | 自然排序，基于元素实现的 `Comparable` 接口进行排序                        | 仅支持实现 `Comparable` 的元素（如 Integer、String），惰性执行               |
-  | `sorted(Comparator<T> c)` | `Stream<T>` | 自定义排序，通过 `Comparator` 接口指定排序规则                            | 接收自定义比较器，灵活控制排序逻辑（升序 / 降序 / 多字段排序），惰性执行     |
-  | `distinct()`              | `Stream<T>` | 去重操作，基于元素的 `equals()` 方法判断重复并移除                        | 无参数，依赖元素重写 `equals()`（如基本类型包装类、String 已实现），惰性执行 |
-  | `limit(long n)`           | `Stream<T>` | 限制长度，仅保留流中前 n 个元素                                           | 参数为非负整数，若 n 大于流长度则保留全部，惰性执行                          |
-  | `skip(long n)`            | `Stream<T>` | 跳过元素，忽略流中前 n 个元素，返回剩余元素构成的流                       | 参数为非负整数，若 n 大于流长度则返回空流，惰性执行                          |
+  | 方法名          | 返回值类型   | 功能描述                                                  |
+  | --------------- | ------------ | --------------------------------------------------------- |
+  | filter          | Stream<T>    | 过滤元素，仅保留满足条件的元素                            |
+  | map             | Stream<R>    | 映射转换，将元素转换为另一种类型或值                      |
+  | mapToInt        | IntStream    | 映射为 IntStream（基本类型流），避免装箱开销              |
+  | mapToLong       | LongStream   | 映射为 LongStream（基本类型流）                           |
+  | mapToDouble     | DoubleStream | 映射为 DoubleStream（基本类型流）                         |
+  | flatMap         | Stream<R>    | 扁平映射，将元素转换为子流并合并为一个流（解决 “流中流”） |
+  | flatMapToInt    | IntStream    | 扁平映射为 IntStream                                      |
+  | flatMapToLong   | LongStream   | 扁平映射为 LongStream                                     |
+  | flatMapToDouble | DoubleStream | 扁平映射为 DoubleStream                                   |
+  | sorted          | Stream<T>    | 自然排序（基于元素的 Comparable 接口）                    |
+  | sorted          | Stream<T>    | 自定义排序（通过 Comparator 指定规则）                    |
+  | distinct        | Stream<T>    | 去重操作（基于元素的 equals () 和 hashCode ()）           |
+  | limit           | Stream<T>    | 限制流长度，仅保留前 N 个元素                             |
+  | skip            | Stream<T>    | 跳过前 N 个元素，返回剩余元素构成的流                     |
+  | peek            | Stream<T>    | 中间处理 / 调试，对元素执行消费逻辑（不改变元素）         |
+  | unordered       | Stream<T>    | 标记流为无序，提升并行流性能（串行流无影响）              |
 
 - 终端操作（结束操作）,stream 调用这些方后不能再调用其他的方法
 
-  | 操作方法                                | 返回值类型          | 功能描述                                                               | 核心说明                                                                                          |
-  | --------------------------------------- | ------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-  | `collect(Collector<T, A, R>)`           | `R`（目标数据类型） | 收集结果，将流转换为集合（List/Set/Map）或其他数据结构                 | 需配合 `Collectors` 工具类（如 `toList()` 返回 `List<T>`、`toMap()` 返回 `Map<K,V>`），触发流执行 |
-  | `forEach(Consumer<T> c)`                | `void`              | 遍历元素，逐个对元素执行 `Consumer` 定义的逻辑（如打印、修改外部状态） | 接收 `Consumer<T>`（输入 T，无返回值），无返回结果，触发流执行                                    |
-  | `count()`                               | `long`              | 统计个数，返回流中元素的总数量                                         | 无参数，触发流执行                                                                                |
-  | `max(Comparator<T> c)`                  | `Optional<T>`       | 求最大值，基于比较器返回流中最大元素                                   | 接收 `Comparator`，返回 `Optional<T>`（避免空流返回 null），触发流执行                            |
-  | `min(Comparator<T> c)`                  | `Optional<T>`       | 求最小值，基于比较器返回流中最小元素                                   | 接收 `Comparator`，返回 `Optional<T>`，触发流执行                                                 |
-  | `anyMatch(Predicate<T> p)`              | `boolean`           | 任一匹配，判断流中是否**至少有一个**元素满足条件                       | 接收 `Predicate`，短路求值（找到匹配元素即停止遍历）                                              |
-  | `allMatch(Predicate<T> p)`              | `boolean`           | 全部匹配，判断流中是否**所有**元素都满足条件                           | 接收 `Predicate`，短路求值（找到不匹配元素即停止）                                                |
-  | `noneMatch(Predicate<T> p)`             | `boolean`           | 无匹配，判断流中是否**所有**元素都不满足条件                           | 接收 `Predicate`，短路求值（找到匹配元素即停止）                                                  |
-  | `reduce(T identity, BinaryOperator<T>)` | `T`                 | 聚合合并，将流中元素通过二元运算逐步合并为单个结果（如求和、求乘积）   | `identity` 为初始值，`BinaryOperator` 为合并规则，触发流执行                                      |
-  | `reduce(BinaryOperator<T>)`             | `Optional<T>`       | 无初始值的聚合合并，适用于流非空场景或需处理空流的情况                 | 无初始值，返回 `Optional<T>`（空流时返回空 `Optional`），触发流执行                               |
+  | 方法名         | 返回值类型       | 功能描述                                         |
+  | -------------- | ---------------- | ------------------------------------------------ |
+  | collect        | R（目标类型）    | 将流转换为集合（List/Set/Map）或其他数据结构     |
+  | collect        | R（目标类型）    | 三参数自定义收集（容器创建、元素累加、并行合并） |
+  | toArray        | Object[]         | 将流转换为 Object 数组                           |
+  | toArray        | A []（指定类型） | 将流转换为指定类型的数组                         |
+  | forEach        | void             | 遍历元素，执行消费逻辑（并行流不保证顺序）       |
+  | forEachOrdered | void             | 有序遍历（即使并行流也保证元素顺序）             |
+  | count          | long             | 统计流中元素总数量                               |
+  | max            | Optional<T>      | 基于比较器返回流中最大元素                       |
+  | min            | Optional<T>      | 基于比较器返回流中最小元素                       |
+  | findFirst      | Optional<T>      | 返回流中第一个元素（短路操作，保证顺序）         |
+  | findAny        | Optional<T>      | 返回流中任意一个元素（短路操作，并行流性能更优） |
+  | anyMatch       | boolean          | 判断是否至少有一个元素满足条件（短路求值）       |
+  | allMatch       | boolean          | 判断是否所有元素都满足条件（短路求值）           |
+  | noneMatch      | boolean          | 判断是否所有元素都不满足条件（短路求值）         |
+  | reduce         | T                | 带初始值的聚合合并（如求和、乘积）               |
+  | reduce         | Optional<T>      | 无初始值的聚合合并                               |
+  | reduce         | U                | 带类型转换的聚合合并（支持并行流）               |
+  | iterator       | Iterator<T>      | 将流转换为迭代器（Iterator）                     |
+  | spliterator    | Spliterator<T>   | 返回流的可分割迭代器（支持并行遍历）             |
 
 ### 获取方式
 
