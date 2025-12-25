@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-5785cd8b","path":"/ts/%E7%AC%AC%E4%B8%80%E7%89%88%E7%AC%94%E8%AE%B0/ts%E7%AC%94%E8%AE%B0.html","title":"基础类型","lang":"zh-CN","frontmatter":{},"headers":[{"level":3,"title":"4. 重载","slug":"_4-重载","link":"#_4-重载","children":[]}],"git":{"updatedTime":1704166058000},"filePathRelative":"ts/第一版笔记/ts笔记.md"}');export{t as data};
