@@ -592,22 +592,22 @@ public class Quote {
 
   | 方法名          | 返回值类型   | 功能描述                                                  |
   | --------------- | ------------ | --------------------------------------------------------- |
-  | filter          | Stream<T>    | 过滤元素，仅保留满足条件的元素                            |
-  | map             | Stream<R>    | 映射转换，将元素转换为另一种类型或值                      |
+  | filter          | Stream\<T\>  | 过滤元素，仅保留满足条件的元素                            |
+  | map             | Stream\<R\>  | 映射转换，将元素转换为另一种类型或值                      |
   | mapToInt        | IntStream    | 映射为 IntStream（基本类型流），避免装箱开销              |
   | mapToLong       | LongStream   | 映射为 LongStream（基本类型流）                           |
   | mapToDouble     | DoubleStream | 映射为 DoubleStream（基本类型流）                         |
-  | flatMap         | Stream<R>    | 扁平映射，将元素转换为子流并合并为一个流（解决 “流中流”） |
+  | flatMap         | Stream\<R\>  | 扁平映射，将元素转换为子流并合并为一个流（解决 “流中流”） |
   | flatMapToInt    | IntStream    | 扁平映射为 IntStream                                      |
   | flatMapToLong   | LongStream   | 扁平映射为 LongStream                                     |
   | flatMapToDouble | DoubleStream | 扁平映射为 DoubleStream                                   |
-  | sorted          | Stream<T>    | 自然排序（基于元素的 Comparable 接口）                    |
-  | sorted          | Stream<T>    | 自定义排序（通过 Comparator 指定规则）                    |
-  | distinct        | Stream<T>    | 去重操作（基于元素的 equals () 和 hashCode ()）           |
-  | limit           | Stream<T>    | 限制流长度，仅保留前 N 个元素                             |
-  | skip            | Stream<T>    | 跳过前 N 个元素，返回剩余元素构成的流                     |
-  | peek            | Stream<T>    | 中间处理 / 调试，对元素执行消费逻辑（不改变元素）         |
-  | unordered       | Stream<T>    | 标记流为无序，提升并行流性能（串行流无影响）              |
+  | sorted          | Stream\<T\>  | 自然排序（基于元素的 Comparable 接口）                    |
+  | sorted          | Stream\<T\>  | 自定义排序（通过 Comparator 指定规则）                    |
+  | distinct        | Stream\<T\>  | 去重操作（基于元素的 equals () 和 hashCode ()）           |
+  | limit           | Stream\<T\>  | 限制流长度，仅保留前 N 个元素                             |
+  | skip            | Stream\<T\>  | 跳过前 N 个元素，返回剩余元素构成的流                     |
+  | peek            | Stream\<T\>  | 中间处理 / 调试，对元素执行消费逻辑（不改变元素）         |
+  | unordered       | Stream\<T\>  | 标记流为无序，提升并行流性能（串行流无影响）              |
 
 - 终端操作（结束操作）,stream 调用这些方后不能再调用其他的方法
 
@@ -620,18 +620,18 @@ public class Quote {
   | forEach        | void             | 遍历元素，执行消费逻辑（并行流不保证顺序）       |
   | forEachOrdered | void             | 有序遍历（即使并行流也保证元素顺序）             |
   | count          | long             | 统计流中元素总数量                               |
-  | max            | Optional<T>      | 基于比较器返回流中最大元素                       |
-  | min            | Optional<T>      | 基于比较器返回流中最小元素                       |
-  | findFirst      | Optional<T>      | 返回流中第一个元素（短路操作，保证顺序）         |
-  | findAny        | Optional<T>      | 返回流中任意一个元素（短路操作，并行流性能更优） |
+  | max            | Optional\<T\>    | 基于比较器返回流中最大元素                       |
+  | min            | Optional\<T\>    | 基于比较器返回流中最小元素                       |
+  | findFirst      | Optional\<T\>    | 返回流中第一个元素（短路操作，保证顺序）         |
+  | findAny        | Optional\<T\>    | 返回流中任意一个元素（短路操作，并行流性能更优） |
   | anyMatch       | boolean          | 判断是否至少有一个元素满足条件（短路求值）       |
   | allMatch       | boolean          | 判断是否所有元素都满足条件（短路求值）           |
   | noneMatch      | boolean          | 判断是否所有元素都不满足条件（短路求值）         |
   | reduce         | T                | 带初始值的聚合合并（如求和、乘积）               |
-  | reduce         | Optional<T>      | 无初始值的聚合合并                               |
+  | reduce         | Optional\<T\>    | 无初始值的聚合合并                               |
   | reduce         | U                | 带类型转换的聚合合并（支持并行流）               |
-  | iterator       | Iterator<T>      | 将流转换为迭代器（Iterator）                     |
-  | spliterator    | Spliterator<T>   | 返回流的可分割迭代器（支持并行遍历）             |
+  | iterator       | Iterator\<T\>    | 将流转换为迭代器（Iterator）                     |
+  | spliterator    | Spliterator\<T\> | 返回流的可分割迭代器（支持并行遍历）             |
 
 ### 获取方式
 
