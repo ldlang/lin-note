@@ -706,3 +706,160 @@ public class Quote {
    // 生成 1,2,3,4,5（迭代流：种子 1，每次 +1）
    Stream<Integer> iterateStream = Stream.iterate(1, n -> n + 1).limit(5);
    ```
+
+### collect 主要终端方法
+
+1. 将`stream`流的收集到集合中
+
+   ```java
+   import java.util.ArrayList;
+   import java.util.List;
+   import java.util.stream.Collectors;
+
+   public class StreamCase {
+       public static void main(String[] args) {
+           List<String> list1 = List.of("王梓轩", "欧阳雨欣", "李诗琪", "司马宇宸", "张诺丹", "王还哈", "赵勇杰");
+
+           // 获取所有名字为3个字的, 并转成 list
+           list1.stream().filter(name -> name.length() == 3).collect(Collectors.toList());
+
+           // 获取所有名字为3个字的, 并转成 set
+           list1.stream().filter(name -> name.length() == 3).collect(Collectors.toSet());
+
+           // 获取所有名字为3个字的, 并转成 ArrayList 或者 hashList
+           ArrayList<String> collect = list1.stream().filter(name -> name.length() == 3).collect(Collectors.toCollection(ArrayList::new));
+           for (String s : collect) {
+               System.out.println(s);
+           }
+       }
+   }
+   ```
+
+2. 转为数组
+
+   ```java
+   import java.util.ArrayList;
+   import java.util.List;
+   import java.util.stream.Collectors;
+
+   public class StreamCase {
+       public static void main(String[] args) {
+           List<String> list1 = List.of("王梓轩", "欧阳雨欣", "李诗琪", "司马宇宸", "张诺丹", "王还哈", "赵勇杰");
+           String[] array = list1.stream().toArray((s) -> new String[s]);
+           // 方法引用简化
+           String[] array = list1.stream().toArray(String[]::new);
+
+           for (String s : array) {
+               System.out.println(s);
+           }
+       }
+   }
+   ```
+
+3. 聚合计算（求和、平均值、最大 / 最小值）
+
+   ```java
+   import java.util.Arrays;
+   import java.util.DoubleSummaryStatistics;
+   import java.util.List;
+   import java.util.stream.Collectors;
+
+   public class CollectAggregation {
+       public static void main(String[] args) {
+           List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+           // 1. 求和
+           int sum = numbers.stream().collect(Collectors.summingInt(Integer::intValue));
+           System.out.println("总和：" + sum); // 15
+
+           // 2. 求平均值
+           double avg = numbers.stream().collect(Collectors.averagingInt(Integer::intValue));
+           System.out.println("平均值：" + avg); // 3.0
+
+           // 3. 求最大值（返回 Optional，避免空指针）
+           numbers.stream().collect(Collectors.maxBy(Integer::compare))
+                  .ifPresent(max -> System.out.println("最大值：" + max)); // 5
+
+           // 4. 一次性获取多个统计结果（总和、平均值、最大/最小值、数量）
+           DoubleSummaryStatistics stats = numbers.stream()
+                   .collect(Collectors.summarizingDouble(Integer::doubleValue));
+           System.out.println("统计结果：" + stats);
+           // 输出：DoubleSummaryStatistics{count=5, sum=15.000000, min=1.000000, average=3.000000, max=5.000000}
+       }
+   }
+   ```
+
+4. 分组（groupingBy）
+
+   把元素按指定规则分组，返回 `Map<分组键, 分组元素集合>`，
+
+   ```java
+   import java.util.Arrays;
+   import java.util.List;
+   import java.util.Map;
+   import java.util.stream.Collectors;
+
+   public class CollectGrouping {
+       public static void main(String[] args) {
+           // 定义实体类
+           record Student(String name, String className, int score) {}
+
+           // 模拟数据
+           List<Student> students = Arrays.asList(
+                   new Student("张三", "一班", 90),
+                   new Student("李四", "二班", 85),
+                   new Student("王五", "一班", 95),
+                   new Student("赵六", "二班", 80)
+           );
+
+           // 1. 按班级分组（默认值为 List）
+           Map<String, List<Student>> groupByClass = students.stream()
+                   .collect(Collectors.groupingBy(Student::className));
+           System.out.println("按班级分组：" + groupByClass);
+           // 输出：{一班=[Student[name=张三, className=一班, score=90], Student[name=王五, className=一班, score=95]], 二班=[...]}
+
+           // 2. 按班级分组，且每组只保留学生姓名（映射值）
+           Map<String, List<String>> groupByClassWithName = students.stream()
+                   .collect(Collectors.groupingBy(
+                           Student::className, // 分组键：班级
+                           Collectors.mapping(Student::name, Collectors.toList()) // 映射值：姓名列表
+                   ));
+           System.out.println("按班级分组（仅姓名）：" + groupByClassWithName);
+           // 输出：{一班=[张三, 王五], 二班=[李四, 赵六]}
+
+           // 3. 按班级分组，并计算每组的平均分
+           Map<String, Double> avgScoreByClass = students.stream()
+                   .collect(Collectors.groupingBy(
+                           Student::className,
+                           Collectors.averagingInt(Student::score)
+                   ));
+           System.out.println("各班平均分：" + avgScoreByClass); // {一班=92.5, 二班=82.5}
+       }
+   }
+   ```
+
+5. 拼接字符串（joining）
+
+   ```java
+   import java.util.Arrays;
+   import java.util.List;
+   import java.util.stream.Collectors;
+
+   public class CollectJoining {
+       public static void main(String[] args) {
+           List<String> words = Arrays.asList("Java", "Stream", "Collect");
+
+           // 1. 直接拼接
+           String join1 = words.stream().collect(Collectors.joining());
+           System.out.println(join1); // JavaStreamCollect
+
+           // 2. 用分隔符拼接
+           String join2 = words.stream().collect(Collectors.joining(","));
+           System.out.println(join2); // Java,Stream,Collect
+
+           // 3. 带前缀、分隔符、后缀
+           String join3 = words.stream().collect(Collectors.joining(",", "[", "]"));
+           System.out.println(join3); // [Java,Stream,Collect]
+       }
+   }
+   ```
