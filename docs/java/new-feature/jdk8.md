@@ -863,3 +863,242 @@ public class Quote {
        }
    }
    ```
+
+## 7、并行流
+
+### 并行流的获取
+
+1. 将串行流转为并行流
+
+   直接调用`parallel()`方法即可
+
+   ```java
+   Stream.of(1,2,3,4,5).parallel().filter((s)->{
+       System.out.println(Thread.currentThread() + "" +  s);
+       return s >1;
+   }).count();
+
+   // Thread[#1,main,5,main]3
+   // Thread[#33,ForkJoinPool.commonPool-worker-4,5,main]4
+   // Thread[#31,ForkJoinPool.commonPool-worker-2,5,main]1
+   // Thread[#32,ForkJoinPool.commonPool-worker-3,5,main]5
+   // Thread[#30,ForkJoinPool.commonPool-worker-1,5,main]2
+   ```
+
+2. 直接获取并行流
+
+   通过`parallelStream()`方法
+
+   ```java
+   Stream<Object> objectStream = new ArrayList<>().parallelStream();
+   ```
+
+### 线程安全问题
+
+如果直接使用并行流处理线程不安全的数据，就会导致数据丢失
+
+```java
+Stream<Object> objectStream = new ArrayList<>().parallelStream();
+// ArrayList是线程不安全的list，这里又使用并行流进行操作，就会导致数据丢失
+ArrayList<Object> list = new ArrayList<>();
+IntStream.rangeClosed(1, 1000).parallel().forEach(list::add);
+// list不一定会存到1000条数据
+System.out.println(list.size());
+```
+
+解决方式
+
+1. 使用锁
+
+   ```java
+   import java.util.ArrayList;
+   import java.util.stream.IntStream;
+   import java.util.stream.Stream;
+
+   public class ParallelStream {
+       public static void main(String[] args) {
+           Stream<Object> objectStream = new ArrayList<>().parallelStream();
+           ArrayList<Object> list = new ArrayList<>();
+
+           Object obj = new Object();
+           IntStream.rangeClosed(1, 1000).parallel().forEach(s->{
+               // 加入同步锁
+               synchronized(obj) {
+                   list.add(s);
+               }
+           });
+           System.out.println(list.size()); // 1000
+       }
+   }
+
+   ```
+
+2. 使用线程安全的集合
+
+   ```java
+   Vector vector = new Vector();
+   IntStream.rangeClosed(1, 1000).parallel().forEach(vector::add);
+   System.out.println(vector.size()); // 1000
+   ```
+
+3. 将线程不安全的集合转为线程安全的
+
+   ```java
+   import java.util.ArrayList;
+   import java.util.Collections;
+   import java.util.List;
+   import java.util.stream.Collectors;
+   import java.util.stream.IntStream;
+
+   public class ParallelStream {
+       public static void main(String[] args) {
+           Stream<Object> objectStream = new ArrayList<>().parallelStream();
+           ArrayList<Object> list = new ArrayList<>();
+           // 将线程不安全的集合转为线程全的集合
+           List<Object> synchronizedList = Collections.synchronizedList(list);
+           IntStream.rangeClosed(1, 1000).parallel().forEach(synchronizedList::add);
+   		// 1000
+           System.out.println(list.size());
+
+       }
+   }
+   ```
+
+4. 调用`Stream`流中的`collect/toArray`
+
+   ```java
+   import java.util.ArrayList;
+   import java.util.List;
+   import java.util.stream.Collectors;
+   import java.util.stream.IntStream;
+   import java.util.stream.Stream;
+
+   public class ParallelStream {
+       public static void main(String[] args) {
+
+           Stream<Object> objectStream = new ArrayList<>().parallelStream();
+           // ArrayList是线程不安全的list，这里又使用并行流进行操作，就会导致数据丢失
+           ArrayList<Object> list = new ArrayList<>();
+
+           List<Integer> list1 = IntStream.rangeClosed(1, 1000).parallel().boxed().collect(Collectors.toList());
+           System.out.println(list1.size()); // 1000
+       }
+   }
+   ```
+
+## 8、Optional
+
+Optional 是 Java 8 引入的一个容器类，它可以**保存类型为 T 的值，或者仅仅保存 null**。它的核心作用是：
+
+- 显式地表达 “值可能存在也可能不存在”，让代码语义更清晰；
+- 避免手动写大量的 `null` 检查，减少空指针异常；
+- 提供一系列便捷的方法，让空值处理更优雅。
+
+### 创建方式
+
+- **of**
+
+  必须传入非 null 值，否则直接抛空指针，适合确定值不为 null 的场景；
+
+  ```java
+  Optional<String> string = Optional.of("张三");
+  ```
+
+- **ofNullable**
+
+  最常用，兼容 null 和非 null 值，推荐优先使用；
+
+  ```java
+  Optional<String> string1 = Optional.ofNullable("str");
+  Optional<String> string2= Optional.ofNullable(null);
+  ```
+
+- **empty()**
+
+  直接创建空的 Optional，显式表示 “无值”
+
+  ```java
+  Optional<String> emptyOptional = Optional.empty();
+  ```
+
+### 判断值
+
+通过 `isPresent()` 判断值是否存在：
+
+```java
+Optional<String> optional1 = Optional.of("Java");
+Optional<String> optional2 = Optional.empty();
+
+// 判断值是否存在（true/false）
+System.out.println(optional1.isPresent()); // true
+System.out.println(optional2.isPresent()); // false
+```
+
+### 读取值
+
+通过`get`读取值，如果是空就会报错，所以要搭配`isPresent`来使用
+
+```java
+Optional<String> string1 = Optional.ofNullable(null);
+
+if (string1.isPresent()) {
+    System.out.println(string1.get());
+}else {
+    System.out.println("没有值");
+}
+```
+
+### 判断
+
+- `orElse`
+
+  如果`Optional`有值则使用原有的值，否则使用`orElse`的值
+
+  ```java
+  Optional<String> string = Optional.of("张三");
+  Optional<String> string1 = Optional.empty();
+
+  String s1 = string.orElse("李四");
+  String s2 = string1.orElse("李四");
+
+  System.out.println(s1); // 张三
+  System.out.println(s1); // 李四
+  ```
+
+- `ifPresent`
+
+  一个方法，接受一个`Consumer`参数，如果`Optional`有值就会执行里面的代码体
+
+  ```java
+  Optional<String> string = Optional.of("张三");
+  Optional<String> string1 = Optional.empty();
+
+  string.ifPresent(System.out::println); // 张三
+  string1.ifPresent(System.out::println); // 不会打印
+  ```
+
+- `ifPresentOrElse`
+
+  接受两个参数，有值执行前面的`Consumer`函数，没有值执行后面的`Runnable`函数
+
+  ```java
+  Optional<String> string = Optional.of("张三");
+
+  string.ifPresentOrElse(s -> System.out.println("有值" + s),()->System.out.println("没有值")); // 有值 张三
+  ```
+
+### 映射
+
+map 进行值的类型转换，或着其他的转换
+
+```java
+Optional<String> string = Optional.of("hello");
+// 转为大写
+Optional<String> s2 = string.map(String::toUpperCase);
+System.out.println(s2); // HELLO
+
+Optional<String> string = Optional.of("1");
+// 转为数字
+Optional<Integer> s2 = string.map(Integer::parseInt);
+System.out.println(s2); // 1
+```
