@@ -217,3 +217,38 @@ docker exec -it nginx bash
 
 ![数据卷](/docker/data.png)
 
+### 挂载本地目录
+
+- 挂载`/root/mysql/data`到容器内的`/var/lib/mysql`目录
+- 挂载`/root/mysql/init`到容器内的`/docker-entrypoint-initdb.d`目录（初始化的SQL脚本目录）
+- 挂载`/root/mysql/conf`到容器内的`/etc/mysql/conf.d`目录（这个是MySQL配置文件目录）
+
+```bash
+# 1.删除原来的MySQL容器
+docker rm -f mysql
+
+# 2.进入root目录
+cd ~
+
+# 3.创建并运行新mysql容器，挂载本地目录
+docker run -d \
+  --name mysql \
+  -p 3306:3306 \
+  -e TZ=Asia/Shanghai \
+  -e MYSQL_ROOT_PASSWORD=123 \
+  -v ./mysql/data:/var/lib/mysql \
+  -v ./mysql/conf:/etc/mysql/conf.d \
+  -v ./mysql/init:/docker-entrypoint-initdb.d \
+  mysql
+```
+
+## 5、Dockerfile
+
+| **指令**       | **说明**                                     | **示例**                     |
+| :------------- | :------------------------------------------- | :--------------------------- |
+| **FROM**       | 指定基础镜像                                 | `FROM centos:6`              |
+| **ENV**        | 设置环境变量，可在后面指令使用               | `ENV key value`              |
+| **COPY**       | 拷贝本地文件到镜像的指定目录                 | `COPY ./xx.jar /tmp/app.jar` |
+| **RUN**        | 执行Linux的shell命令，一般是安装过程的命令   | `RUN yum install gcc`        |
+| **EXPOSE**     | 指定容器运行时监听的端口，是给镜像使用者看的 | EXPOSE 8080                  |
+| **ENTRYPOINT** | 镜像中应用的启动命令，容器运行时调用         | ENTRYPOINT java -jar xx.jar  |
