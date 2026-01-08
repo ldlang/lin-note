@@ -178,6 +178,10 @@ export const navbar = [
         link: "/java/SpringBoot.md",
       },
       {
+        text: "SpringCloud",
+        link: "/java/SpringCloud.md",
+      },
+      {
         text: "docker",
         link: "/java/docker.md",
       },
