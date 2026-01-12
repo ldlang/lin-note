@@ -287,7 +287,7 @@ try {
 
 ## 2、nocas
 
-注册中心，将所有的服务都进行统一的管理，自动感知服务的启停，并解决服务相互之间调用，请求地址写死的问题
+注册中心，将所有的服务都进行统一的管理，自动感知服务的启停，并解决服务相互之间调用，请求地址写死的问题，可以自动获取同一个服务的不用请求地址。
 
 ### 安装 nocas
 
@@ -335,7 +335,6 @@ try {
      PRIMARY KEY (`id`),
      UNIQUE KEY `uk_configinfoaggr_datagrouptenantdatum` (`data_id`,`group_id`,`tenant_id`,`datum_id`)
    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='增加租户字段';
-
 
    /******************************************/
    /*   数据库全名 = nacos_config   */
@@ -439,7 +438,6 @@ try {
      KEY `idx_did` (`data_id`)
    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='多租户改造';
 
-
    /******************************************/
    /*   数据库全名 = nacos_config   */
    /*   表名称 = tenant_capacity   */
@@ -458,7 +456,6 @@ try {
      PRIMARY KEY (`id`),
      UNIQUE KEY `uk_tenant_id` (`tenant_id`)
    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='租户容量信息表';
-
 
    CREATE TABLE `tenant_info` (
      `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
@@ -573,3 +570,219 @@ try {
        Map.of("ids", itemIds.stream().map(Object::toString).collect(Collectors.joining(",")))
    );
    ```
+
+## 3、OpenFeign
+
+配置`nocas`实现不同服务之间快速简单的调用
+
+1. 添加依赖
+
+   ```xml
+   <!--openFeign-->
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-openfeign</artifactId>
+   </dependency>
+   <!--负载均衡器-->
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+   </dependency>
+   ```
+
+2. 在启动类上添加注解
+
+   ```java
+   @EnableFeignClients  // 加入这个注解
+   @SpringBootApplication
+   public class CartApplication {
+       public static void main(String[] args) {
+           SpringApplication.run(CartApplication.class, args);
+       }
+   }
+   ```
+
+3. 编写对应服务的接口
+
+   ```java
+   import com.hmall.cart.domain.dto.ItemDTO;
+   import org.springframework.cloud.openfeign.FeignClient;
+   import org.springframework.web.bind.annotation.GetMapping;
+   import org.springframework.web.bind.annotation.RequestParam;
+
+   import java.util.List;
+
+   // item-services服务中所有的接口都可以写这里面
+   @FeignClient("item-service")
+   public interface ItemClient {
+
+       @GetMapping("/items")
+       List<ItemDTO> queryItemByIds(@RequestParam("ids") List<Long> ids);
+   }
+   ```
+
+4. 注入
+
+   ```java
+   @Autowired
+   private final ItemClient itemClient;
+   ```
+
+5. 使用
+
+   就像调`service`服务一样，调用对应接口即可
+
+   ```java
+   List<ItemDTO> items = itemClient.queryItemByIds(itemIds);
+   ```
+
+### 最佳实践
+
+将所有需要对外暴露的接口，dto 等全部放在一个新的模块中，进行统一的管理，那个服务需要就去这个公共的服务中去拿
+
+1. 新建公共的 api 模块，将上面的服务接口和类型文件抽离到这个模块中（**模块名称 ldlang-api**）
+
+2. 在需要调用公共导入这个模块
+
+   ```xml
+   <dependency>
+       <groupId>com.heima</groupId>
+       <artifactId>ldlang-api</artifactId>
+       <version>1.0.0</version>
+   </dependency>
+   ```
+
+3. 更改启动文件中的`@EnableFeignClients`，指定扫描的包，之后就像调用`service`一样正常调用即可
+
+   ```java
+   @EnableFeignClients(basePackages = "com.ldlang.api.client")
+   ```
+
+### 日志
+
+1. 添加日志配置文件
+
+   ```java
+   import feign.Logger;
+   import org.springframework.context.annotation.Bean;
+
+   public class DefaultFeignConfig {
+       @Bean
+       public Logger.Level feignLoggerLevel(){
+           return Logger.Level.FULL;
+       }
+   }
+   ```
+
+2. 开启日志
+
+   ```java
+   @EnableFeignClients(basePackages = "com.hmall.api.client", defaultConfiguration = DefaultFeignConfig.class)
+   ```
+
+## 4、网关
+
+当服务被拆分成多个的时候，就有很多个端口，这样前端就不知道要请求那个接口了，这时候就需要网关进行服务的统一调度，所有的请求都请求到网关，再由[网关](https://spring.io/projects/spring-cloud-gateway#learn)进行路由的转发，网关所有转发后的请求都是去到 nacos。
+
+### 安装使用
+
+1. 需要新建一个模块进行网关服务的统一管理
+
+2. 添加依赖
+
+   ```xml
+   <!--网关-->
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-gateway</artifactId>
+   </dependency>
+   <!--nacos discovery-->
+   <dependency>
+       <groupId>com.alibaba.cloud</groupId>
+       <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+   </dependency>
+   <!--负载均衡-->
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+   </dependency>
+   </dependencies>
+   ```
+
+3. 配置`application.yaml`
+
+   ```yaml
+   server:
+     port: 8080 # 请求的端口号
+   spring:
+     application:
+       name: gateway # 服务名称
+     cloud:
+       nacos:
+         server-addr: 127.0.0.1:8848 # nacos的地址
+       gateway:
+         routes:
+           - id: user-service # 路由规则id，自定义，唯一，最好和服务名对应
+             uri: lb://user-service # 路由的目标服务，lb代表负载均衡，会从注册中心拉取服务列表，user-service拉取nacos的服务名
+             predicates: # 路由断言，判断当前请求是否符合当前规则，符合则路由到目标服务
+               - Path=/items/**,/search/** # 这里是以请求路径作为判断规则
+   ```
+
+### 配置
+
+1. [predicates](https://docs.spring.io/spring-cloud-gateway/docs/3.1.9/reference/html/#gateway-request-predicates-factories)的配置，处理路由匹配
+
+   | **名称**   | **说明**                        | **示例**                                                                                               |
+   | :--------- | :------------------------------ | :----------------------------------------------------------------------------------------------------- |
+   | After      | 是某个时间点后的请求            | - After=2037-01-20T17:42:47.789-07:00[America/Denver]                                                  |
+   | Before     | 是某个时间点之前的请求          | - Before=2031-04-13T15:14:47.433+08:00[Asia/Shanghai]                                                  |
+   | Between    | 是某两个时间点之前的请求        | - Between=2037-01-20T17:42:47.789-07:00[America/Denver], 2037-01-21T17:42:47.789-07:00[America/Denver] |
+   | Cookie     | 请求必须包含某些 cookie         | - Cookie=chocolate, ch.p                                                                               |
+   | Header     | 请求必须包含某些 header         | - Header=X-Request-Id, \d+                                                                             |
+   | Host       | 请求必须是访问某个 host（域名） | - Host=**.somehost.org,**.anotherhost.org                                                              |
+   | Method     | 请求方式必须是指定方式          | - Method=GET,POST                                                                                      |
+   | Path       | 请求路径必须符合指定规则        | - Path=/red/{segment},/blue/\*\*                                                                       |
+   | Query      | 请求参数必须包含指定参数        | - Query=name, Jack 或者- Query=name                                                                    |
+   | RemoteAddr | 请求者的 ip 必须是指定范围      | - RemoteAddr=192.168.1.1/24                                                                            |
+   | weight     | 权重处理                        |                                                                                                        |
+
+2. [filter](https://docs.spring.io/spring-cloud-gateway/docs/3.1.9/reference/html/#gatewayfilter-factories)的配置，统一的请求头，重写路径等
+
+### 请求拦截
+
+在网关中实现`GlobalFilter`和`Ordered`接口即可
+
+```java
+package com.hmall.gateway.filters;
+
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.core.Ordered;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
+
+@Component
+public class MyGlobalFilter implements GlobalFilter, Ordered {
+
+    // 所有的请求都会先走到这里
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        // 获取请求
+        ServerHttpRequest request = exchange.getRequest();
+        HttpHeaders headers = request.getHeaders();
+        System.out.println(headers);
+        // 将处理过后的请求返回回去
+        return chain.filter(exchange);
+    }
+
+    @Override
+    public int getOrder() {
+        // 过滤器执行的时机，值越小，越先执行
+        return 0;
+    }
+}
+
+```
