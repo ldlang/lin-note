@@ -4,6 +4,8 @@ sidebar: auto
 
 # SpringCloud
 
+![数据传递](/SpringClound/delivery.png)
+
 ## 1、调用其他服务的接口
 
 ### 核心概念：RestTemplate
@@ -680,6 +682,26 @@ try {
    @EnableFeignClients(basePackages = "com.hmall.api.client", defaultConfiguration = DefaultFeignConfig.class)
    ```
 
+### 微服务之间数据的传递
+
+使用`OpenFeign`提供的拦截器进行数据传递，依旧是将数据放到请求头上
+
+```java
+public class DefaultFeignConfig {
+    @Bean
+    public RequestInterceptor userRequestInterceptor(){
+        return (RequestTemplate requestTemplate)-> {
+            // 获取 ThreadLocal 的用户信息
+            Long user = UserContext.getUser();
+            if (user != null) {
+                // 将用户信息塞到请求头中
+                requestTemplate.header("user-info", user.toString());
+            }
+        };
+    }
+}
+```
+
 ## 4、网关
 
 当服务被拆分成多个的时候，就有很多个端口，这样前端就不知道要请求那个接口了，这时候就需要网关进行服务的统一调度，所有的请求都请求到网关，再由[网关](https://spring.io/projects/spring-cloud-gateway#learn)进行路由的转发，网关所有转发后的请求都是去到 nacos。
@@ -784,5 +806,100 @@ public class MyGlobalFilter implements GlobalFilter, Ordered {
         return 0;
     }
 }
-
 ```
+
+### 设置响应状态码，终止请求
+
+```java
+@Component
+@AllArgsConstructor
+public class AuthGlobalFilter implements GlobalFilter {
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        ServerHttpResponse response = exchange.getResponse();
+        // 设置响应状态码为 HttpStatus.UNAUTHORIZED = 401
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        return response.setComplete(); // 设置请求完成
+    }
+}
+```
+
+### 网关给微服务传递信息
+
+网关将需要传递给微服务的信息，放到请求头里面，微服务的每个请求都会带着这个请求头，所以微服务只需要去请求头里面就能拿到网关传递过来的信息。
+
+```java
+@Component
+@AllArgsConstructor
+public class AuthGlobalFilter implements GlobalFilter, Ordered {
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        ServerHttpRequest request = exchange.getRequest();
+        // 传递用户信息
+        String userInfo = "1";
+        ServerWebExchange build = exchange.mutate()
+            .request(builder -> builder.header("user-info", userInfo)) // 往请求头塞信息
+            .build();
+        // 将修改后的exchange传递给后面的放行
+        return chain.filter(build);
+    }
+}
+```
+
+### 微服务接收网关的数据
+
+> 注意：这里的拦截器放到一个公共模块中，不然所有的微服务都写拦截器，太浪费精力了
+
+1. 使用拦截器获取网关塞到请求头上的信息
+
+   ```java
+   import cn.hutool.core.util.StrUtil;
+   import com.hmall.common.utils.UserContext;
+   import org.springframework.web.servlet.HandlerInterceptor;
+   import javax.servlet.http.HttpServletRequest;
+   import javax.servlet.http.HttpServletResponse;
+
+   public class UserInfoInterceptor implements HandlerInterceptor {
+       @Override
+       public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+   		// 得到传递的信息
+           String header = request.getHeader("user-info");
+           if (StrUtil.isNotBlank(header)) {
+               // 这里的 UserContext 其实是一个 ThreadLocal，将得到的信息放到ThreadLocal，其他的
+   			// 微服务就能够直接从 ThreadLocal 取到
+               UserContext.setUser(Long.valueOf(header));
+           }
+           return true;
+       }
+   }
+   ```
+
+2. 配置拦截器
+
+   ```java
+   import com.hmall.common.interceptor.UserInfoInterceptor;
+   import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+   import org.springframework.context.annotation.Configuration;
+   import org.springframework.web.servlet.DispatcherServlet;
+   import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+   import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+   @Configuration
+   // 必须有SpringMVC才会自动装配，因为网关没有SpringMVC，所以这里在网关就不能自动装配
+   @ConditionalOnClass(DispatcherServlet.class)
+   public class MvcConfig implements WebMvcConfigurer {
+       @Override
+       public void addInterceptors(InterceptorRegistry registry) {
+           registry.addInterceptor(new UserInfoInterceptor());
+       }
+   }
+   ```
+
+3. 在不同包（模块）中自动装配的包要想被扫到，就必须在`resources/META-INF/spring.factories`中进行配置
+
+   ```
+   org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+     com.hmall.common.config.MvcConfig,\
+   ```
+
+## 5、配置管理

@@ -240,6 +240,27 @@ public class ListStu {
 }
 ```
 
+### 获取
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class ListStu {
+    public static void main(String[] args) {
+        List list = new ArrayList();
+
+        // 按顺序添加
+        list.add("张三");
+        list.add("李四");
+
+        System.out.println(list.get(0)); // 张三
+    }
+}
+```
+
+
+
 ### 删除
 
 1. clear 清空数组
