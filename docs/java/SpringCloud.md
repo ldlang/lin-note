@@ -4,7 +4,7 @@ sidebar: auto
 
 # SpringCloud
 
-![数据传递](/SpringClound/delivery.png)
+![数据传递](/SpringCloud/delivery.png)
 
 ## 1、调用其他服务的接口
 
@@ -572,6 +572,229 @@ try {
        Map.of("ids", itemIds.stream().map(Object::toString).collect(Collectors.joining(",")))
    );
    ```
+
+### 配置管理
+
+将`appliciton.yaml`的一些公共配置提取到`nacos`中，再由`SpringCloud`将其读取下来，再和本地微服务的配置合并起来。
+
+1. 在`nocas`中添加配置
+
+   ![第一步](/SpringCloud/configuration1.png)
+
+   ![第二步](/SpringCloud/configuration2.png)
+
+2. 在微服务的项目中导入依赖
+
+   ```xml
+   <!--nacos配置管理-->
+   <dependency>
+       <groupId>com.alibaba.cloud</groupId>
+       <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+   </dependency>
+   <!--读取bootstrap文件-->
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-bootstrap</artifactId>
+   </dependency>
+   ```
+
+3. 在微服务项目中添加`bootstrap.yaml`用于拉取`nacos`中的配置，拉取到的配置会自动和`application.yaml`中的配置进行合并
+
+   ```yaml
+   spring:
+     application:
+       name: cart-service # 微服务名称
+     profiles:
+       active: dev
+     cloud:
+       nacos:
+         server-addr: 127.0.0.1:8848
+         config:
+           file-extension: yaml
+           shared-configs: # 要读取的配置文件列表
+             - data-id: shared-jdbc.yaml # 共享mybatis配置
+             - data-id: shared-log.yaml
+             - data-id: shared-swagger.yaml
+   ```
+
+4. `nocas`中很多地方使用了变量，就需要在`application.yaml`给这些变量赋值
+
+   ![配置详情](/SpringCloud/configuration3.png)
+
+   ```yaml
+   # 比如${hm.db.port:3306} ${hm.db.database} 这里:后面的3306是默认值
+   hm:
+     db:
+       port: 3306 # 给 port 赋值
+       database: cart # 给 database 赋值
+   ```
+
+### 读取配置管理中的文件，控制业务
+
+在`nacos`中添加一个变量，并读取到项目中使用，这个配置是热更新的，只要在`nacos`中改了，项目中就能生效
+
+1. 在`nacos`添加配置文件
+
+   ![设置](/SpringCloud/setting.png)
+
+2. 读取配置文件的属性
+
+   ```java
+   import lombok.Data;
+   import org.springframework.boot.context.properties.ConfigurationProperties;
+   import org.springframework.stereotype.Component;
+   
+   @Data
+   @Component
+   @ConfigurationProperties(prefix = "ldlang")
+   public class CartSetting {
+       private String name;
+   }
+   ```
+
+3. 使用这个配置
+
+   ```java
+   @Autowired
+   private final CartSetting cartSetting;
+   
+   System.out.println("cartSetting" + cartSetting.getName()); // cartSetting ldlang
+   ```
+
+### 动态路由
+
+在网关中配置了所有的路由信息，用于控制哪些是放行，哪些是不放行的，但是如果需要增加放行的路由，那么就要更改路由的配置文件，并重启网关，此时所有的服务都会宕机，不利于生产环境，因此就要将这里路由信息放在`nacos`的配置管理中，让网关去监听这些路由的变化。
+
+1. 添加配置
+
+   ```xml
+   <!--统一配置管理-->
+   <dependency>
+       <groupId>com.alibaba.cloud</groupId>
+       <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+   </dependency>
+   <!--加载bootstrap-->
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-bootstrap</artifactId>
+   </dependency>
+   ```
+
+2. 在网关服务创建`bootstrap.yaml`文件，删除`application.yaml`中的放行接口配置
+
+   ```yaml
+   spring:
+     application:
+       name: gateway
+     cloud:
+       nacos:
+         server-addr: 127.0.0.1:8848
+         config:
+           file-extension: yaml
+           shared-configs:
+             - data-id: shared-log.yaml
+   ```
+
+3. 在`nacos`中的配置列表中添加 `gateway-routes.json`文件
+
+   ```json
+   [
+       {
+           "id": "item",
+           "predicates": [{
+               "name": "Path",
+               "args": {"_genkey_0":"/items/**", "_genkey_1":"/search/**"}
+           }],
+           "filters": [],
+           "uri": "lb://item-service"
+       },
+   ]
+   ```
+
+4. 读取上面的`json`文件，并动态添加路由
+
+   ```java
+   package com.hmall.gateway.route;
+   
+   import cn.hutool.json.JSONUtil;
+   import com.alibaba.cloud.nacos.NacosConfigManager;
+   import com.alibaba.nacos.api.config.listener.Listener;
+   import com.alibaba.nacos.api.exception.NacosException;
+   import com.hmall.common.utils.CollUtils;
+   import lombok.RequiredArgsConstructor;
+   import lombok.extern.slf4j.Slf4j;
+   import org.springframework.cloud.gateway.route.RouteDefinition;
+   import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
+   import org.springframework.stereotype.Component;
+   import reactor.core.publisher.Mono;
+   
+   import javax.annotation.PostConstruct;
+   import java.util.HashSet;
+   import java.util.List;
+   import java.util.Set;
+   import java.util.concurrent.Executor;
+   
+   @Slf4j
+   @Component
+   @RequiredArgsConstructor
+   public class DynamicRouteLoader {
+   
+       private final RouteDefinitionWriter writer;
+       private final NacosConfigManager nacosConfigManager;
+   
+       // 路由配置文件的id和分组, dataId必须和配置管理中的文件名一致
+       private final String dataId = "gateway-routes.json";
+       private final String group = "DEFAULT_GROUP"; //Group也必须和nacos上的一致 
+       // 保存更新过的路由id
+       private final Set<String> routeIds = new HashSet<>();
+   
+       @PostConstruct
+       public void initRouteConfigListener() throws NacosException {
+           // 1.注册监听器并首次拉取配置
+           String configInfo = nacosConfigManager.getConfigService()
+                   .getConfigAndSignListener(dataId, group, 5000, new Listener() {
+                       @Override
+                       public Executor getExecutor() {
+                           return null;
+                       }
+   
+                       @Override
+                       public void receiveConfigInfo(String configInfo) {
+                           updateConfigInfo(configInfo);
+                       }
+                   });
+           // 2.首次启动时，更新一次配置
+           updateConfigInfo(configInfo);
+       }
+   
+       private void updateConfigInfo(String configInfo) {
+           log.debug("监听到路由配置变更，{}", configInfo);
+           // 1.反序列化
+           List<RouteDefinition> routeDefinitions = JSONUtil.toList(configInfo, RouteDefinition.class);
+           // 2.更新前先清空旧路由
+           // 2.1.清除旧路由
+           for (String routeId : routeIds) {
+               writer.delete(Mono.just(routeId)).subscribe();
+           }
+           routeIds.clear();
+           // 2.2.判断是否有新的路由要更新
+           if (CollUtils.isEmpty(routeDefinitions)) {
+               // 无新路由配置，直接结束
+               return;
+           }
+           // 3.更新路由
+           routeDefinitions.forEach(routeDefinition -> {
+               // 3.1.更新路由
+               writer.save(Mono.just(routeDefinition)).subscribe();
+               // 3.2.记录路由id，方便将来删除
+               routeIds.add(routeDefinition.getId());
+           });
+       }
+   }
+   ```
+
+   
+
 
 ## 3、OpenFeign
 
