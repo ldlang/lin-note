@@ -643,7 +643,7 @@ try {
    import lombok.Data;
    import org.springframework.boot.context.properties.ConfigurationProperties;
    import org.springframework.stereotype.Component;
-   
+
    @Data
    @Component
    @ConfigurationProperties(prefix = "ldlang")
@@ -657,7 +657,7 @@ try {
    ```java
    @Autowired
    private final CartSetting cartSetting;
-   
+
    System.out.println("cartSetting" + cartSetting.getName()); // cartSetting ldlang
    ```
 
@@ -699,15 +699,17 @@ try {
 
    ```json
    [
-       {
-           "id": "item",
-           "predicates": [{
-               "name": "Path",
-               "args": {"_genkey_0":"/items/**", "_genkey_1":"/search/**"}
-           }],
-           "filters": [],
-           "uri": "lb://item-service"
-       },
+     {
+       "id": "item",
+       "predicates": [
+         {
+           "name": "Path",
+           "args": { "_genkey_0": "/items/**", "_genkey_1": "/search/**" }
+         }
+       ],
+       "filters": [],
+       "uri": "lb://item-service"
+     }
    ]
    ```
 
@@ -715,7 +717,7 @@ try {
 
    ```java
    package com.hmall.gateway.route;
-   
+
    import cn.hutool.json.JSONUtil;
    import com.alibaba.cloud.nacos.NacosConfigManager;
    import com.alibaba.nacos.api.config.listener.Listener;
@@ -727,27 +729,27 @@ try {
    import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
    import org.springframework.stereotype.Component;
    import reactor.core.publisher.Mono;
-   
+
    import javax.annotation.PostConstruct;
    import java.util.HashSet;
    import java.util.List;
    import java.util.Set;
    import java.util.concurrent.Executor;
-   
+
    @Slf4j
    @Component
    @RequiredArgsConstructor
    public class DynamicRouteLoader {
-   
+
        private final RouteDefinitionWriter writer;
        private final NacosConfigManager nacosConfigManager;
-   
+
        // 路由配置文件的id和分组, dataId必须和配置管理中的文件名一致
        private final String dataId = "gateway-routes.json";
-       private final String group = "DEFAULT_GROUP"; //Group也必须和nacos上的一致 
+       private final String group = "DEFAULT_GROUP"; //Group也必须和nacos上的一致
        // 保存更新过的路由id
        private final Set<String> routeIds = new HashSet<>();
-   
+
        @PostConstruct
        public void initRouteConfigListener() throws NacosException {
            // 1.注册监听器并首次拉取配置
@@ -757,7 +759,7 @@ try {
                        public Executor getExecutor() {
                            return null;
                        }
-   
+
                        @Override
                        public void receiveConfigInfo(String configInfo) {
                            updateConfigInfo(configInfo);
@@ -766,7 +768,7 @@ try {
            // 2.首次启动时，更新一次配置
            updateConfigInfo(configInfo);
        }
-   
+
        private void updateConfigInfo(String configInfo) {
            log.debug("监听到路由配置变更，{}", configInfo);
            // 1.反序列化
@@ -792,9 +794,6 @@ try {
        }
    }
    ```
-
-   
-
 
 ## 3、OpenFeign
 
@@ -1125,4 +1124,119 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
      com.hmall.common.config.MvcConfig,\
    ```
 
-## 5、配置管理
+## 5、Sentinel（服务保护）
+
+1. 安装
+
+   将[jar](https://github.com/alibaba/Sentinel/releases)包下载到本地，解压到一个非中文目录
+
+2. 启动
+
+   打开`localhost:8090`，默认账号密码：`sentinel/sentinel`
+
+   ```Shell
+   java -Dserver.port=8090 -Dcsp.sentinel.dashboard.server=localhost:8090 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard.jar
+   ```
+
+3. 项目中引入依赖
+
+   ```xml
+   <!--sentinel-->
+   <dependency>
+       <groupId>com.alibaba.cloud</groupId>
+       <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+   </dependency>
+   ```
+
+4. 添加配置
+
+   ```yaml
+   spring:
+     application:
+       sentinel:
+         transport:
+           dashboard: 127.0.0.1:8090 # 监听端口
+         http-method-specify: true # 开启区别请求方式
+   ```
+
+5. 重启服务即可
+
+### 请求限流
+
+![请求限流](/SpringClund/sentinel-limit.png)
+
+### 线程隔离
+
+![请求限流](/SpringClund/sentinel-isolation.png)
+
+### FallBack（待补充）
+
+### 服务熔断（待补充）
+
+## 6、分布式事务
+
+在微服务项目中，每个服务直接都会存在相互调用的问题，假如一个接口同时调用了好几个微服务，但是其中有些服务失败了，有些成功了就会导致事务的不一致性，这时候就需要对成功的事务进行回滚。
+
+### Seata
+
+[Seata](https://seata.apache.org/zh-cn/docs/overview/what-is-seata/)就是用来解决分布式事务一致性的
+
+1. 安装配置
+
+   [文档](https://seata.apache.org/zh-cn/docs/user/quickstart)，成功安装到 docker 后，nacos 中会多出一个微服务
+
+2. 项目中安装依赖
+
+   ```xml
+   <!--统一配置管理-->
+     <dependency>
+         <groupId>com.alibaba.cloud</groupId>
+         <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+     </dependency>
+     <!--读取bootstrap文件-->
+     <dependency>
+         <groupId>org.springframework.cloud</groupId>
+         <artifactId>spring-cloud-starter-bootstrap</artifactId>
+     </dependency>
+     <!--seata-->
+     <dependency>
+         <groupId>com.alibaba.cloud</groupId>
+         <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+     </dependency>
+   ```
+
+3. 增加配置`application.yaml`
+
+   ```yaml
+   seata:
+     registry: # TC服务注册中心的配置，微服务根据这些信息去注册中心获取tc服务地址
+       type: nacos # 注册中心类型 nacos
+       nacos:
+         server-addr: 127.0.0.1:8848 # nacos地址
+         namespace: "" # namespace，默认为空
+         group: DEFAULT_GROUP # 分组，默认是DEFAULT_GROUP
+         application: seata-server # seata服务名称
+         username: nacos
+         password: nacos
+     tx-service-group: hmall # 事务组名称
+     service:
+       vgroup-mapping: # 事务组与tc集群的映射关系
+         hmall: "default"
+     data-source-proxy-mode: XA # 或者 AT 两种模式
+   ```
+
+4. 实现事务一致性
+
+   在`service`的实现类上加入`@GlobalTransactional`注解
+
+   假如在`order`服务下面的`createOrder`上调了`item`服务下的`removeByItemIds`
+
+   ```java
+   @Override
+   @GlobalTransactional // 入口服务要加这个注解
+   public Long createOrder(OrderFormDTO orderFormDTO) {}
+
+   @Override
+   @Transactional // 被调用的实现类要加
+   public void removeByItemIds(Collection<Long> itemIds) {}
+   ```
