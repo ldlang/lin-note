@@ -185,6 +185,10 @@ export const navbar = [
         text: "docker",
         link: "/java/docker.md",
       },
+      {
+        text: "Redis",
+        link: "/java/Redis.md",
+      },
     ],
   },
   {
