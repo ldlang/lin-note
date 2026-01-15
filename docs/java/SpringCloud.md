@@ -1163,11 +1163,11 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
 ### 请求限流
 
-![请求限流](/SpringClund/sentinel-limit.png)
+![请求限流](/SpringCloud/sentinel-limit.png)
 
 ### 线程隔离
 
-![请求限流](/SpringClund/sentinel-isolation.png)
+![请求限流](/SpringCloud/sentinel-isolation.png)
 
 ### FallBack（待补充）
 
