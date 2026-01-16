@@ -37,15 +37,71 @@ sidebar: auto
      hobby: [playGame,study]
      ```
 
-## 2、给实体类注入属性
+## 2、依赖管理
+
+```xml
+<!--依赖管理-->
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.5.9</version>
+    <relativePath/>
+</parent>
+
+<!--上面依赖管理父项目，他里面管理了很多常见依赖的版本-->
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-dependencies</artifactId>
+    <version>3.5.9</version>
+</parent>
+```
+
+- `spring-boot-dependencies`中管理了很多常用依赖的版本，所以在导入其他依赖的时候，如果这个包在在里面声明过了版本号，那么就可以不用配置版本号，直接配置依赖就行了
+
+- 改用指定版本的依赖
+
+  ```xml
+  <properties>
+      <mysql.version>6.0.6</mysql.version>
+  <properties>
+  ```
+
+- `spring-boot-starter-*`只要是这个开头的依赖都是官方提供的依赖
+
+## 3、自动配置
+
+### 默认的包结构
+
+- 和主程序所在包以及下面所有的子包资料的组件都会被默认扫描出来，无需任何配置
+
+- 手动改变要扫描的包路径
+
+  ```java
+  import org.springframework.boot.SpringApplication;
+  import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+  // 通过 scanBasePackages 指定扫描包的路径
+  @SpringBootApplication(scanBasePackages = "com.ldlang")
+  public class HelloApplication {
+      public static void main(String[] args) {
+          SpringApplication.run(HelloApplication.class, args);
+      }
+  }
+  ```
+
+### 配置文件的默认值
+
+- `application.yaml`中所有的配置最终都会绑定到对应的类上，这个类会在容器中创建对象
+
+- 按需加载默认配置，只有被引用的包才会开启
+
+## 4、给实体类注入属性
 
 ### 通过 yaml 文件进行注入
 
 1. 实体
 
    ```java
-   package com.ldlang.pojo;
-
    import org.springframework.boot.context.properties.ConfigurationProperties;
    import org.springframework.stereotype.Component;
 
@@ -160,6 +216,88 @@ public class Dog {
        }
    }
    ```
+
+## 5、常用注解
+
+---
+
+**注册组件注解**
+
+### `@Configuration`
+
+标记一个类为配置类，核心作用是代替配置`bean`的`xml`文件，让你能通过`java`代码的形式向`Spring`注入`bean`，注入的这个`bean`能够在使用的地方通过`@Autowired`来使用对象。
+
+1. 在配置类中通过`@Bean`注解标记在方法上给容器注册组件，默认是单例的
+
+2. 配置类本身也是一个组件
+
+3. 改变代理`bean`的方式
+
+   - `proxyBeanMethods =true`默认值，每次返回的`bean`都是同一个对象
+
+   - `proxyBeanMethods =true`，每次返回的`bean`都**不**是同一个对象
+
+     ```java
+     @Configuration(proxyBeanMethods = false) // 推荐使用
+     ```
+
+```java
+@Configuration
+public class RedisConfig {
+
+    @Bean
+    public Person user(){
+        return new Person("李四", 1);
+    }
+}
+```
+
+### @Bean
+
+配合`@Configuration`来向容器中注册组件，以方法名作为组件的 id。返回类型就是组件类型。返回的值，就是组件在容器中的实例
+
+### @Import
+
+配合`@Configuration`向`Spring`容器中导入更多的组件，导入的类会自动注册为`bean`，默认组件的名字就是全类名。
+
+```java
+@Configuration(proxyBeanMethods = false)
+@Import({Person.class})
+public class MyConfig {}
+```
+
+### @Conditional
+
+配合`@Configuration`以及控制条件来注册组件
+
+```java
+@Configuration
+// Spring容器中有名字为 person 的 bean 这个config才生效，
+@ConditionalOnMissingBean(name = "person") // 也可以和 @Bean 来控制某一个 Bean
+public class MyConfig {}
+```
+
+![所有的控制条件](/java/Conditional.png)
+
+---
+
+**原生配置文件引入**
+
+### @ImportResource
+
+配合`@Configuration`来导入`beans.xml`文件
+
+```java
+@Configuration
+@ImportResource("classpath:beans.xml")
+public class MyConfig {}
+```
+
+---
+
+### @ConfigurationProperties
+
+获取配置文件中的属性，参考第四点
 
 ## 3、jsr303 验证（validation）
 
@@ -305,17 +443,7 @@ spring:
       on-profile: pro
 ```
 
-## 5、注册 Bean
-
-将第三方或者`jar`包中的`class`注册到`ioc`容器中
-
-- @Bean
-
-  要注册的`bean`对象来自于第三方（不是自定义的），是无法使用`@Component`及衍生注解注册`bean`的，需要使用`@Bean`将其注册到`IOC`容器中
-
-- @Import
-
-## 6、全局异常处理
+## 5、全局异常处理
 
 原理：使用`@RestControllerAdvice`注解对所有的`RestController`和`Controller`进行错误的捕获
 
@@ -360,7 +488,7 @@ public class GlobalExceptionHandler {
 }
 ```
 
-## 7、全局拦截器
+## 6、全局拦截器
 
 1. 实现拦截器
 
@@ -429,7 +557,7 @@ public class GlobalExceptionHandler {
 
    ```
 
-## 8、使用线程池共享状态
+## 7、使用线程池共享状态
 
 1. 实现线程池工具类
 
@@ -499,5 +627,3 @@ public class GlobalExceptionHandler {
        ThreadLocalUtil.remove();
    }
    ```
-
-一般用于将整个文件的进行`bean`注入
