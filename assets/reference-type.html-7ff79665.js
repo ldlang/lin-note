@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-20365108","path":"/JavaScript/red-book/reference-type.html","title":"集合引用类型","lang":"zh-CN","frontmatter":{"sidebar":"auto"},"headers":[],"git":{"updatedTime":1698126330000},"filePathRelative":"JavaScript/red-book/reference-type.md"}');export{e as data};

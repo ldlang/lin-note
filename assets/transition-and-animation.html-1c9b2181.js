@@ -1,0 +1,43 @@
+import{_ as s,o as a,c as i,e}from"./app-63ba67c3.js";const t={};function p(l,n){return a(),i("div",null,[...n[0]||(n[0]=[e(`<h2 id="transition-过渡" tabindex="-1"><a class="header-anchor" href="#transition-过渡" aria-hidden="true">#</a> transition 过渡</h2><h3 id="transition-过渡属性" tabindex="-1"><a class="header-anchor" href="#transition-过渡属性" aria-hidden="true">#</a> transition 过渡属性</h3><p>接收 4 个参数，分别是</p><ul><li>表示动画所应用的 CSS 属性名称，如 width、opacity 等。all 表示全部属性都参与过渡。</li><li>表示过渡动画的持续时间。</li><li>过渡效果的时间曲线。</li><li>表示过渡动画的延迟时间.</li></ul><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">transition</span><span class="token punctuation">:</span> width 1s ease 0<span class="token punctuation">;</span>		表过渡的属性是width，过渡时间为2s，
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div></div></div><h3 id="_4-个参数说明" tabindex="-1"><a class="header-anchor" href="#_4-个参数说明" aria-hidden="true">#</a> 4 个参数说明</h3><ol><li><p>transition-property 第一个参数</p><p>规定应用过渡的 CSS 属性的名称。</p></li><li><p>transition-duration 第二个参数</p><p>定义过渡效果花费的时间。默认是 0。</p></li><li><p>transition-timing-function 第三个参数</p><p>规定过渡效果的时间曲线。默认是 &quot;ease&quot;。</p><ul><li>linear 规定以相同速度开始至结束的过渡效果（等于 cubic-bezier(0,0,1,1)）。</li><li>ease 规定慢速开始，然后变快，然后慢速结束的过渡效果（cubic-bezier(0.25,0.1,0.25,1)）。</li><li>ease-in 规定以慢速开始的过渡效果（等于 cubic-bezier(0.42,0,1,1)）。</li><li>ease-out 规定以慢速结束的过渡效果（等于 cubic-bezier(0,0,0.58,1)）。</li><li>ease-in-out 规定以慢速开始和结束的过渡效果（等于 cubic-bezier(0.42,0,0.58,1)）。</li><li>cubic-bezier(n,n,n,n) 在 cubic-bezier 函数中定义自己的值。可能的值是 0 至 1 之间的数值。</li></ul></li><li><p>transition-delay 第四个参数</p><p>规定过渡效果何时开始。默认是 0。</p></li></ol><h3 id="使用方式" tabindex="-1"><a class="header-anchor" href="#使用方式" aria-hidden="true">#</a> 使用方式</h3><ol><li><p>同时过渡分别过渡多个属性</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">transition</span><span class="token punctuation">:</span> opacity 1s ease<span class="token punctuation">,</span> transform 1s ease<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li><li><p>同时过渡所有动画，使用关键字 all</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">transition</span><span class="token punctuation">:</span> all 1s<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li></ol><h2 id="animation-动画" tabindex="-1"><a class="header-anchor" href="#animation-动画" aria-hidden="true">#</a> animation 动画</h2><h3 id="animation-的使用" tabindex="-1"><a class="header-anchor" href="#animation-的使用" aria-hidden="true">#</a> animation 的使用</h3><p>animation: name 3s ease 2s infinite alternate both running forwards;</p><p>9 个参数分别为：</p><ul><li>animation-name： 必须设置，指定绑定到选择器的一个或多个关键帧的名称。</li><li>animation-duration： 指定动画一次循环的时间。默认值为 0s。</li><li>animation-timing-function： 指定动画使用的时间函数以决定动画如何沿指定的轨迹移动和变化。</li><li>animation-delay： 指定动画开始之前的延迟时间。默认值为 0s。</li><li>animation-iteration-count： 指定动画播放的次数。默认为 1。</li><li>animation-direction： 指定动画是否应该在正常播放方向或反向播放。默认值为 normal。</li><li>animation-fill-mode： 指定当动画不播放时元素应如何呈现。默认值为 none。</li><li>animation-play-state： 指定动画应播放还是暂停。默认值为 running。</li><li>animation-iteration-duration： 指定动画的每次循环持续时间。默认值为 animation-duration。</li></ul><p>关键帧的 name 定义，必须使用@keyframes 关键字</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token atrule"><span class="token rule">@keyframes</span> myName</span> <span class="token punctuation">{</span>
+  <span class="token selector">0%</span> <span class="token punctuation">{</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> 0px<span class="token punctuation">;</span>
+    <span class="token property">top</span><span class="token punctuation">:</span> 0px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">25%</span> <span class="token punctuation">{</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> yellow<span class="token punctuation">;</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> 200px<span class="token punctuation">;</span>
+    <span class="token property">top</span><span class="token punctuation">:</span> 0px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">50%</span> <span class="token punctuation">{</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> blue<span class="token punctuation">;</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> 200px<span class="token punctuation">;</span>
+    <span class="token property">top</span><span class="token punctuation">:</span> 200px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">75%</span> <span class="token punctuation">{</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> green<span class="token punctuation">;</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> 0px<span class="token punctuation">;</span>
+    <span class="token property">top</span><span class="token punctuation">:</span> 200px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">100%</span> <span class="token punctuation">{</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> 0px<span class="token punctuation">;</span>
+    <span class="token property">top</span><span class="token punctuation">:</span> 0px<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+或者 <span class="token atrule"><span class="token rule">@keyframes</span> myfirst</span> <span class="token punctuation">{</span>
+  <span class="token selector">from</span> <span class="token punctuation">{</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">to</span> <span class="token punctuation">{</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> yellow<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div>`,16)])])}const c=s(t,[["render",p],["__file","transition-and-animation.html.vue"]]);export{c as default};

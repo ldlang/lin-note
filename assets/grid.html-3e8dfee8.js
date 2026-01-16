@@ -1,0 +1,132 @@
+import{_ as s,o as a,c as e,e as t}from"./app-63ba67c3.js";const p={};function i(l,n){return a(),e("div",null,[...n[0]||(n[0]=[t(`<h1 id="grid-布局" tabindex="-1"><a class="header-anchor" href="#grid-布局" aria-hidden="true">#</a> grid 布局</h1><h2 id="父容器上的属性" tabindex="-1"><a class="header-anchor" href="#父容器上的属性" aria-hidden="true">#</a> 父容器上的属性</h2><h3 id="grid-、-inline-grid-、subgrid" tabindex="-1"><a class="header-anchor" href="#grid-、-inline-grid-、subgrid" aria-hidden="true">#</a> grid 、 inline-grid 、subgrid</h3><ul><li><p>display: grid; 该容器元素为 块级元素</p></li><li><p>display: inline-grid; 该容器元素为 行内元素</p></li><li><p>display: subgrid; 定义一个继承其父级网格容器的行和列的大小的网格容器，它是父级网格容器的一个子项</p></li></ul><h3 id="grid-template-columns-设置列-grid-template-rows-设置行" tabindex="-1"><a class="header-anchor" href="#grid-template-columns-设置列-grid-template-rows-设置行" aria-hidden="true">#</a> grid-template-columns（设置列）grid-template-rows（设置行）</h3><ul><li><p>px，百分比</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token comment">/*规定只能有三列，每列的宽度为100px*/</span>
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+
+<span class="token comment">/* 规定前两行，每行的高度为100px，如果有第三行则自适应*/</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 100px 100px<span class="token punctuation">;</span>
+
+<span class="token comment">/*使用百分比规定3列的宽度*/</span>
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 30% 30% 40%<span class="token punctuation">;</span>
+
+<span class="token comment">/*使用百分比前2行的高度*/</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 30% 20%<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li><li><p>repeat</p><p>接收两个参数，第一个是重复第二个参数的次数，第二个参数可以是一个值，也可以是一种模式，也就是很多值</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token comment">/*规定有两列，每列宽度为200px*/</span>
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>2<span class="token punctuation">,</span> 200px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/*规定2 * 后面模式的个数，也就是4列*/</span>
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>2<span class="token punctuation">,</span> 200px 100px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/*规定前两行的高度为300px，剩余的自适应*/</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>2<span class="token punctuation">,</span> 300px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li><li><p>auto-fill</p><ul><li>父级的宽度或者高度不知道，但要规定每个子盒子的宽度，就可以使用 auto-fill</li><li>auto-fit，两者的行为基本是相同的。只有当容器足够宽，可以在一行容纳所有单元格，并且单元格宽度不固定的时候，才会有行为差异：auto-fill 会用空格子填满剩余宽度，auto-fit 则会尽量扩大单元格的宽度。</li></ul><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token comment">/*不知道父级的宽度，每个子项的宽度为200px*/</span>
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>auto-fill<span class="token punctuation">,</span> 200px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/*不知道父级的高度，但每个子项的高度为350px*/</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>auto-fill<span class="token punctuation">,</span> 350px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>auto-fit<span class="token punctuation">,</span> 200px 300px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li><li><p>fr</p><p>占比，每列或每行占比为多少，1fr 就代表一份</p><p>在 columns 中有几个这个 fr 就代表有几列，在 row 中如果有 5 行，但是只规定了 3 行，剩下的行高度会自适应</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token comment">/*有三列，第二列占比为一半，一、三列占位为1/4*/</span>
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 1fr 2fr 1fr<span class="token punctuation">;</span>
+
+<span class="token comment">/*设置前两行占总高度的一半，但是如果有第三行，总高度就会把第三行的高度去了，前两行再分配剩余高度*/</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 1fr 1fr<span class="token punctuation">;</span>
+
+<span class="token comment">/*有三列，第一列占100px，第二列占剩余空间的2/3*/</span>
+grid-template-columns：100px 2fr 1fr<span class="token punctuation">;</span>
+
+<span class="token comment">/*规定前第一行为200px，2、3行占剩余空间的一半*/</span>
+<span class="token property">grid-template-row</span><span class="token punctuation">:</span> 200px 1fr 1fr<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li><li><p>minmax() 最大最小值</p><p>接收两个参数，<code>minmax(500px, 1fr) </code>，如果 1fr 大于 500px 那么就取 1fr 的值，否则取 500px</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 1fr 1fr <span class="token function">minmax</span><span class="token punctuation">(</span>500px<span class="token punctuation">,</span> 1fr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/*1fr代表第三行占总高度剔除200px的*/</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 100px 100px <span class="token function">minmax</span><span class="token punctuation">(</span>500px<span class="token punctuation">,</span> 1fr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li><li><p>auto</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token comment">/*第二列会占总高度减去200px的高度*/</span>
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px auto 100px<span class="token punctuation">;</span>
+
+<span class="token comment">/*第二行会占总高度减去200px的高度*/</span>
+<span class="token property">grid-template-row</span><span class="token punctuation">:</span> 100px auto 100px<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div></li><li><p>网格线的名称</p><p>指定网格布局为 3 行 x 3 列，因此有 4 根垂直网格线和 4 根水平网格线。方括号里面依次是这八根线的名字。 网格布局允许同一根线有多个名字，比如[fifth-line row-5]</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">grid-template-columns</span><span class="token punctuation">:</span> [c1] 100px [c2] 100px [c3] auto [c4]<span class="token punctuation">;</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> [r1] 100px [r2] 100px [r3] auto [r4]<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div></div></div></li></ul><h3 id="grid-gap、grid-column-gap、grid-row-gap" tabindex="-1"><a class="header-anchor" href="#grid-gap、grid-column-gap、grid-row-gap" aria-hidden="true">#</a> grid-gap、grid-column-gap、grid-row-gap</h3><p>grid-row-gap 等同于 grid-row 设置子项的行间距</p><p>grid-column-gap 等同于 grid-column 设置子项的列间距</p><p>grid-gap 等同于 gap 同时设置行和列的间距</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code>grid-template-columns：200px 200px 200px；
+<span class="token comment">/*设置每行之间的间距为50px；*/</span>
+<span class="token property">grid-row-gap</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span>
+
+<span class="token comment">/*设置每列之间的间距为50px*/</span>
+grid-columns-gap：50px；
+
+<span class="token comment">/*只有一个参数，那么行间距和列间距一致，都为50px*/</span>
+grid-gap：50px；
+
+<span class="token comment">/*第一个参数为行间距，第二个参数为列间距*/</span>
+gap：50px， 100px；
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="grid-template-area" tabindex="-1"><a class="header-anchor" href="#grid-template-area" aria-hidden="true">#</a> grid-template-area</h3><ul><li>子项的位置可以随意书写。空出的位置可以用 . 占位。</li><li>可以只给某个子项设置 grid-area，只要能对应 grid-template-areas 上的一个，就能改变其位置</li></ul><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token comment">/*规定每个子项所在的位置，每个子项的命名通过grid-area命名*/</span>
+<span class="token property">grid-template-areas</span><span class="token punctuation">:</span> <span class="token string">&quot;a b c&quot;</span><span class="token punctuation">;</span>
+
+<span class="token comment">/*在对应子项的类下面加入命名，grid-template-areas才能书写布局*/</span>
+<span class="token property">grid-area</span><span class="token punctuation">:</span> a<span class="token punctuation">;</span>
+
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px 300px 200px<span class="token punctuation">;</span>
+<span class="token property">grid-template-areas</span><span class="token punctuation">:</span>
+  <span class="token string">&quot;item1 item2 item3&quot;</span>
+  <span class="token string">&quot;item4 .	  item6&quot;</span>
+  <span class="token string">&quot;item7 .     item9&quot;</span>
+  <span class="token string">&quot;item5 .     .    &quot;</span> 用 . 去占位
+  <span class="token string">&quot;item8 item8 item8&quot;</span><span class="token punctuation">;</span> <span class="token comment">/*item8独占一行而不是赋值三份*/</span>
+
+<span class="token selector">.item1</span> <span class="token punctuation">{</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> rebeccapurple<span class="token punctuation">;</span>
+  <span class="token property">grid-area</span><span class="token punctuation">:</span> item1<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">...... .item9</span> <span class="token punctuation">{</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> olivedrab<span class="token punctuation">;</span>
+  <span class="token property">grid-area</span><span class="token punctuation">:</span> item9<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="grid-auto-flow" tabindex="-1"><a class="header-anchor" href="#grid-auto-flow" aria-hidden="true">#</a> grid-auto-flow</h3><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token comment">/* 子项会先填满第一行，才会去填充第二行，先行后列，   row默认值 */</span>
+<span class="token property">grid-auto-flow</span><span class="token punctuation">:</span> row<span class="token punctuation">;</span>
+<span class="token comment">/* 子项会先填满第一列，然后才去填充第二列，先列后行 */</span>
+<span class="token property">grid-auto-flow</span><span class="token punctuation">:</span> columns<span class="token punctuation">;</span>
+
+<span class="token comment">/*先行后列，并且紧密排列，尽量不会出现空格*/</span>
+<span class="token property">grid-auto-flow</span><span class="token punctuation">:</span> row dense<span class="token punctuation">;</span>
+<span class="token comment">/*先列后行，并且紧密排列，尽量不会出现空格*/</span>
+<span class="token property">grid-auto-flow</span><span class="token punctuation">:</span> row columns<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="justify-items、align-items、place-items" tabindex="-1"><a class="header-anchor" href="#justify-items、align-items、place-items" aria-hidden="true">#</a> justify-items、align-items、place-items</h3><p>justify-items 子项水平线上的布局</p><p>align-items 子项垂直线上的布局</p><p>place-items 子项水平和垂直线上的布局</p><p>如果子项自身定义了宽高，但是 grid 布局的宽大于其自身的宽高，那么就可以通过这些去设置子项在单元格中的布局</p><p>配置可选值：</p><ul><li>start：对齐单元格的起始边缘。</li><li>end：对齐单元格的结束边缘。</li><li>center：单元格内部居中。</li><li>stretch：拉伸，占满单元格的整个宽度（默认值）。前提是子项没有设置宽高</li></ul><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+<span class="token property">justify-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token comment">/*子项在其单元格中 水平 居中*/</span>
+<span class="token property">align-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token comment">/*子项在其单元格中 垂直 居中*/</span>
+
+<span class="token property">place-items</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token comment">/*只有一个参数，水平和垂直布局一致，都为center*/</span>
+<span class="token property">place-items</span><span class="token punctuation">:</span> center start<span class="token punctuation">;</span> <span class="token comment">/*第一个为align-items的布局，justify-items的布局*/</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="justify-content、align-content、place-content" tabindex="-1"><a class="header-anchor" href="#justify-content、align-content、place-content" aria-hidden="true">#</a> justify-content、align-content、place-content</h3><p>justify-content 整个内容区域在容器里面的水平位置</p><p>align-content 整个内容区域在容器里面的垂直位置</p><p>place-content 整个内容区域在容器里面的水平和垂直位置</p><p>配置可选值：</p><ul><li>start 对齐容器的起始边框。</li><li>end 对齐容器的结束边框。</li><li>center 容器内部居中。</li><li>stretch 项目大小没有指定时，拉伸占据整个网格容器。</li><li>space-around 每个项目两侧的间隔相等。所以，项目之间的间隔比项目与容器边框的间隔大一倍。</li><li>space-between 项目与项目的间隔相等，项目与容器边框之间没有间隔。</li><li>space-evenly 项目与项目的间隔相等，项目与容器边框之间也是同样长度的间隔。</li></ul><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">justify-content</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token comment">/*整体内容在盒子中 水平 居中*/</span>
+<span class="token property">align-content</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span> <span class="token comment">/*整体内容在盒子中 垂直 居中*/</span>
+<span class="token comment">/*有一个参数，水平和垂直布局一致，两个参数第一个为align-content，第二个为justify-content*/</span>
+place-content
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="grid-auto-columns、grid-auto-rows" tabindex="-1"><a class="header-anchor" href="#grid-auto-columns、grid-auto-rows" aria-hidden="true">#</a> grid-auto-columns、grid-auto-rows</h3><p>grid-auto-columns 设置在 grid-template-columns 规定列之外列的属性，写法同 grid-template-columns</p><p>grid-auto-rows 设置在 grid-template-row 规定行之外行的属性，写法同 grid-template-row</p><p>下面只规定了一个三列二行单元格的大小，第 3 行的及以后的高度并没有去规定，grid-auto-rows 就是去规定，没有被 grid-template-rows 规定以外单元格的属性，此时第 3 行的及以后的高度则为 10px， grid-auto-columns 同 grid-template-rows</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 200px 200px<span class="token punctuation">;</span>
+<span class="token property">grid-auto-rows</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="grid-template、grid" tabindex="-1"><a class="header-anchor" href="#grid-template、grid" aria-hidden="true">#</a> grid-template、grid</h3><p><strong>grid-template</strong>属性是 <code>grid-template-columns</code>、<code>grid-template-rows</code>和<code>grid-template-areas</code>这三个属性的合并简写形式。</p><p><strong>grid</strong>属性是 <code>grid-template-rows</code>、<code>grid-template-columns</code>、<code>grid-template-areas</code>、 <code>grid-auto-rows</code>、<code>grid-auto-columns</code>、<code>grid-auto-flow</code>这六个属性的合并简写式</p><h2 id="子项的属性" tabindex="-1"><a class="header-anchor" href="#子项的属性" aria-hidden="true">#</a> 子项的属性</h2><h3 id="grid-column-start、grid-column-end、grid-row-start、grid-row-end" tabindex="-1"><a class="header-anchor" href="#grid-column-start、grid-column-end、grid-row-start、grid-row-end" aria-hidden="true">#</a> grid-column-start、grid-column-end、grid-row-start、grid-row-end</h3><p>grid-column-start 左边框所在的垂直网格线</p><p>grid-column-end 右边框所在的垂直网格线</p><p>grid-row-start 上边框所在的水平网格线</p><p>grid-row-end 下边框所在的水平网格线</p><p>规定了 item1 这一子项的左边框在第二根垂直线上，右边框在第四根垂直线上，此时第一和第二根垂直线上的位置就会被空出来</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token selector">.item1</span> <span class="token punctuation">{</span>
+  <span class="token property">grid-column-start</span><span class="token punctuation">:</span> 2<span class="token punctuation">;</span>
+  <span class="token property">grid-column-end</span><span class="token punctuation">:</span> 4<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>规定同时规定了 item1 垂直线和水平线的位置，空出来的位置会被其他子项填充，其他子项会排除这个子项的位置，开始正常排列</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token selector">.item1</span> <span class="token punctuation">{</span>
+  <span class="token property">grid-column-start</span><span class="token punctuation">:</span> 2<span class="token punctuation">;</span>
+  <span class="token property">grid-column-end</span><span class="token punctuation">:</span> 4<span class="token punctuation">;</span>
+  <span class="token property">grid-row-start</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+  <span class="token property">grid-row-end</span><span class="token punctuation">:</span> 3<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>也可以使用网格线的别名</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">grid-template-columns</span><span class="token punctuation">:</span> [c1] 100px [c2] 100px [c3] auto [c4]<span class="token punctuation">;</span>
+<span class="token property">grid-column-start</span><span class="token punctuation">:</span> c2<span class="token punctuation">;</span>
+<span class="token property">grid-column-end</span><span class="token punctuation">:</span> c4<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="span-跨越的网格线数量" tabindex="-1"><a class="header-anchor" href="#span-跨越的网格线数量" aria-hidden="true">#</a> span 跨越的网格线数量</h3><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">grid-column-start</span><span class="token punctuation">:</span> span 3<span class="token punctuation">;</span> <span class="token comment">/*表示要跨越3条网格线，即开始线为1，结束线为4*/</span>
+
+等同于
+	<span class="token property">grid-column-start</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+	<span class="token property">grid-column-end</span><span class="token punctuation">:</span> 4<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="grid-column、grid-row" tabindex="-1"><a class="header-anchor" href="#grid-column、grid-row" aria-hidden="true">#</a> grid-column、grid-row</h3><p>如果只有一个参数，则表示开始线的位置，结束线的位置为开始线的位置+1</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token property">grid-column</span><span class="token punctuation">:</span>1 / 4<span class="token punctuation">;</span> <span class="token comment">/*开始线为1，结束线为4*/</span>
+
+等同于
+	<span class="token property">grid-column-start</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+	<span class="token property">grid-column-end</span><span class="token punctuation">:</span> 4<span class="token punctuation">;</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="grid-area" tabindex="-1"><a class="header-anchor" href="#grid-area" aria-hidden="true">#</a> grid-area</h3><p>用法一：参靠父级属性的 grid-template-area</p><p>用法二：grid-area 属性还可用作 grid-row-start、grid-column-start、grid-row-end、grid-column-end 的合并简写形式，直接指定项目的位置</p><div class="language-css line-numbers-mode" data-ext="css"><pre class="language-css"><code><span class="token selector">.item-1</span> <span class="token punctuation">{</span>
+  <span class="token property">grid-area</span><span class="token punctuation">:</span> 1 / 1 / 3 / 3<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre><div class="line-numbers" aria-hidden="true"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><h3 id="justify-self、align-self、place-self" tabindex="-1"><a class="header-anchor" href="#justify-self、align-self、place-self" aria-hidden="true">#</a> justify-self、align-self、place-self</h3><p>用法同父级的 justify-items、align-items、place-items 一致</p>`,62)])])}const o=s(p,[["render",i],["__file","grid.html.vue"]]);export{o as default};

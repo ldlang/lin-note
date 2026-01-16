@@ -1,0 +1,1 @@
+const a=JSON.parse('{"key":"v-e1ba2a20","path":"/JavaScript/ES6/","title":"ES6","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1721010841000},"filePathRelative":"JavaScript/ES6/README.md"}');export{a as data};

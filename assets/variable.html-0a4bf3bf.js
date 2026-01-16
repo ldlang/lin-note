@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-3ee7f0bc","path":"/JavaScript/red-book/variable.html","title":"变量、作用域、内存","lang":"zh-CN","frontmatter":{"sidebar":"auto"},"headers":[{"level":3,"title":"原始值和引用值","slug":"原始值和引用值","link":"#原始值和引用值","children":[]}],"git":{"updatedTime":1698126330000},"filePathRelative":"JavaScript/red-book/variable.md"}');export{e as data};

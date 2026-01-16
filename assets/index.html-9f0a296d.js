@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-5f152cc1","path":"/JavaScript/red-book/","title":"红宝书笔记","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1697794650000},"filePathRelative":"JavaScript/red-book/README.md"}');export{t as data};
