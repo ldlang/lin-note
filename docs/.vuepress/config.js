@@ -3,7 +3,7 @@ import { defaultTheme } from "vuepress";
 import { sidebar } from "./config/sidebar.js";
 import { navbar } from "./config/navbar.js";
 import { searchPlugin } from "@vuepress/plugin-search";
-import CodeCopyPulgin from 'vuepress-code-copy'
+import CodeCopyPulgin from "vuepress-code-copy";
 
 export default defineUserConfig({
   base: "/lin-note/",
@@ -19,13 +19,19 @@ export default defineUserConfig({
       },
     }),
     CodeCopyPulgin({
-      copyText: '复制',
-      copiedText: '复制成功',
-    })
+      copyText: "复制",
+      copiedText: "复制成功",
+    }),
   ],
+  markdown: {
+    headers: {
+      level: [2, 3, 4, 5],
+    },
+  },
   theme: defaultTheme({
     contributors: false,
     navbar,
     sidebar,
+    sidebarDepth: 5,
   }),
 });
